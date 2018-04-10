@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  	"start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser chrome"
+    "start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser chrome"
   },
   "keywords": [],
   "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
@@ -12,7 +12,5 @@
   "devDependencies": {
     "browser-sync": "2.23.6"
   },
-  "dependencies": {
-    "npm": "5.8.0"
-  }
+  "dependencies": {}
 }
