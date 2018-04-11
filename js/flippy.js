@@ -85,7 +85,7 @@
         },
 
         onChange(query, cb, usePolyfill) {
-            let res = this.testMedia(query, usePolyfill)
+            const res = this.testMedia(query, usePolyfill)
 
             res.addListener(changed => {
                 cb.apply({}, [changed.matches, changed.media])
@@ -110,13 +110,15 @@
 
         _book.plotter.bounds = _setGeometricalPremise(node)
 
+        _applyEventListenersOnBook(node)
+
+
         _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
 
-        _book.currentPage = _setCurrentPage(settings.startPage)
-        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.mode)
+        // _book.currentPage = _setCurrentPage(settings.startPage)
+        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
+        // _book.range = _setRangeIndices(_book.currentPage, _book.mode)
 
-        _applyEventListenersOnBook(node)
     }
 
     _viewer.onChange('(orientation: landscape)', match => {
@@ -336,7 +338,7 @@
                 _book.state.eventsCache.push([event, _book.direction])
                 break
             case 'DIV':
-                console.log('click')
+                // console.log('click')
                 break
             default:
         }
@@ -628,7 +630,7 @@
     }
 
     /**********************************/
-    /** ******* Helper methods *********/
+    /********** Helper methods ********/
     /**********************************/
 
     const isEven = number => number === parseFloat(number) ? !(number % 2) : void 0
@@ -855,7 +857,7 @@
 
     // }
 
-    const bezierCurve = () => {}
+    const _bezierCurve = () => {}
 
     const _setUpThePlot = (event) => {
         _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'

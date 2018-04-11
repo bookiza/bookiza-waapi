@@ -3,13 +3,14 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-const settings = { duration: 600, animate: true, peel: true, zoom: true, startPage: 6 }
 
 const node = document.getElementById('book')
 
 const manuscript = [...node.children]
 
 const buttons = manuscript.splice(0, 2)
+
+const settings = { duration: 600, animate: true, peel: true, zoom: true, startPage: 6 }
 
 const superbook = Flippy.init({ node, settings, manuscript, buttons })
 
