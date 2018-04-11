@@ -687,7 +687,7 @@
 
     const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(node) }
 
-    w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise.
+    w.addEventListener('resize', _resetGeometricalPremise) // Re-calibrate geometrical premise.
 
     const _setGeometricalOrigin = () => ({
         "x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -696,7 +696,7 @@
 
     const _resetGeometricalOrigin = () => { _book.plotter.origin = _setGeometricalOrigin() }
 
-    w.addEventListener('resize', _resetGeometricalOrigin) // Recalibrate geometrical origin.
+    w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
     const _setCurrentPage = startPage => (startPage === undefined) ? 1 : (parseInt(startPage) > 0 && parseInt(startPage) < parseInt(_book.pages.length)) ? parseInt(startPage) % parseInt(_book.pages.length) : (parseInt(startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(startPage) % parseInt(_book.pages.length) : parseInt(startPage) % parseInt(_book.pages.length) // Cyclic array
 
