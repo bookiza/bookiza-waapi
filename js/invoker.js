@@ -7,7 +7,11 @@ const settings = { duration: 600, animate: true, peel: true, zoom: true, startPa
 
 const node = document.getElementById('book')
 
-const superbook = Flippy.init(node, settings)
+const manuscript = [...node.children]
+
+const buttons = manuscript.splice(0, 2)
+
+const superbook = Flippy.init({ node, settings, manuscript, buttons })
 
 /**********************************/
 /** ****** Work in progress ********/
@@ -35,9 +39,9 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Book length:', booklength)
 
-let currentPage = superbook.flippy('page')
+// let currentPage = superbook.flippy('page')
 
-console.log('Current page:', currentPage)
+// console.log('Current page:', currentPage)
 
 // let view = superbook.flippy('view')
 

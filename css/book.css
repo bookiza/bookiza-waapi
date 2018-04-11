@@ -1,13 +1,31 @@
 * {
     box-sizing: border-box;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 *:after {
     box-sizing: border-box;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 *:before {
     box-sizing: border-box;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html,
@@ -15,6 +33,7 @@ body {
     margin: 0;
     width: 100vw;
     height: 100vh;
+    height: 100%;
     pointer-events: none;
     overflow: hidden;
     display: flex;
@@ -23,6 +42,14 @@ body {
     /*transition-duration: 200ms;*/
     backface-visibility: hidden;
     touch-action: none;
+    position: absolute;
+    box-sizing: border-box;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .viewer {
@@ -209,14 +236,6 @@ svg {
     pointer-events: none;
 }
 
-.noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
 .arrow-tap {
     opacity: 1;
 }
@@ -307,10 +326,3 @@ svg {
 /* To be removed eventually */
 
 @import './plotter.css';
-.red {
-    background: tomato;
-}
-
-.blue {
-    background: skyblue;
-}
