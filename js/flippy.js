@@ -106,25 +106,18 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, manuscript = [], buttons = [], settings = { duration: 500, animation: true, peel: true, zoom: true } }) => {
-
-        console.log(_book)
-
+    const _initializeSuperBook = ({ node, manuscript, buttons, settings = { duration: 500, animation: true, peel: true, zoom: true } }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
 
         _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
 
-        _book.currentPage = _setCurrentPage(settings.startPage)
-        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.mode)
-
-        console.log(_book.range)
-
-        return
+        // _book.currentPage = _setCurrentPage(settings.startPage)
+        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
+        // _book.range = _setRangeIndices(_book.currentPage, _book.mode)
 
         _applyEventListenersOnBook(node)
 
-        if (_book.state.isInitialized) _printBookToDOM()
+        // if (_book.state.isInitialized) _printBookToDOM()
 
     }
 
@@ -132,7 +125,7 @@
         _book.mode = match ? 'landscape' : 'portrait'
         _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
         _book.range = _setRangeIndices(_book.currentPage, _book.mode)
-        _printBookToDOM()
+        if (_book.state.isInitialized) _printBookToDOM()
     })
 
     // const _removePage = (index) => {
@@ -286,19 +279,19 @@
 
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
-        // console.log('Out!')
+        console.log('Out!')
     }
 
     const _handleMouseMove = (event) => {
-        // _printStateValues(event)
-        // _printGeometricalPremise()
+        _printStateValues(event)
+        _printGeometricalPremise()
         _setUpThePlot(event) // :D
 
-        console.log(sign(_book.plotter.μ))
+        // console.log(sign(_book.plotter.μ))
 
         if (_book.state.isZoomed) node.style = _panAround()
 
-        if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
+        // if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
 
         if (_book.state.isFlipping) _animateFlippablePages() // TODO: Pass animationType here
 
