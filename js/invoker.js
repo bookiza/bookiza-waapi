@@ -15,7 +15,7 @@ const settings = { duration: 600, animate: true, peel: true, zoom: true, startPa
 const superbook = Flippy.init({ node, settings, manuscript, buttons })
 
 /**********************************/
-/** ****** Work in progress ********/
+/******** Work in progress ********/
 /**********************************/
 
 // superbook('flipping', cb) // fire when turning the page

@@ -1,7 +1,7 @@
 // Copyright Notice: All rights reserved. © 2016 - 2017 Marvin Danig
 // FLIPPY VERSION::0.0.1'
 
-// import viewer from '../modules/mode.js'
+// import _viewer from '../modules/mode.js'
 // import '../modules/graph.js'
 // import events from '../modules/events.js'
 
@@ -12,7 +12,7 @@
 
     class Book {
         constructor() {
-                this.state = { 'isInitializing': true, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false, 'isPeeled': false, 'eventsCache': [] }
+                this.state = { 'isInitialized': false, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false, 'isPeeled': false, 'eventsCache': [] }
                 this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
                 this.direction = 'forward'
                 this.plotter = {
@@ -79,7 +79,7 @@
      ********** Private Methods *********
      ***********************************/
 
-    let _viewer = {
+    const _viewer = {
         getMatch(query, usePolyfill) {
             return this.testMedia(query, usePolyfill).matches
         },
@@ -108,16 +108,23 @@
 
     const _initializeSuperBook = ({ node, manuscript = [], buttons = [], settings = { duration: 500, animation: true, peel: true, zoom: true } }) => {
 
+        console.log(_book)
+
         _book.plotter.bounds = _setGeometricalPremise(node)
-
-        _applyEventListenersOnBook(node)
-
 
         _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
 
-        // _book.currentPage = _setCurrentPage(settings.startPage)
-        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
-        // _book.range = _setRangeIndices(_book.currentPage, _book.mode)
+        _book.currentPage = _setCurrentPage(settings.startPage)
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.mode)
+
+        console.log(_book.range)
+
+        return
+
+        _applyEventListenersOnBook(node)
+
+        if (_book.state.isInitialized) _printBookToDOM()
 
     }
 
@@ -223,7 +230,7 @@
                 _handleTouchEnd(event)
                 break
             default:
-                console.log(event) // Ignore 
+                console.log(event) // Ignore all other events.
                 break
         }
     }
@@ -259,8 +266,7 @@
                 delegateElement.addEventListener(event, handler)
             })
         }
-        _book.state.isInitializing = false
-            // _printBookToDOM()
+        _book.state.isInitialized = true
     }
 
     /****************************************/
@@ -284,8 +290,8 @@
     }
 
     const _handleMouseMove = (event) => {
-        _printStateValues(event)
-        _printGeometricalPremise()
+        // _printStateValues(event)
+        // _printGeometricalPremise()
         _setUpThePlot(event) // :D
 
         console.log(sign(_book.plotter.μ))
@@ -336,6 +342,7 @@
             case 'A':
                 _book.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
                 _book.state.eventsCache.push([event, _book.direction])
+                console.log('click')
                 break
             case 'DIV':
                 // console.log('click')
@@ -645,7 +652,7 @@
 
     const _rightCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
 
-    // const _radians = degrees => degrees / 180 * π
+    const _radians = degrees => degrees / 180 * π
 
     const _degrees = radians => radians / π * 180
 
