@@ -5,16 +5,14 @@
 // import '../modules/graph.js'
 // import events from '../modules/events.js'
 
-(((n, w, d) => {
+((n, w, d) => {
     /***********************************
      ************* Public API ***********
      ***********************************/
 
     class Book {
         constructor() {
-                this.state = { 'isInitialized': false, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false, 'isPeeled': false, 'eventsCache': [] }
-                this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
-                this.direction = 'forward'
+                this.state = { 'isInitialized': false, 'direction': 'forward', 'isFlipping': false, 'isPeelable': false, 'isZoomed': false, 'isPeeled': false, 'eventsCache': [], 'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait' }
                 this.plotter = {
                     'origin': {
                         "x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -40,7 +38,7 @@
         }
 
         getMode() {
-            return _book.mode
+            return _book.state.mode
         }
 
         // METHODS
@@ -65,18 +63,18 @@
         // }
 
         // next() {
-        //     _next(increment(_book.mode))
+        //     _next(increment(_book.state.mode))
         // }
 
         // previous() {
-        //     _previous(increment(_book.mode))
+        //     _previous(increment(_book.state.mode))
         // }
 
         // EVENTS
     }
 
     /***********************************
-     ********** Private Methods *********
+     ********** Private Methods ********
      ***********************************/
 
     const _viewer = {
@@ -108,23 +106,25 @@
 
     const _initializeSuperBook = ({ node, manuscript, buttons, settings = { duration: 500, animation: true, peel: true, zoom: true } }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
+        _applyEventListenersOnBook(node)
+
+        console.log(_book)
 
         _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
 
-        // _book.currentPage = _setCurrentPage(settings.startPage)
-        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
-        // _book.range = _setRangeIndices(_book.currentPage, _book.mode)
+        _book.currentPage = _setCurrentPage(settings.startPage)
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
 
-        _applyEventListenersOnBook(node)
 
-        // if (_book.state.isInitialized) _printBookToDOM()
+        if (_book.state.isInitialized) _printBookToDOM()
 
     }
 
     _viewer.onChange('(orientation: landscape)', match => {
-        _book.mode = match ? 'landscape' : 'portrait'
-        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.mode)
+        _book.state.mode = match ? 'landscape' : 'portrait'
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
         if (_book.state.isInitialized) _printBookToDOM()
     })
 
@@ -234,7 +234,7 @@
 
     const keyEvents = ['keypress', 'keyup', 'keydown']
 
-    const _applyEventListenersOnBook = () => {
+    const _applyEventListenersOnBook = (node) => {
         keyEvents.forEach(event => {
             w.addEventListener(event, handler)
         })
@@ -251,7 +251,7 @@
             })
         }
 
-        w.addEventListener('mouseover', _applyBookEvents) // TODO: Optimization needed here.
+        w.addEventListener('mouseover', _applyBookEvents)
         w.addEventListener('mouseout', _removeBookEvents)
 
         if (isTouch()) {
@@ -280,6 +280,8 @@
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
         console.log('Out!')
+        console.log(_book.state.eventsCache)
+
     }
 
     const _handleMouseMove = (event) => {
@@ -287,11 +289,11 @@
         _printGeometricalPremise()
         _setUpThePlot(event) // :D
 
-        // console.log(sign(_book.plotter.μ))
+        console.log(sign(_book.plotter.μ))
 
         if (_book.state.isZoomed) node.style = _panAround()
 
-        // if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
+        if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
 
         if (_book.state.isFlipping) _animateFlippablePages() // TODO: Pass animationType here
 
@@ -305,7 +307,7 @@
             case 'DIV':
                 if (_book.state.isZoomed) return
                 _book.state.isFlipping = !_book.state.isFlipping
-                _book.direction = _determineFlippingDirection()
+                _book.state.direction = _determineFlippingDirection()
                 _renderOrUpdateBook()
 
                 _applyTransitionToSpot()
@@ -333,12 +335,12 @@
     const _handleMouseClicks = (event) => {
         switch (event.target.nodeName) {
             case 'A':
-                _book.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
-                _book.state.eventsCache.push([event, _book.direction])
+                _book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
+                _book.state.eventsCache.push([event, _book.state.direction])
                 console.log('click')
                 break
             case 'DIV':
-                // console.log('click')
+                console.log('click')
                 break
             default:
         }
@@ -348,8 +350,8 @@
     const _handleMouseDoubleClick = (event) => {
         switch (event.target.nodeName) {
             case 'A':
-                _book.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
-                _book.state.eventsCache.push([event, _book.direction])
+                _book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
+                _book.state.eventsCache.push([event, _book.state.direction])
                 break
             case 'DIV':
                 _book.state.isZoomed = !_book.state.isZoomed
@@ -361,22 +363,21 @@
 
     /* Don't worry about events below */
     const _handleWheelEvent = (event) => {
-        _book.direction = (event.deltaY < 0) ? 'backward' : 'forward'
-        _book.state.eventsCache.push([event, _book.direction])
-        console.log(_book.direction)
-
+        _book.state.direction = (event.deltaY < 0) ? 'backward' : 'forward'
+        _book.state.eventsCache.push([event, _book.state.direction])
+        console.log(_book.state.direction)
     }
 
     const _handleKeyPressEvent = (event) => {
-        // console.log('pressed', event.keyCode)
+        console.log('pressed', event.keyCode)
     }
 
     const _handleKeyDownEvent = (event) => {
-        // console.log('down', event.keyCode)
+        console.log('down', event.keyCode)
     }
 
     const _handleKeyUpEvent = (event) => {
-        // console.log('up', event.keyCode)
+        console.log('up', event.keyCode)
     }
 
     const _handleTouchStart = (event) => {
@@ -385,11 +386,11 @@
     }
 
     const _handleTouchMove = (event) => {
-        // console.log('Touch moving')
+        console.log('Touch moving')
     }
 
     const _handleTouchEnd = (event) => {
-        // console.log('Touch moving')
+        console.log('Touch moving')
     }
 
     /**********************************/
@@ -430,10 +431,10 @@
 
     const _panAround = () =>
         `transform: scale3d(1.2, 1.2, 1.2)
-								translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
-								backface-visibility: hidden; -webkit-filter: blur(0);
-								will-change: transform;
-								transition: all 10ms;`
+							translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+							backface-visibility: hidden; -webkit-filter: blur(0);
+							will-change: transform;
+							transition: all 10ms;`
 
     /***********************************
      *********** Print2DOM  *************
@@ -489,7 +490,7 @@
 
     const _applyStyles = (pageObj, currentIndex, type) => {
         let cssString = ''
-        switch (_book.mode) {
+        switch (_book.state.mode) {
             case 'portrait':
                 switch (type) {
                     case 'view':
@@ -559,9 +560,9 @@
     }
 
     const _animateFlippablePages = () => {
-        switch (_book.mode) {
+        switch (_book.state.mode) {
             case 'portrait':
-                _book.direction === 'forward' ?
+                _book.state.direction === 'forward' ?
                     d.getElementById(_book.flippablePageIds[0]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;` :
                     d.getElementById(_book.flippablePageIds[0]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${90-_degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;`
                 break
@@ -573,9 +574,9 @@
     }
 
     const _applyTransitionToSpot = () => {
-        switch (_book.mode) {
+        switch (_book.state.mode) {
             case 'portrait':
-                _book.direction === 'forward' ?
+                _book.state.direction === 'forward' ?
                     d.getElementById(_book.flippablePageIds[0]).children[0].style = `rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms;` :
                     d.getElementById(_book.flippablePageIds[0]).children[0].style = `rotateY(${90-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms;`
                 break
@@ -615,10 +616,10 @@
             _removeElementsFromDOMByClassName('arrow-controls')
 
             node.style = `transform: scale3d(1.2, 1.2, 1.2)
-														translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
-														backface-visibility: hidden;
-														transition: all ${_book.settings.duration}ms;
-														will-change: transform;`
+													translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+													backface-visibility: hidden;
+													transition: all ${_book.settings.duration}ms;
+													will-change: transform;`
         } else {
             _printElementsToDOM('buttons', buttons)
             node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
@@ -738,7 +739,7 @@
 
         let [p, q, r, s] = [0]
 
-        switch (_book.mode) {
+        switch (_book.state.mode) {
             case 'portrait':
                 // let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
                 // let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
@@ -778,7 +779,7 @@
         let currentIndex = parseInt(_book.currentPage) - 1
         switch (_book.plotter.side) {
             case 'left':
-                switch (_book.mode) {
+                switch (_book.state.mode) {
                     case 'portrait':
                         return [_book.range.leftPageIndices[1] + 1]
                         break
@@ -788,7 +789,7 @@
                 }
                 break
             case 'right':
-                switch (_book.mode) {
+                switch (_book.state.mode) {
                     case 'portrait':
                         return [_book.currentViewIndices[0] + 1]
                         break
@@ -804,7 +805,7 @@
         let currentIndex = parseInt(_book.currentPage) - 1
         switch (_book.plotter.side) {
             case 'left':
-                switch (_book.mode) {
+                switch (_book.state.mode) {
                     case 'portrait':
                         _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
                         d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
@@ -822,7 +823,7 @@
                 }
                 break
             case 'right':
-                switch (_book.mode) {
+                switch (_book.state.mode) {
                     case 'portrait':
                         _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
                         d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
@@ -908,7 +909,7 @@
     }
 
     /**********************************/
-    /************* Polyfills **********/
+    /************* Polyfill **********/
     /**********************************/
 
     DOMTokenList.prototype.addmany = function(classes) {
@@ -952,7 +953,7 @@
     w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function(callback) { w.setTimeout(callback, 1E3 / 60) })()
 
     /**********************************/
-    /** ********* Exposed API **********/
+    /************ Exposed API *********/
     /**********************************/
 
     class Superbook {
@@ -980,4 +981,4 @@
             }
         }
     }
-}))(navigator, window, document)
+})(navigator, window, document)
