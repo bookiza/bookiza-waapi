@@ -104,28 +104,30 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, manuscript, buttons, settings = { duration: 500, animation: true, peel: true, zoom: true } }) => {
+    const _initializeSuperBook = ({ node, manuscript, buttons, settings = { speed: 500, peel: true, zoom: true } }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
+        _book.settings = settings
         _applyEventListenersOnBook(node)
 
         console.log(_book)
+        // _book.state.isInitialized = true
+        // _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
 
-        _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
-
-        _book.currentPage = _setCurrentPage(settings.startPage)
-        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+        // _book.currentPage = _setCurrentPage(settings.startPage)
+        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        // _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
 
 
-        if (_book.state.isInitialized) _printBookToDOM()
+        // if (_book.state.isInitialized) _printBookToDOM()
+
 
     }
 
     _viewer.onChange('(orientation: landscape)', match => {
         _book.state.mode = match ? 'landscape' : 'portrait'
-        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
-        if (_book.state.isInitialized) _printBookToDOM()
+        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        // _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+        // if (_book.state.isInitialized) _printBookToDOM()
     })
 
     // const _removePage = (index) => {
@@ -259,7 +261,6 @@
                 delegateElement.addEventListener(event, handler)
             })
         }
-        _book.state.isInitialized = true
     }
 
     /****************************************/
@@ -307,7 +308,7 @@
             case 'DIV':
                 if (_book.state.isZoomed) return
                 _book.state.isFlipping = !_book.state.isFlipping
-                _book.state.direction = _determineFlippingDirection()
+                _book.state.direction = _setFlippingDirection()
                 _renderOrUpdateBook()
 
                 _applyTransitionToSpot()
@@ -386,7 +387,7 @@
     }
 
     const _handleTouchMove = (event) => {
-        console.log('Touch moving')
+
     }
 
     const _handleTouchEnd = (event) => {
@@ -397,28 +398,28 @@
     /********** Transition ends *******/
     /**********************************/
 
-    const _whichTransitionEvent = () => {
-        let t
-        const el = d.createElement('fakeelement')
-        const transitions = {
-            'transition': 'transitionend',
-            'OTransition': 'oTransitionEnd',
-            'MozTransition': 'transitionend',
-            'WebkitTransition': 'webkitTransitionEnd'
-        }
+    // const _whichTransitionEvent = () => {
+    //     let t
+    //     const el = d.createElement('fakeelement')
+    //     const transitions = {
+    //         'transition': 'transitionend',
+    //         'OTransition': 'oTransitionEnd',
+    //         'MozTransition': 'transitionend',
+    //         'WebkitTransition': 'webkitTransitionEnd'
+    //     }
 
-        for (t in transitions) {
-            if (el.style[t] !== undefined) {
-                return transitions[t]
-            }
-        }
-    }
+    //     for (t in transitions) {
+    //         if (el.style[t] !== undefined) {
+    //             return transitions[t]
+    //         }
+    //     }
+    // }
 
-    const transitionEvent = _whichTransitionEvent()
+    // const transitionEvent = _whichTransitionEvent()
 
-    transitionEvent && d.addEventListener(transitionEvent, (event) => {
-        console.log(event)
-    })
+    // transitionEvent && d.addEventListener(transitionEvent, (event) => {
+    //     console.log(event)
+    // })
 
     /**********************************/
     /** ******* Behavior methods *******/
@@ -638,7 +639,7 @@
 
     const isOdd = number => Math.abs(number % 2) === 1
 
-    const sign = (x) => typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN
+    const sign = x => typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 1 : NaN : NaN
 
     const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
@@ -660,7 +661,7 @@
         d.getElementById(id).remove()
     }
 
-    const _determineFlippingDirection = () => {
+    const _setFlippingDirection = () => {
         return (_book.plotter.side === 'right') ? 'forward' : 'backward'
     }
 
