@@ -69,7 +69,7 @@ body {
     height: 100%;
     transform: translate3d(0, 0, 0);
     transform-style: preserve-3d;
-    /* Gets faux 3D space for pages */
+    /* Apply faux 3D space for pages */
     backface-visibility: hidden;
 }
 

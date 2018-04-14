@@ -104,30 +104,32 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, manuscript, buttons, settings = { speed: 500, peel: true, zoom: true } }) => {
+    const _initializeSuperBook = ({ node, settings = { speed: 500, peel: true, zoom: true } }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
         _book.settings = settings
         _applyEventListenersOnBook(node)
 
         console.log(_book)
-        // _book.state.isInitialized = true
-        // _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
+    }
 
-        // _book.currentPage = _setCurrentPage(settings.startPage)
-        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        // _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+    const _initializeBookElements = ({ manuscript, buttons }) => {
+        _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
+        _book.state.isInitialized = true
+
+        _book.currentPage = _setCurrentPage(settings.startPage)
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
 
 
-        // if (_book.state.isInitialized) _printBookToDOM()
-
+        if (_book.state.isInitialized) _printBookToDOM()
 
     }
 
     _viewer.onChange('(orientation: landscape)', match => {
         _book.state.mode = match ? 'landscape' : 'portrait'
-        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        // _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
-        // if (_book.state.isInitialized) _printBookToDOM()
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+        if (_book.state.isInitialized) _printBookToDOM()
     })
 
     // const _removePage = (index) => {
@@ -236,7 +238,7 @@
 
     const keyEvents = ['keypress', 'keyup', 'keydown']
 
-    const _applyEventListenersOnBook = (node) => {
+    const _applyEventListenersOnBook = (node, callback) => {
         keyEvents.forEach(event => {
             w.addEventListener(event, handler)
         })
@@ -261,6 +263,8 @@
                 delegateElement.addEventListener(event, handler)
             })
         }
+
+        if (callback && typeof callback === 'function') callback()
     }
 
     /****************************************/
@@ -977,7 +981,9 @@
     if (typeof(w.Flippy) === 'undefined') {
         w.Flippy = {
             init({ node, settings, manuscript, buttons }) {
-                _initializeSuperBook({ node, settings, manuscript, buttons })
+                _initializeSuperBook({ node, settings })
+                _initializeBookElements({ manuscript, buttons })
+
                 return new Superbook()
             }
         }
