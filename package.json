@@ -1,16 +1,18 @@
 {
-  "name": "waapi",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser chrome"
-  },
-  "keywords": [],
-  "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
-  "license": "MIT",
-  "devDependencies": {
-    "browser-sync": "2.23.6"
-  },
-  "dependencies": {}
+    "name": "waapi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser chrome"
+    },
+    "keywords": [],
+    "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
+    "license": "MIT",
+    "devDependencies": {
+        "browser-sync": "2.23.6",
+        "jsdom-quokka-plugin": "1.0.11"
+    },
+    "dependencies": {},
+    "plugins": ["jsdom-quokka-plugin"]
 }

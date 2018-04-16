@@ -106,20 +106,18 @@
 
     const _initializeSuperBook = ({ node, settings = { speed: 500, peel: true, zoom: true } }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
-        _book.settings = settings
+            // _book.settings = settings
         _applyEventListenersOnBook(node)
-
-        console.log(_book)
     }
 
     const _initializeBookElements = ({ manuscript, buttons }) => {
-        _book.pages = manuscript.map((page, currentIndex) => _addPageWrappersAndBaseClasses(page, currentIndex))
+        _book.pages = manuscript.map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+
         _book.state.isInitialized = true
 
         _book.currentPage = _setCurrentPage(settings.startPage)
         _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
         _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
-
 
         if (_book.state.isInitialized) _printBookToDOM()
 
@@ -284,15 +282,15 @@
 
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
-        console.log('Out!')
-        console.log(_book.state.eventsCache)
+        // console.log('Out!')
+        // console.log(_book.state.eventsCache)
 
     }
 
     const _handleMouseMove = (event) => {
         _printStateValues(event)
         _printGeometricalPremise()
-        _setUpThePlot(event) // :D
+        _setUpThePlot(event)
 
         console.log(sign(_book.plotter.μ))
 
@@ -300,7 +298,7 @@
 
         if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
 
-        if (_book.state.isFlipping) _animateFlippablePages() // TODO: Pass animationType here
+        if (_book.state.isFlipping) _animateFlippablePages() // TODO: Consider passing animationType here.
 
     }
 
@@ -313,9 +311,9 @@
                 if (_book.state.isZoomed) return
                 _book.state.isFlipping = !_book.state.isFlipping
                 _book.state.direction = _setFlippingDirection()
-                _renderOrUpdateBook()
+                    // _renderOrUpdateBook()
 
-                _applyTransitionToSpot()
+                // _applyTransitionToSpot()
 
                 break
             default:
@@ -330,7 +328,7 @@
             case 'DIV':
                 if (!_book.state.isZoomed) {
                     _book.state.isFlipping = !_book.state.isFlipping // move this inside transitionEnd callback().
-                    _renderOrUpdateBook()
+                        // _renderOrUpdateBook()
                 }
                 break
             default:
@@ -345,7 +343,7 @@
                 console.log('click')
                 break
             case 'DIV':
-                console.log('click')
+                console.log('click DIV', _setFlippingDirection())
                 break
             default:
         }
@@ -360,7 +358,7 @@
                 break
             case 'DIV':
                 _book.state.isZoomed = !_book.state.isZoomed
-                _renderOrUpdateBook()
+                    // _renderOrUpdateBook()
                 break
             default:
         }
@@ -448,8 +446,6 @@
     // One time DOM printing
     const _printBookToDOM = () => {
         _removeChildren(node)
-
-        // console.log('[ l: ', _book.range.leftPageIndices, ', v:', _book.currentViewIndices, ', r:', _book.range.rightPageIndices, ' ]')
 
         _printElementsToDOM('buttons', buttons)
         _printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
@@ -616,24 +612,24 @@
      *********** DOM/Manipulate **********
      *************************************/
 
-    const _renderOrUpdateBook = () => {
-        if (_book.state.isZoomed) {
-            _removeElementsFromDOMByClassName('arrow-controls')
+    // const _renderOrUpdateBook = () => {
+    //     if (_book.state.isZoomed) {
+    //         _removeElementsFromDOMByClassName('arrow-controls')
 
-            node.style = `transform: scale3d(1.2, 1.2, 1.2)
-													translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
-													backface-visibility: hidden;
-													transition: all ${_book.settings.duration}ms;
-													will-change: transform;`
-        } else {
-            _printElementsToDOM('buttons', buttons)
-            node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
-        }
+    //         node.style = `transform: scale3d(1.2, 1.2, 1.2)
+    // 											translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+    // 											backface-visibility: hidden;
+    // 											transition: all ${_book.settings.duration}ms;
+    // 											will-change: transform;`
+    //     } else {
+    //         _printElementsToDOM('buttons', buttons)
+    //         node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
+    //     }
 
-        if (_book.state.isFlipping) {
-            _sampleOnlyDisplayablePages()
-        }
-    }
+    //     if (_book.state.isFlipping) {
+    //         _sampleOnlyDisplayablePages()
+    //     }
+    // }
 
     /**********************************/
     /********** Helper methods ********/
@@ -647,9 +643,9 @@
 
     const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
-    const _leftCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
+    const _leftCircularIndex = (currentIndex, index) => (parseInt(currentIndex) - parseInt(index) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(index)) : (parseInt(currentIndex) - parseInt(index))
 
-    const _rightCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
+    const _rightCircularIndex = (currentIndex, index) => (parseInt(currentIndex) + parseInt(index) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(index)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(index))
 
     const _radians = degrees => degrees / 180 * π
 
@@ -661,12 +657,13 @@
         node.getElementsByClassName(className).remove()
     }
 
-    const _removeElementFromDOMById = (id) => {
-        d.getElementById(id).remove()
-    }
+    const _removeElementFromDOMById = (id) => { d.getElementById(id).remove() }
 
-    const _setFlippingDirection = () => {
-        return (_book.plotter.side === 'right') ? 'forward' : 'backward'
+    const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
+
+
+    const _waapi = () => {
+        animate(keyframes, options)
     }
 
     const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {

@@ -10,7 +10,7 @@ const manuscript = [...node.children]
 
 const buttons = manuscript.splice(0, 2)
 
-const settings = { speed: 600, peel: true, zoom: true, startPage: 9 }
+const settings = { speed: 600, peel: true, zoom: true, startPage: 6 }
 
 const superbook = Flippy.init({ node, settings, manuscript, buttons })
 
