@@ -28,7 +28,7 @@
                         "y": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}`
                     }
                 }
-                this.printable = []
+                this.frames = new WeakMap([])
             }
             // PROPERTIES
         dimensions() {
@@ -36,11 +36,11 @@
         }
 
         view() {
-            return _book.printable.currentViewIndices.map(i => i + 1) // Array of page numbers in the [View].
+            return _book.frames.currentViewIndices.map(i => i + 1) // Array of page numbers in the [View].
         }
 
         page() {
-            return _book.printable.currentPage
+            return _book.frames.currentPage
         }
 
         getLength() {
@@ -116,7 +116,9 @@
 
     const _initializeSuperBook = ({ node, settings = { speed: 500, peel: true, zoom: true }, manuscript, buttons }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
-        _applyEventListenersOnBook(node, _initializeBookElements({ manuscript, buttons}))
+        _book.settings = settings
+        _applyEventListenersOnBook(node, _initializeBookElements(manuscript))
+        
         _book.state.isInitialized = true 
 
         _calculateIndices(settings.startPage)
@@ -125,8 +127,8 @@
 
     _viewer.onChange('(orientation: landscape)', match => {
         _book.state.mode = match ? 'landscape' : 'portrait'
-        _calculateIndices(_book.printable.currentPage)
 
+        _calculateIndices(_book.frames.currentPage)
     })
 
     // const _removePage = (index) => {
@@ -293,11 +295,11 @@
 
         // console.log(sign(_book.plotter.μ))
 
-        // if (_book.state.isZoomed) node.style = _panAround()
+        if (_book.state.isZoomed) node.style = _panAround()
 
-        // if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
+        if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
 
-        // if (_book.state.isFlipping) _animateFlippablePages() // TODO: Consider passing animationType here.
+        if (_book.state.isFlipping) _animateFlippablePages() // TODO: Consider passing animationType here.
 
     }
 
@@ -310,9 +312,9 @@
                 if (_book.state.isZoomed) return
                 _book.state.isFlipping = !_book.state.isFlipping
                 _book.state.direction = _setFlippingDirection()
-                    // _renderOrUpdateBook()
+                _renderOrUpdateBook()
 
-                // _applyTransitionToSpot()
+                _applyTransitionToSpot()
 
                 break
             default:
@@ -337,7 +339,7 @@
                 _book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
                 _book.state.eventsCache.push([event, _book.state.direction])
             
-                if (_book.state.direction === 'forward') { _calculateIndices(_book.printable.currentPage += _stepper(_book.state.mode)) } else {  _calculateIndices(_book.printable.currentPage -= _stepper(_book.state.mode)) }
+                if (_book.state.direction === 'forward') { _calculateIndices(_book.frames.currentPage += _stepper(_book.state.mode)) } else {  _calculateIndices(_book.frames.currentPage -= _stepper(_book.state.mode)) }
 
                 
                 break
@@ -405,9 +407,9 @@
         _removeChildren(node)
 
         _printElementsToDOM('buttons', buttons)
-        _printElementsToDOM('view', _book.printable.currentViewIndices.map(index => _book.pages[`${index}`]))
-        _printElementsToDOM('rightPages', _book.printable.range.rightPageIndices.map(index => _book.pages[`${index}`]))
-        _printElementsToDOM('leftPages', _book.printable.range.leftPageIndices.map(index => _book.pages[`${index}`]))
+        _printElementsToDOM('view', _book.frames.currentViewIndices.map(index => _book.pages[`${index}`]))
+        _printElementsToDOM('rightPages', _book.frames.range.rightPageIndices.map(index => _book.pages[`${index}`]))
+        _printElementsToDOM('leftPages', _book.frames.range.leftPageIndices.map(index => _book.pages[`${index}`]))
     }
 
     const _printElementsToDOM = (type, elements) => {
@@ -569,24 +571,24 @@
      *********** DOM/Manipulate **********
      *************************************/
 
-    // const _renderOrUpdateBook = () => {
-    //     if (_book.state.isZoomed) {
-    //         _removeElementsFromDOMByClassName('arrow-controls')
+    const _renderOrUpdateBook = () => {
+        if (_book.state.isZoomed) {
+            _removeElementsFromDOMByClassName('arrow-controls')
 
-    //         node.style = `transform: scale3d(1.2, 1.2, 1.2)
-    // 											translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
-    // 											backface-visibility: hidden;
-    // 											transition: all ${_book.settings.duration}ms;
-    // 											will-change: transform;`
-    //     } else {
-    //         _printElementsToDOM('buttons', buttons)
-    //         node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
-    //     }
+            node.style = `transform: scale3d(1.2, 1.2, 1.2)
+    											translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+    											backface-visibility: hidden;
+    											transition: all ${_book.settings.duration}ms;
+    											will-change: transform;`
+        } else {
+            _printElementsToDOM('buttons', buttons)
+            node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
+        }
 
-    //     if (_book.state.isFlipping) {
-    //         _sampleOnlyDisplayablePages()
-    //     }
-    // }
+        if (_book.state.isFlipping) {
+            _sampleOnlyDisplayablePages()
+        }
+    }
 
     /**********************************/
     /********** Transition ends *******/
@@ -647,14 +649,28 @@
     const _stepper = (mode) => (mode === 'portrait') ? 1 : 2 
 
     const _waapi = () => {
-        animate(keyframes, options)
+        animate(_keyframes, _options)
     }
 
-    const keyframes = () => {[]}
+    const _keyframes = () => {
+        [
+            { 
+              transform: 'translateY(-1000px) scaleY(2.5) scaleX(.2)', 
+              transformOrigin: '50% 0', filter: 'blur(40px)', opacity: 0 
+            },
+            { 
+              transform: 'translateY(0) scaleY(1) scaleX(1)',
+              transformOrigin: '50% 50%'
+            }
+        ]
 
-    const options = () => {}
+    }
 
-    const _initializeBookElements = ({ manuscript, buttons}) => {
+    const _options = () => {}
+
+    const _bezierCurve = () => {}
+
+    const _initializeBookElements = (manuscript) => {
         _book.pages = manuscript.map((page, index) => _addPageWrappersAndBaseClasses(page, index))
     } 
 
@@ -681,11 +697,11 @@
     }
 
     const _calculateIndices = (currentIndex) => {
-        _book.printable.currentPage = _setCurrentPage(currentIndex)
-        _book.printable.currentViewIndices = _setViewIndices(_book.printable.currentPage, _book.state.mode)
-        _book.printable.range = _setRangeIndices(_book.printable.currentPage, _book.state.mode)
+        _book.frames.currentPage = _setCurrentPage(currentIndex)
+        _book.frames.currentViewIndices = _setViewIndices(_book.frames.currentPage, _book.state.mode)
+        _book.frames.range = _setRangeIndices(_book.frames.currentPage, _book.state.mode)
 
-        // console.log(_book.printable)
+        console.log(_book)
         if (_book.state.isInitialized) _printBookToDOM()
 
     }
@@ -780,7 +796,7 @@
         return { 'leftPageIndices': [p, q], 'rightPageIndices': [r, s] }
     }
 
-    const pinchZoomFingerDistance = (event) => 
+    const _pinchZoomFingerDistance = (event) => 
     							Math.sqrt(
     									(event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
     									(event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
@@ -795,25 +811,25 @@
 
 
     const _determineFlippablePageIds = () => {
-        let currentIndex = parseInt(_book.printable.currentPage) - 1
+        let currentIndex = parseInt(_book.frames.currentPage) - 1
         switch (_book.plotter.side) {
             case 'left':
                 switch (_book.state.mode) {
                     case 'portrait':
-                        return [_book.printable.range.leftPageIndices[1] + 1]
+                        return [_book.frames.range.leftPageIndices[1] + 1]
                         break
                     case 'landscape':
-                        return [_book.printable.range.leftPageIndices[1] + 1, _book.printable.currentViewIndices[0] + 1]
+                        return [_book.frames.range.leftPageIndices[1] + 1, _book.frames.currentViewIndices[0] + 1]
                         break
                 }
                 break
             case 'right':
                 switch (_book.state.mode) {
                     case 'portrait':
-                        return [_book.printable.currentViewIndices[0] + 1]
+                        return [_book.frames.currentViewIndices[0] + 1]
                         break
                     case 'landscape':
-                        return [_book.printable.currentViewIndices[1] + 1, _book.printable.range.rightPageIndices[0] + 1]
+                        return [_book.frames.currentViewIndices[1] + 1, _book.frames.range.rightPageIndices[0] + 1]
                         break
                 }
                 break
@@ -821,21 +837,21 @@
     }
 
     const _sampleOnlyDisplayablePages = () => {
-        let currentIndex = parseInt(_book.printable.currentPage) - 1
+        let currentIndex = parseInt(_book.frames.currentPage) - 1
         switch (_book.plotter.side) {
             case 'left':
                 switch (_book.state.mode) {
                     case 'portrait':
-                        _removeElementFromDOMById(_book.printable.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
-                        d.getElementById(_book.printable.range.leftPageIndices[1] + 1).style.zIndex = 3
-                        d.getElementById(_book.printable.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+                        _removeElementFromDOMById(_book.frames.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
+                        d.getElementById(_book.frames.range.leftPageIndices[1] + 1).style.zIndex = 3
+                        d.getElementById(_book.frames.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
                         break
                     case 'landscape':
-                        _book.printable.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
-                        d.getElementById(_book.printable.currentViewIndices[1] + 1).style.zIndex = 1
-                        d.getElementById(_book.printable.range.leftPageIndices[1] + 1).style.zIndex = 4
-                        d.getElementById(_book.printable.range.leftPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-                        d.getElementById(_book.printable.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+                        _book.frames.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+                        d.getElementById(_book.frames.currentViewIndices[1] + 1).style.zIndex = 1
+                        d.getElementById(_book.frames.range.leftPageIndices[1] + 1).style.zIndex = 4
+                        d.getElementById(_book.frames.range.leftPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+                        d.getElementById(_book.frames.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
                         break
                     default:
                         break
@@ -844,15 +860,15 @@
             case 'right':
                 switch (_book.state.mode) {
                     case 'portrait':
-                        _removeElementFromDOMById(_book.printable.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-                        d.getElementById(_book.printable.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+                        _removeElementFromDOMById(_book.frames.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
+                        d.getElementById(_book.frames.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
                         break
                     case 'landscape':
-                        _book.printable.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
-                        d.getElementById(_book.printable.currentViewIndices[0] + 1).style.zIndex = 1
-                        d.getElementById(_book.printable.range.rightPageIndices[0] + 1).style.zIndex = 4
-                        d.getElementById(_book.printable.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-                        d.getElementById(_book.printable.range.rightPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+                        _book.frames.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+                        d.getElementById(_book.frames.currentViewIndices[0] + 1).style.zIndex = 1
+                        d.getElementById(_book.frames.range.rightPageIndices[0] + 1).style.zIndex = 4
+                        d.getElementById(_book.frames.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+                        d.getElementById(_book.frames.range.rightPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
                         break
                 }
                 break
@@ -876,8 +892,6 @@
     // const λ = (angle) => {
 
     // }
-
-    const _bezierCurve = () => {}
 
     const _setUpThePlot = (event) => {
         _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
