@@ -12,15 +12,16 @@
 
     class Book {
         constructor() {
-                this.state = { 
-                    'isInitialized': false, 
-                    'direction': 'forward', 
-                    'isFlipping': false, 
-                    'isPeelable': false, 
-                    'isZoomed': false, 
-                    'isPeeled': false, 
-                    'eventsCache': [], 
-                    'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait' 
+                this.state = {
+                    'isInitialized': false,
+                    'direction': 'forward',
+                    'isFlipping': false,
+                    'isPeelable': false,
+                    'isZoomed': false,
+                    'isPeeled': false,
+                    'toFlipOrNotToFlip': false,
+                    'eventsCache': [],
+                    'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
                 }
                 this.plotter = {
                     'origin': {
@@ -114,12 +115,12 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, settings = { speed: 500, peel: true, zoom: true }, manuscript, buttons }) => {
+    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true }, manuscript, buttons }) => {
         _book.plotter.bounds = _setGeometricalPremise(node)
         _book.settings = settings
         _applyEventListenersOnBook(node, _initializeBookElements(manuscript))
-        
-        _book.state.isInitialized = true 
+
+        _book.state.isInitialized = true
 
         _calculateIndices(settings.startPage)
 
@@ -338,10 +339,10 @@
             case 'A':
                 _book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
                 _book.state.eventsCache.push([event, _book.state.direction])
-            
-                if (_book.state.direction === 'forward') { _calculateIndices(_book.frames.currentPage += _stepper(_book.state.mode)) } else {  _calculateIndices(_book.frames.currentPage -= _stepper(_book.state.mode)) }
+                _book.state.toFlipOrNotToFlip = true
 
-                
+                let nextStep = (_book.state.direction === 'forward') ? `${_book.frames.currentPage += _stepper(_book.state.mode)}` : `${_book.frames.currentPage -= _stepper(_book.state.mode)}`
+                _calculateIndices(nextStep)
                 break
             case 'DIV':
                 console.log('click DIV', _setFlippingDirection())
@@ -359,7 +360,7 @@
                 break
             case 'DIV':
                 _book.state.isZoomed = !_book.state.isZoomed
-                    // _renderOrUpdateBook()
+                _renderOrUpdateBook()
                 break
             default:
         }
@@ -616,7 +617,7 @@
     // transitionEvent && d.addEventListener(transitionEvent, (event) => {
     //     console.log(event)
     // })
-    
+
 
     /**********************************/
     /********** Helper methods ********/
@@ -646,33 +647,52 @@
 
     const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
-    const _stepper = (mode) => (mode === 'portrait') ? 1 : 2 
+    const _stepper = (mode) => (mode === 'portrait') ? 1 : 2
 
     const _waapi = () => {
         animate(_keyframes, _options)
     }
 
     const _keyframes = () => {
-        [
-            { 
-              transform: 'translateY(-1000px) scaleY(2.5) scaleX(.2)', 
-              transformOrigin: '50% 0', filter: 'blur(40px)', opacity: 0 
+        [{
+                transform: 'translateY(-1000px) scaleY(2.5) scaleX(.2)',
+                transformOrigin: '50% 0',
+                filter: 'blur(40px)',
+                opacity: 0
             },
-            { 
-              transform: 'translateY(0) scaleY(1) scaleX(1)',
-              transformOrigin: '50% 50%'
+            {
+                transform: 'translateY(0) scaleY(1) scaleX(1)',
+                transformOrigin: '50% 50%'
             }
         ]
 
     }
 
-    const _options = () => {}
+    const _options = ({ duration, bezierCurvature, direction }) => {
+        [{
+            duration: settings.duration,
+            easing: 'ease-in-out',
+            iterations: 1,
+            direction: 'alternate',
+            fill: 'forwards'
+        }]
+    }
 
-    const _bezierCurve = () => {}
+    const _bezierCurvature = () => {}
+
+    const _calculateIndices = (currentIndex) => {
+        _book.frames.currentPage = _setCurrentPage(currentIndex)
+        _book.frames.currentViewIndices = _setViewIndices(_book.frames.currentPage, _book.state.mode)
+        _book.frames.range = _setRangeIndices(_book.frames.currentPage, _book.state.mode)
+
+        console.log(_book)
+        if (_book.state.isInitialized) _printBookToDOM()
+
+    }
 
     const _initializeBookElements = (manuscript) => {
         _book.pages = manuscript.map((page, index) => _addPageWrappersAndBaseClasses(page, index))
-    } 
+    }
 
     const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
         _removeClassesFromElem(pageObj, 'page')
@@ -695,17 +715,6 @@
         newWrapper.appendChild(pageObj)
         return newWrapper
     }
-
-    const _calculateIndices = (currentIndex) => {
-        _book.frames.currentPage = _setCurrentPage(currentIndex)
-        _book.frames.currentViewIndices = _setViewIndices(_book.frames.currentPage, _book.state.mode)
-        _book.frames.range = _setRangeIndices(_book.frames.currentPage, _book.state.mode)
-
-        console.log(_book)
-        if (_book.state.isInitialized) _printBookToDOM()
-
-    }
-    
 
     const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
@@ -796,10 +805,10 @@
         return { 'leftPageIndices': [p, q], 'rightPageIndices': [r, s] }
     }
 
-    const _pinchZoomFingerDistance = (event) => 
-    							Math.sqrt(
-    									(event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
-    									(event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
+    const _pinchZoomFingerDistance = (event) =>
+        Math.sqrt(
+            (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
+            (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
 
     const _panAround = () =>
         `transform: scale3d(1.2, 1.2, 1.2)
