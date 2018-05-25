@@ -4,14 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --browser chrome"
+        "start": "browser-sync start --server --files '**/*.css, **/*.html, **/*.js, !node_modules/**/*' --directory --port 7777 --blacklist 'renders/*' "
     },
     "keywords": [],
     "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
     "license": "MIT",
     "devDependencies": {
-        "browser-sync": "2.23.6",
-        "jsdom-quokka-plugin": "1.0.11"
+        "browser-sync": "2.24.4",
+        "jsdom-quokka-plugin": "1.0.13"
     },
     "dependencies": {},
     "plugins": [
