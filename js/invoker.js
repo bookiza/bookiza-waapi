@@ -3,16 +3,11 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-
 const node = document.getElementById('book')
 
-const manuscript = [...node.children]
+const settings = { duration: 600, peel: true, zoom: true, startPage: 16 }
 
-const buttons = manuscript.splice(0, 2)
-
-const settings = { duration: 600, peel: true, zoom: true, startPage: 6 }
-
-const superbook = Flippy.init({ node, settings, manuscript, buttons })
+const superbook = Bookiza.init({ node, settings })
 
 /**********************************/
 /******** Work in progress ********/

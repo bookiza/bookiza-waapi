@@ -115,10 +115,16 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true }, manuscript, buttons }) => {
+    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true } }) => {
+
+        _book.manuscript = [...node.children]
+
+        _book.buttons = _book.manuscript.splice(0, 2)
+
         _book.plotter.bounds = _setGeometricalPremise(node)
+
         _book.settings = settings
-        _applyEventListenersOnBook(node, _initializeBookElements(manuscript))
+        _applyEventListenersOnBook(node, _initializeBookElements(_book.manuscript))
 
         _book.state.isInitialized = true
 
@@ -268,7 +274,7 @@
     }
 
     /****************************************/
-    /** ********** Event handlers ************/
+    /************* Event handlers ************/
     /****************************************/
 
     const _handleMouseOver = (event) => {
@@ -284,8 +290,8 @@
 
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
-        // console.log('Out!')
-        // console.log(_book.state.eventsCache)
+        console.log('Out!')
+        console.log(_book.state.eventsCache)
 
     }
 
@@ -370,6 +376,11 @@
     const _handleWheelEvent = (event) => {
         _book.state.direction = (event.deltaY < 0) ? 'backward' : 'forward'
         _book.state.eventsCache.push([event, _book.state.direction])
+            /* @set state isFlipping = true
+             * Call the turning method only when isFlipping is false
+             * In the new method check if eventsCache method has an event element.
+             * Pop it, execute page turn for
+             */
         console.log(_book.state.direction)
     }
 
@@ -407,7 +418,7 @@
     const _printBookToDOM = () => {
         _removeChildren(node)
 
-        _printElementsToDOM('buttons', buttons)
+        _printElementsToDOM('buttons', _book.buttons)
         _printElementsToDOM('view', _book.frames.currentViewIndices.map(index => _book.pages[`${index}`]))
         _printElementsToDOM('rightPages', _book.frames.range.rightPageIndices.map(index => _book.pages[`${index}`]))
         _printElementsToDOM('leftPages', _book.frames.range.leftPageIndices.map(index => _book.pages[`${index}`]))
@@ -1015,11 +1026,10 @@
     }
 
     // Putting Superbook object in global namespace.
-    if (typeof(w.Flippy) === 'undefined') {
-        w.Flippy = {
-            init({ node, settings, manuscript, buttons }) {
-                _initializeSuperBook({ node, settings, manuscript, buttons })
-
+    if (typeof(w.Bookiza) === 'undefined') {
+        w.Bookiza = {
+            init({ node, settings }) {
+                _initializeSuperBook({ node, settings })
                 return new Superbook()
             }
         }
