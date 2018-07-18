@@ -115,7 +115,7 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true, startPage: 1 } }) => {
+    const _initializeSuperBook = ({ node, settings = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {
 
         _book.manuscript = [...node.children]
 
@@ -124,7 +124,7 @@
         _book.plotter.bounds = _setGeometricalPremise(node)
 
         _book.settings = settings
-        
+
         _applyEventListenersOnBook(node, _initializeBookElements(_book.manuscript))
 
         _book.state.isInitialized = true
@@ -291,8 +291,7 @@
 
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
-        console.log('Out!')
-        console.log(_book.state.eventsCache)
+        // console.log(_book.state.eventsCache)
 
     }
 
