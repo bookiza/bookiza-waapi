@@ -5,7 +5,7 @@
 
 const node = document.getElementById('book')
 
-const settings = { duration: 600, peel: true, zoom: true, startPage: 9 }
+const settings = { duration: 600, peel: true, zoom: true, startPage: 13 }
 
 const superbook = Bookiza.init({ node, settings })
 

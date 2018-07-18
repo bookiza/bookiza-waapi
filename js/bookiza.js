@@ -115,7 +115,7 @@
 
     let _book = new Book()
 
-    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true } }) => {
+    const _initializeSuperBook = ({ node, settings = { duration: 500, peel: true, zoom: true, startPage: 1 } }) => {
 
         _book.manuscript = [...node.children]
 
@@ -124,6 +124,7 @@
         _book.plotter.bounds = _setGeometricalPremise(node)
 
         _book.settings = settings
+        
         _applyEventListenersOnBook(node, _initializeBookElements(_book.manuscript))
 
         _book.state.isInitialized = true
@@ -696,7 +697,6 @@
         _book.frames.currentViewIndices = _setViewIndices(_book.frames.currentPage, _book.state.mode)
         _book.frames.range = _setRangeIndices(_book.frames.currentPage, _book.state.mode)
 
-        console.log(_book)
         if (_book.state.isInitialized) _printBookToDOM()
 
     }
@@ -1034,4 +1034,6 @@
             }
         }
     }
+
+
 })(navigator, window, document)
