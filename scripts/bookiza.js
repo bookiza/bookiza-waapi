@@ -35,7 +35,11 @@
 
         view() {
             return _book.currentViewIndices.map(i => i + 1) // Array of page numbers in the [View].
-        }
+		}
+		
+		range() {
+			return _book.range
+		}
 
         page() {
             return _book.currentPage
@@ -49,6 +53,11 @@
             return _book.state.mode
         }
 	}
+
+
+	/************************************
+     ******** Geometry listeners ********
+     ************************************/
 
 	const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
@@ -409,8 +418,6 @@
         d.getElementById('xaxis').textContent = _book.plotter.μ
         d.getElementById('yaxis').textContent = _book.plotter.ε
     }
-
-
 
 	const _viewer = {
         getMatch(query, usePolyfill) {

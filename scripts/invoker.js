@@ -8,4 +8,6 @@ console.log(superbook.execute('length'))
 
 console.log(superbook.execute('view'))
 
+// console.log(superbook.execute('range'))
+
 console.log(superbook.execute('mode'))
