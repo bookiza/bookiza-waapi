@@ -2,22 +2,27 @@
     /************************************
      ************* Public API ***********
      ***********************************/
-
     class Book {
         constructor() {
 				this.node = d.getElementById('book')
 				this.delegator = d.getElementById('plotter')
+				this.test = d.getElementById('test')
                 this.state = {
                     'isInitialized': false,
                     'direction': 'forward',
-                    'isFlipping': false,
+                    'isTurning': false,
                     'isPeelable': false,
                     'isZoomed': false,
                     'isPeeled': false,
                     'toTurnOrNotToTurn': false,
                     'eventsCache': [],
                     'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
-                }
+				}
+				/* @plotter.origin is set at the center of the viewport,
+				*  thus splitting the screen into four quadrants instead
+				*  of the default IV-quadrant referencing used in
+				*  scroll animation mechanics.
+				*/
                 this.plotter = {
                     'origin': {
                         "x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -25,8 +30,8 @@
                     }
 				}
 				this.plotter.bounds = _setGeometricalPremise(this.node)
-				this.pages = [...this.node.children] // Or source it via http request.
-				this.buttons = this.pages.splice(0, 2)	
+				this.pages = [...this.node.children] // Or source it via http request. Or construct via React/JSX like template transformation.
+				this.buttons = this.pages.splice(0, 2)
             }
             // PROPERTIES
         dimensions() {
@@ -35,10 +40,6 @@
 
         view() {
             return _book.currentViewIndices.map(i => i + 1) // Array of page numbers in the [View].
-		}
-		
-		range() {
-			return _book.range
 		}
 
         page() {
@@ -75,11 +76,12 @@
     w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
 	/************************************
-     ************* One time init ********
+     *********** One time init **********
      ************************************/
 
-	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {        
-		
+	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {
+		_removeChildren(_book.node)
+
 		_applyEventListenersOnBook(_calculateIndices(options.startPage))
 
 	}
@@ -181,7 +183,8 @@
 
     const _handleMouseOver = (event) => {
         switch (event.target.nodeName) {
-            case 'A':
+			case 'A':
+				console.log('On anchor')
                 break
             case 'DIV':
                 break
@@ -197,16 +200,16 @@
 
     const _handleMouseMove = (event) => {
 		_updateGeometricalPlotValues(event)
-
     }
 
     const _handleMouseDown = (event) => {
         switch (event.target.nodeName) {
             case 'A':
-                // console.log('Execute half flip')
+                console.log('Execute half curl over')
                 break
             case 'DIV':
 				// console.log('Page picked, execute curl')
+				// console.log('down', event.pageX)
                 break
             default:
         }
@@ -217,7 +220,8 @@
             case 'A':
                 console.log('Complete the flip')
                 break
-            case 'DIV':
+			case 'DIV':
+				// console.log('up', event.pageX)
                 break
             default:
         }
@@ -225,10 +229,13 @@
 
     const _handleMouseClicks = (event) => {
         switch (event.target.nodeName) {
-            case 'A':
+			case 'A':
+
                 break
 			case 'DIV':
-				console.log(_book.plotter)
+				let animation = _book.test.animate(keyframes, options)
+
+				animation.onfinish = function(event){ _book.test.remove() }
                 break
             default:
         }
@@ -269,12 +276,23 @@
     }
 
     const _handleTouchMove = (event) => {
-
+		_updateGeometricalPlotValues(event)
     }
 
     const _handleTouchEnd = (event) => {
         console.log('Touch moving')
     }
+
+    /**********************************/
+    /******** Animation methods *******/
+    /**********************************/
+
+
+	const keyframes = [  {transform: 'translateX(0)'}, { transform: 'translateX(calc(100vw - 100px))' }  ]
+
+	const options = { duration: 600, fill: 'forwards', easing: 'ease-out' }
+
+
 
     /**********************************/
     /********** Helper methods ********/
@@ -298,19 +316,23 @@
 
     const _radians = degrees => degrees / 180 * π
 
-    const _degrees = radians => radians / π * 180
+	const _degrees = radians => radians / π * 180
+
+	const Δ = (displacement) => {} // Displacement on mousedown + mousemove/touchstart + touchmove
+
+    const λ = (angle) => {}  // Cone angle
 
 
     const _calculateIndices = (currentIndex) => {
 
 		_book.currentPage = _setCurrentPage(currentIndex)
         _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
 
 	}
 
 	const _setCurrentPage = startPage => (startPage === undefined) ? 1 : (parseInt(startPage) > 0 && parseInt(startPage) < parseInt(_book.pages.length)) ? parseInt(startPage) % parseInt(_book.pages.length) : (parseInt(startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(startPage) % parseInt(_book.pages.length) : parseInt(startPage) % parseInt(_book.pages.length) // Cyclic array
-	
+
 
 	const _setViewIndices = (currentPage = 1, mode) => {
         let currentIndex = parseInt(currentPage) - 1
@@ -384,7 +406,7 @@
         return { 'leftPageIndices': [p, q], 'rightPageIndices': [r, s] }
     }
 
-
+	const _removeChildren = node => { node.innerHTML = '' }
 
     const _updateGeometricalPlotValues = (event) => {
         _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
@@ -395,10 +417,10 @@
         _book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x) // x-coord from origin.
 		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y) // y-coord from origin.
 
-		_printCursorPosition(event)
+		console.log(sign(_book.plotter.μ))
 
-		_printGeometricalPremise()
-
+		_printCursorPosition(event) // delete this method call alongwith its function
+		_printGeometricalPremise() // delete this method call alongwith its function
 
     }
 
@@ -410,9 +432,10 @@
         d.getElementById('pleft').textContent = _book.plotter.bounds.left
         d.getElementById('pright').textContent = _book.plotter.bounds.right
         d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-        // d.getElementById('originX').textContent = _book.plotter.origin.x
-        // d.getElementById('originY').textContent = _book.plotter.origin.y
-    }
+        d.getElementById('originX').textContent = _book.plotter.origin.x
+        d.getElementById('originY').textContent = _book.plotter.origin.y
+	}
+
  	/* this function can be erased upon release */
     const _printCursorPosition = (event) => {
         d.getElementById('xaxis').textContent = _book.plotter.μ
@@ -447,7 +470,6 @@
     _viewer.onChange('(orientation: landscape)', match => {
         _book.state.mode = match ? 'landscape' : 'portrait'
     })
-
 
 	let _book = new Book()
 
