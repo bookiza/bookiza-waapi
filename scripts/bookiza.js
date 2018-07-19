@@ -5,7 +5,8 @@
 
     class Book {
         constructor() {
-			    this.node = d.getElementById('book')
+				this.node = d.getElementById('book')
+				this.delegator = d.getElementById('plotter')
                 this.state = {
                     'isInitialized': false,
                     'direction': 'forward',
@@ -13,7 +14,7 @@
                     'isPeelable': false,
                     'isZoomed': false,
                     'isPeeled': false,
-                    'toFlipOrNotToFlip': false,
+                    'toTurnOrNotToTurn': false,
                     'eventsCache': [],
                     'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
                 }
@@ -67,9 +68,6 @@
 		_applyEventListenersOnBook( _calculateIndices(options.startPage) )
 
 	}
-
-
-    const delegateElement = d.getElementById('plotter')
 
     const handler = (event) => {
         if (!event.target) return
@@ -139,13 +137,13 @@
 
         const _applyBookEvents = () => {
             mouseEvents.map(event => {
-                delegateElement.addEventListener(event, handler)
+                _book.delegator.addEventListener(event, handler)
             })
         }
 
         const _removeBookEvents = () => {
             mouseEvents.map(event => {
-                delegateElement.removeEventListener(event, handler)
+                _book.delegator.removeEventListener(event, handler)
             })
         }
 
@@ -155,7 +153,7 @@
 		/* Touch capability is used only to apply eventListeners pertaining to touch.  */
         if (isTouch()) {
             touchEvents.map(event => {
-                delegateElement.addEventListener(event, handler)
+                _book.delegator.addEventListener(event, handler)
             })
         }
 
@@ -163,7 +161,7 @@
     }
 
     /****************************************/
-    /************* Event handlers ************/
+    /************* Event handlers ***********/
     /****************************************/
 
     const _handleMouseOver = (event) => {
@@ -179,15 +177,12 @@
 
     const _handleMouseOut = (event) => {
         // TODO: This is where we calculate range pages according to QI-QIV.
-        // console.log(_book.state.eventsCache)
 
     }
 
     const _handleMouseMove = (event) => {
+		_updateGeometricalPlotValues(event)
 
-		_printCursorPosition(event)
-
-		_printGeometricalPremise()
     }
 
     const _handleMouseDown = (event) => {
@@ -217,7 +212,8 @@
         switch (event.target.nodeName) {
             case 'A':
                 break
-            case 'DIV':
+			case 'DIV':
+				console.log(_book.plotter)
                 break
             default:
         }
@@ -278,6 +274,23 @@
 
 	}
 
+    const _updateGeometricalPlotValues = (event) => {
+        _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
+        _book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
+        _book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
+        _book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${_book.plotter.origin.y - event.pageY}" }`)
+        _book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
+        _book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x) // x-coord from origin.
+		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y) // y-coord from origin.
+
+		_printCursorPosition(event)
+
+		_printGeometricalPremise()
+
+
+    }
+
+
     const _printGeometricalPremise = () => {
         d.getElementById('pwidth').textContent = _book.plotter.bounds.width
         d.getElementById('pheight').textContent = _book.plotter.bounds.height
@@ -285,13 +298,13 @@
         d.getElementById('pleft').textContent = _book.plotter.bounds.left
         d.getElementById('pright').textContent = _book.plotter.bounds.right
         d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-        d.getElementById('originX').textContent = _book.plotter.origin.x
-        d.getElementById('originY').textContent = _book.plotter.origin.y
+        // d.getElementById('originX').textContent = _book.plotter.origin.x
+        // d.getElementById('originY').textContent = _book.plotter.origin.y
     }
 
     const _printCursorPosition = (event) => {
-        d.getElementById('xaxis').textContent = event.pageX
-        d.getElementById('yaxis').textContent = event.pageY
+        d.getElementById('xaxis').textContent = _book.plotter.μ
+        d.getElementById('yaxis').textContent = _book.plotter.ε
     }
 
 
