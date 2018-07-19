@@ -1,5 +1,5 @@
 ((n, w, d) => {
-    /***********************************
+    /************************************
      ************* Public API ***********
      ***********************************/
 
@@ -25,6 +25,8 @@
                     }
 				}
 				this.plotter.bounds = _setGeometricalPremise(this.node)
+				this.pages = [...this.node.children] // Or source it via http request.
+				this.buttons = this.pages.splice(0, 2)	
             }
             // PROPERTIES
         dimensions() {
@@ -52,7 +54,7 @@
 
     const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(_book.node) }
 
-    w.addEventListener('resize', _resetGeometricalPremise) // Re-calibrate geometrical premise.
+    w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise.
 
     const _setGeometricalOrigin = () => ({
         "x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -63,9 +65,13 @@
 
     w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
-	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {
+	/************************************
+     ************* One time init ********
+     ************************************/
 
-		_applyEventListenersOnBook( _calculateIndices(options.startPage) )
+	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {        
+		
+		_applyEventListenersOnBook(_calculateIndices(options.startPage))
 
 	}
 
@@ -157,7 +163,7 @@
             })
         }
 
-        // if (callback && typeof callback === 'function') callback()
+        if (callback && typeof callback === 'function') callback()
     }
 
     /****************************************/
@@ -261,18 +267,115 @@
         console.log('Touch moving')
     }
 
-	/* Helper methods here */
+    /**********************************/
+    /********** Helper methods ********/
+    /**********************************/
 
 	const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
+    const isEven = number => number === parseFloat(number) ? !(number % 2) : void 0
+
+    const isOdd = number => Math.abs(number % 2) === 1
+
+	const sign = x => typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 1 : NaN : NaN
+
+    const _leftCircularIndex = (currentIndex, index) => (parseInt(currentIndex) - parseInt(index) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(index)) : (parseInt(currentIndex) - parseInt(index))
+
+	const _rightCircularIndex = (currentIndex, index) => (parseInt(currentIndex) + parseInt(index) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(index)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(index))
+
+	const _stepper = (mode) => (mode === 'portrait') ? 1 : 2
+
+	const π = Math.PI
+
+    const _radians = degrees => degrees / 180 * π
+
+    const _degrees = radians => radians / π * 180
+
+
     const _calculateIndices = (currentIndex) => {
 
-		console.log(currentIndex)
-        // _book.currentPage = _setCurrentPage(currentIndex)
-        // _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-        // _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
+		_book.currentPage = _setCurrentPage(currentIndex)
+        _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
+        _book.range = _setRangeIndices(_book.currentPage, _book.state.mode)
 
 	}
+
+	const _setCurrentPage = startPage => (startPage === undefined) ? 1 : (parseInt(startPage) > 0 && parseInt(startPage) < parseInt(_book.pages.length)) ? parseInt(startPage) % parseInt(_book.pages.length) : (parseInt(startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(startPage) % parseInt(_book.pages.length) : parseInt(startPage) % parseInt(_book.pages.length) // Cyclic array
+	
+
+	const _setViewIndices = (currentPage = 1, mode) => {
+        let currentIndex = parseInt(currentPage) - 1
+
+        switch (mode) {
+            case 'portrait':
+                return [currentIndex]
+                break
+            case 'landscape':
+                if (isEven(parseInt(currentPage))) {
+                    /***
+                    		@range = _book.pages.slice(P , Q) where:
+                    				P & Q are integers
+                    				P & Q may or may not lie in the range 0 < VALUES < 2N (_book.length)
+                    	***/
+                    let q = (parseInt(currentPage) + 1) > parseInt(_book.pages.length) ? 1 : (parseInt(currentPage) + 1) % parseInt(_book.pages.length)
+                    return [currentIndex, q - 1]
+
+                } else {
+                    let p = (parseInt(currentPage) - 1) < 1 ? _book.pages.length : (parseInt(currentPage) - 1) % parseInt(_book.pages.length)
+                    return [p - 1, currentIndex]
+                }
+                break
+        }
+    }
+
+	const _setRangeIndices = (currentPage = 1, mode) => {
+        let currentIndex = parseInt(currentPage) - 1
+
+        /***
+        	@range = _book.pages.slice(P , Q) where:
+        		P, Q, R, S are integers
+        		P, Q, R, S may or may not lie in the range 0 < VALUE < 2N (_book.length)
+        ***/
+
+        let [p, q, r, s] = [0]
+
+        switch (mode) {
+            case 'portrait':
+                // let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                // let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
+                // let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? (currentIndex + 1) - parseInt(_book.pages.length) : (currentIndex + 1)
+                // let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
+                p = _leftCircularIndex(currentIndex, 2)
+                q = _leftCircularIndex(currentIndex, 1)
+                r = _rightCircularIndex(currentIndex, 1)
+                s = _rightCircularIndex(currentIndex, 2)
+                break
+            case 'landscape':
+                if (isEven(parseInt(currentPage))) {
+                    // let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                    // let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
+                    // let r = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
+                    // let s = (currentIndex + 3 >= parseInt(_book.pages.length)) ? (currentIndex + 3) - parseInt(_book.pages.length) : (currentIndex + 3)
+                    p = _leftCircularIndex(currentIndex, 2)
+                    q = _leftCircularIndex(currentIndex, 1)
+                    r = _rightCircularIndex(currentIndex, 2)
+                    s = _rightCircularIndex(currentIndex, 3)
+                } else {
+                    // let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
+                    // let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                    // let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 1)
+                    // let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 2)
+                    p = _leftCircularIndex(currentIndex, 3)
+                    q = _leftCircularIndex(currentIndex, 2)
+                    r = _rightCircularIndex(currentIndex, 1)
+                    s = _rightCircularIndex(currentIndex, 2)
+                }
+                break
+        }
+        return { 'leftPageIndices': [p, q], 'rightPageIndices': [r, s] }
+    }
+
+
 
     const _updateGeometricalPlotValues = (event) => {
         _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
@@ -290,7 +393,7 @@
 
     }
 
-
+	/* this function can be erased upon release */
     const _printGeometricalPremise = () => {
         d.getElementById('pwidth').textContent = _book.plotter.bounds.width
         d.getElementById('pheight').textContent = _book.plotter.bounds.height
@@ -301,7 +404,7 @@
         // d.getElementById('originX').textContent = _book.plotter.origin.x
         // d.getElementById('originY').textContent = _book.plotter.origin.y
     }
-
+ 	/* this function can be erased upon release */
     const _printCursorPosition = (event) => {
         d.getElementById('xaxis').textContent = _book.plotter.μ
         d.getElementById('yaxis').textContent = _book.plotter.ε
@@ -343,7 +446,6 @@
 
 	console.log(_book)
 
-
     class Superbook {
         execute(methodName, ...theArgs) {
             switch (methodName) {
@@ -361,14 +463,11 @@
     }
 
 
-
-
-    // Putting Superbook object in global namespace.
     if (typeof(w.Bookiza) === 'undefined') {
         w.Bookiza = {
             init({ options }) {
 				_initializeSuperBook({ options })
-				return new Superbook()
+				return new Superbook() // Put Superbook object in global namespace.
             }
         }
     }
