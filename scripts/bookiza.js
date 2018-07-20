@@ -235,7 +235,12 @@
 			case 'DIV':
 				let animation = _book.test.animate(keyframes, options)
 
-				animation.onfinish = function(event){ _book.test.remove() }
+				console.log(animation.playState)
+
+				animation.onfinish = function(event){
+					_book.test.remove()
+					console.log(animation.playState)
+				}
                 break
             default:
         }
@@ -288,9 +293,9 @@
     /**********************************/
 
 
-	const keyframes = [  {transform: 'translateX(0)'}, { transform: 'translateX(calc(100vw - 100px))' }  ]
+	const keyframes = [  {transform: 'rotateY(0deg)'}, { transform: 'rotateY(90deg)' }  ]
 
-	const options = { duration: 600, fill: 'forwards', easing: 'ease-out' }
+	const options = { duration: 3000, fill: 'forwards', easing: 'ease-out' }
 
 
 
