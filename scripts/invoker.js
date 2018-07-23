@@ -1,13 +1,13 @@
-const options = { duration: 600, peel: true, zoom: true, startPage: 6 }
+const options = { duration: 2000, peel: true, zoom: true, startPage: 11 }
 
 const superbook = Bookiza.init({ options })
 
-console.log('invoker', superbook.execute('dimensions'))
+// console.log('invoker', superbook.execute('dimensions'))
 
-console.log('invoker', superbook.execute('length'))
+// console.log('invoker', superbook.execute('length'))
 
-console.log('invoker', superbook.execute('view'))
+// console.log('invoker', superbook.execute('view'))
 
-console.log('invoker', superbook.execute('mode'))
+// console.log('invoker', superbook.execute('mode'))
 
-console.log('invoker', superbook.execute('page'))
+// console.log('invoker', superbook.execute('page'))

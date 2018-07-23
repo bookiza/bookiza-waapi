@@ -7,14 +7,14 @@
 			this.node = d.getElementById('book')
 			this.delegator = d.getElementById('plotter')
 			this.state = {
-				'isInitialized': false,
 				'direction': 'forward',
-				'isTurning': false,
-				'isPeelable': false,
-				'isZoomed': false,
-				'isPeeled': false,
-				'toTurnOrNotToTurn': false,
-				'eventsCache': [],
+				'isInitialized': false,
+				// 'isTurning': false,
+				// 'isPeelable': false,
+				// 'isZoomed': false,
+				// 'isPeeled': false,
+				// 'toTurnOrNotToTurn': false,
+				// 'eventsCache': [],
 				'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			}
 			/* @plotter.origin is set at the center of the viewport,
@@ -29,7 +29,7 @@
 				}
 			}
 			this.plotter.bounds = _setGeometricalPremise(this.node)
-			this.pages = [...this.node.children] // Or source it via http request. Or construct via React/JSX like template transformation.
+			this.pages = [...this.node.children] // Source via http request. Or construct via React/JSX like template transformation.
 			this.buttons = this.pages.splice(0, 2)
 			this.frames = this.pages.map((page, index) => _addPageWrappersAndBaseClasses(page, index)) // Frame is a page with necessary wrappers and shadow elements | or pseudo before: :after elements.
 		}
@@ -82,7 +82,9 @@
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {
 		_removeChildren(_book.node)
 
-		_applyEventListenersOnBook(_calculateIndices(options.startPage))
+		_book.options = options // Save new or default settings
+
+		_applyEventListenersOnBook(_calculateIndices(options.startPage)) // Event delegation via #plotter node.
 
 
 		// const worker = new Worker('../workers/base.js')
@@ -92,10 +94,11 @@
 		//   }, false)
 
 		// worker.postMessage('Hello World')
+		/* Initailization is complete */
 
-		_printBookToDOM()
+		_book.state.isInitialized = true
 
-
+		_printBookToDOM() // Go for the first print.
 	}
 
 	const handler = (event) => {
@@ -196,10 +199,10 @@
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('On anchor')
+				_book.state.direction = _setFlippingDirection()
+
 				break
 			case 'DIV':
-				console.log('On book')
 				break
 			default:
 				break
@@ -243,17 +246,12 @@
 	const _handleMouseClicks = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
+				_book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
+
+				_animateLeaf()
 
 				break
 			case 'DIV':
-				let animation = _book.frames[6].animate(keyframes, options)
-
-				console.log(animation.playState)
-
-				animation.onfinish = function (event) {
-					_book.frames[6].remove()
-					console.log(animation.playState)
-				}
 				break
 			default:
 		}
@@ -271,9 +269,19 @@
 		}
 	}
 
-	/* Don't worry about events below */
 	const _handleWheelEvent = (event) => {
-		console.log(_book.state.direction)
+		switch (event.target.nodeName) {
+			case 'A':
+				_book.state.direction = (event.deltaY < 0) ? 'backward' : 'forward'
+
+				console.log(_book.state.direction)
+
+				break
+			case 'DIV':
+				break
+			default:
+		}
+
 	}
 
 	const _handleKeyPressEvent = (event) => {
@@ -289,7 +297,9 @@
 	}
 
 	const _handleTouchStart = (event) => {
-		if (event.touches.length === 2) { }
+		if (event.touches.length === 2) {
+
+		}
 		console.log(event.touches.length)
 	}
 
@@ -306,18 +316,29 @@
 	/**********************************/
 
 
-	const keyframes = 	[
-							{ transform: 'rotateY(0deg)', transformOrigin: '0 50% 0', },
-							{ transform: 'rotateY(90deg)', transformOrigin: '0 50% 0', }
-	 					]
+	const _keyframes = () => [
+		{ transform: 'rotateY(0deg)', transformOrigin: '0 50% 0', },
+		{ transform: 'rotateY(180deg)', transformOrigin: '0 50% 0', }
+	]
 
-	const options = 	{
-							duration: 3000,
-							fill: 'forwards',
-							easing: 'ease-out'
-						}
+	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-out' }) => ({
+		duration: duration,
+		easing: bezierCurvature,
+		fill: 'forwards'
+	})
 
 
+	const _animateLeaf = () => {
+		let animation = _book.frames[_book.currentViewIndices[1]].animate(_keyframes(), _options({}))
+
+		console.log(animation.playState)
+
+		animation.onfinish = function (event) {
+			_book.frames[_book.currentViewIndices[1]].remove()
+			console.log(animation.playState)
+		}
+
+	}
 
 	/**********************************/
 	/********** Helper methods ********/
@@ -347,6 +368,7 @@
 
 	const λ = (angle) => { }  // Cone angle
 
+	const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
 	const _calculateIndices = (currentIndex) => {
 
@@ -355,8 +377,6 @@
 		_book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
 
 		console.log(_book.currentPage, _book.currentViewIndices, _book.range)
-
-
 
 	}
 
@@ -439,8 +459,8 @@
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.frames[`${index}`]))
-		_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
-		_printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
+		// _printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
+		// _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
 	}
 
 	const _printElementsToDOM = (type, elements) => {
@@ -685,7 +705,7 @@
 
 	let _book = new Book()
 
-	// console.log(_book)
+	console.log(_book)
 
 	class Superbook {
 		execute(methodName, ...theArgs) {
