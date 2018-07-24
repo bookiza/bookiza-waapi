@@ -39,7 +39,7 @@
 			*  @range is set of printable frames for the viewport.
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots
 			*******************************************************/
-			this.range = [] 
+			this.range = []
 		}
 		// PROPERTIES
 		dimensions() {
@@ -261,9 +261,9 @@
 			case 'A':
 				_book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
 				_book.targetPage = _target(_book.state.direction)
-				
+
 				_animateLeaf(_book.targetPage)
-	
+
 
 				break
 			case 'DIV':
@@ -350,17 +350,17 @@
 
 
 	const _animateLeaf = (targetPage) => {
-					
+
 	// _book.range.rightPageIndices.map(index => _removeElementFromDOMById(index + 1)) : _book.range.leftPageIndices.map(index => _removeElementFromDOMById(index + 1))
 	// _book.state.direction === 'forward'?
 	// 	_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`])) : _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
-		
+
 
 		_raiseAnimatablePages()
 
 		_book.state.isTurning = true
 
-		console.log('target', targetPage) 
+		console.log('target', targetPage)
 
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -371,22 +371,18 @@
 
 					let animation1 = _book.frames[_book.currentViewIndices[1]].childNodes[0].animate(_keyframes(), _options({}))
 					let animation2 = _book.frames[_book.range.rightPageIndices[0]].childNodes[0].animate(_kf(), _options({}))
-					
+
 					// console.log(animation1.playState)
 					// console.log(animation2.playState)
 
-					animation1.onfinish = function (event) {
+					animation2.onfinish = function (event) {
 						// _book.frames[_book.currentViewIndices[1]].remove()
 						console.log(animation1.playState)
 						_calculateIndices(targetPage)
 						_book.state.isTurning = false
-					}
+						_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
 
-					animation2.onfinish = function (event) {
-						// _book.frames[_book.currentViewIndices[1]].remove()
-						console.log(animation2.playState)
 					}
-
 
 				}
 
@@ -522,6 +518,8 @@
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.frames[`${index}`]))
+
+		// Can be moved from here.
         _printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
         _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
 
@@ -578,7 +576,7 @@
 						break
 					case 'rightPages':
 						// inner
-						cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
+						cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0; visibility: visible;'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
 						cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
@@ -587,7 +585,7 @@
 						break
 					case 'leftPages':
 						// inner
-						cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
+						cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0; visibility: visible;'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
 						cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
@@ -656,25 +654,6 @@
 		return newWrapper
 	}
 
-
-
-	const _updateGeometricalPlotValues = (event) => {
-		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
-		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
-		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
-		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${_book.plotter.origin.y - event.pageY}" }`)
-		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
-		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x) // x-coord from origin.
-		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y) // y-coord from origin.
-
-		// console.log(_sign(_book.plotter.μ))
-
-		_printCursorPosition(event) // delete this method call alongwith its function
-		_printGeometricalPremise() // delete this method call alongwith its function
-
-	}
-
-
     const _raiseAnimatablePages = () => {
         let currentIndex = parseInt(_book.currentPage) - 1
         switch (_book.state.direction) {
@@ -688,7 +667,7 @@
 						_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
 
 						// _book.frames[_book.currentViewIndices[1]].remove()
-						_book.frames[_book.currentViewIndices[1]].style.zIndex = 1
+						// _book.frames[_book.currentViewIndices[1]].style.zIndex = 1
 						_book.frames[_book.range.rightPageIndices[0]].style.zIndex = 4
 						_book.frames[_book.range.rightPageIndices[0]].childNodes[0].style.visibility = 'visible'
 						_book.frames[_book.range.rightPageIndices[1]].childNodes[0].style.visibility = 'visible'
@@ -700,7 +679,7 @@
 						break
 					default:
                         break
-						
+
                 }
                 break
             case 'backward':
@@ -724,6 +703,21 @@
         }
     }
 
+	const _updateGeometricalPlotValues = (event) => {
+		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
+		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
+		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
+		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${_book.plotter.origin.y - event.pageY}" }`)
+		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
+		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x) // x-coord from origin.
+		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y) // y-coord from origin.
+
+		// console.log(_sign(_book.plotter.μ))
+
+		// _printCursorPosition(event) // delete this method call alongwith its function
+		// _printGeometricalPremise() // delete this method call alongwith its function
+
+	}
 
 	/* this function can be erased upon release */
 	const _printGeometricalPremise = () => {
