@@ -9,7 +9,7 @@
 			this.state = {
 				'direction': 'forward',
 				'isInitialized': false,
-				// 'isTurning': false,
+				'isTurning': false,
 				// 'isPeelable': false,
 				// 'isZoomed': false,
 				// 'isPeeled': false,
@@ -199,18 +199,24 @@
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction = _setFlippingDirection()
-
 				break
 			case 'DIV':
+
 				break
 			default:
-				break
 		}
 	}
 
 	const _handleMouseOut = (event) => {
 		// TODO: This is where we calculate range pages according to QI-QIV.
+		switch (event.target.nodeName) {
+			case 'A':
+				break
+			case 'DIV':
+
+				break
+			default:
+		}
 
 	}
 
@@ -237,7 +243,7 @@
 				console.log('Complete the flip')
 				break
 			case 'DIV':
-				// console.log('up', event.pageX)
+				// console.log('up', event.pageX) // Calculate x-shift, y-shift.
 				break
 			default:
 		}
@@ -248,7 +254,15 @@
 			case 'A':
 				_book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
 
-				_animateLeaf()
+				let step = (_book.state.direction) === 'forward' ? isEven(_book.targetPage)? _stepper(_book.state.mode) : 1 : isOdd(_book.targetPage)? _stepper(_book.state.mode) : 1
+
+				_book.targetPage = (_book.state.direction) === 'forward' ? _setCurrentPage(_book.targetPage + step) : _setCurrentPage(_book.targetPage - step)
+
+					
+					
+					console.log('targetPage ', _book.targetPage, 'step ', step)
+
+				// _animateLeaf()
 
 				break
 			case 'DIV':
@@ -261,7 +275,6 @@
 	const _handleMouseDoubleClick = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-
 				break
 			case 'DIV':
 				break
@@ -274,7 +287,7 @@
 			case 'A':
 				_book.state.direction = (event.deltaY < 0) ? 'backward' : 'forward'
 
-				console.log(_book.state.direction)
+				// console.log(_book.state.direction)
 
 				break
 			case 'DIV':
@@ -329,14 +342,40 @@
 
 
 	const _animateLeaf = () => {
-		let animation = _book.frames[_book.currentViewIndices[1]].animate(_keyframes(), _options({}))
 
-		console.log(animation.playState)
+		_book.state.isTurning = true
 
-		animation.onfinish = function (event) {
-			_book.frames[_book.currentViewIndices[1]].remove()
-			console.log(animation.playState)
+		// console.log(_book.state.isTurning)
+
+		switch (_book.state.mode) {
+			case 'portrait':
+
+				break
+			case 'landscape':
+				if (_book.state.direction === 'forward') {
+
+					let animation1 = _book.frames[_book.currentViewIndices[1]].animate(_keyframes(), _options({}))
+					let animation2 = _book.frames[_book.range.rightPageIndices[0]].animate(_keyframes(), _options({}))
+					console.log(animation1.playState)
+					console.log(animation2.playState)
+
+					animation1.onfinish = function (event) {
+						_book.frames[_book.currentViewIndices[1]].remove()
+						console.log(animation1.playState)
+					}
+
+					animation2.onfinish = function (event) {
+						// _book.frames[_book.currentViewIndices[1]].remove()
+						console.log(animation2.playState)
+					}
+
+
+				}
+
+				break
 		}
+
+
 
 	}
 
@@ -370,17 +409,13 @@
 
 	const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
-	const _calculateIndices = (currentIndex) => {
-
-		_book.currentPage = _setCurrentPage(currentIndex)
+	const _calculateIndices = (pageNo) => {
+		_book.targetPage = _book.currentPage = _setCurrentPage(pageNo)
 		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
-
-		console.log(_book.currentPage, _book.currentViewIndices, _book.range)
-
 	}
 
-	const _setCurrentPage = startPage => (startPage === undefined) ? 1 : (parseInt(startPage) > 0 && parseInt(startPage) < parseInt(_book.pages.length)) ? parseInt(startPage) % parseInt(_book.pages.length) : (parseInt(startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(startPage) % parseInt(_book.pages.length) : parseInt(startPage) % parseInt(_book.pages.length) // Cyclic array
+	const _setCurrentPage = pageNo => (pageNo === undefined) ? 1 : (parseInt(pageNo) > 0 && parseInt(pageNo) < parseInt(_book.pages.length)) ? parseInt(pageNo) % parseInt(_book.pages.length) : (parseInt(pageNo) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(pageNo) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(pageNo) % parseInt(_book.pages.length) : parseInt(pageNo) % parseInt(_book.pages.length) // Cyclic array
 
 	const _setViewIndices = (currentPage = 1, mode) => {
 		let currentIndex = parseInt(currentPage) - 1
@@ -612,6 +647,8 @@
 
 
 
+
+
 	/* this function can be erased upon release */
 	const _printGeometricalPremise = () => {
 		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
@@ -705,7 +742,7 @@
 
 	let _book = new Book()
 
-	console.log(_book)
+	// console.log(_book)
 
 	class Superbook {
 		execute(methodName, ...theArgs) {

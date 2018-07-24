@@ -1,4 +1,4 @@
-const options = { duration: 2000, peel: true, zoom: true, startPage: 11 }
+const options = { duration: 2000, peel: true, zoom: true, startPage: 10 }
 
 const superbook = Bookiza.init({ options })
 
