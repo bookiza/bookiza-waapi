@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'> 
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
 <title> Bubblin's Official Guide </title>
 
   
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,27 +93,29 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
   font-family: monospace;
   font-size: 2.5vw;
   background: #ff0;
-  border: 1px solid #ff0;  
+  border: 1px solid #ff0;
   color: #444;
   padding: .2vw 1vw;
   border-radius: .5vw;
@@ -207,16 +209,31 @@ ol {
     background: transparent;
   }
 }
+
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
     
   </style>
 </head>
 <body>
-  <div class="leaf ">
-  <div class="inner justify ">
-    <h1> Remove Page</h1>
-    <p> While add page implies adding at least 2 pages (One leaf) into the book, removing a page removes only one page (ActivePage) at a time. </p> <img src="https://raw.githubusercontent.com/bubblin/Official-Handbook/master/assets/images/delete-page.jpg" width="100%"
-    />
-    <p> This is to ensure that no other page is deleted by mistake or inadvertantly. </p>
+  <div class="leaf">
+  <div class="inner justify">
+    <h1> Intrinsic Design</h1>
+    <p>CSS has a very important function for your book: layout. It styles the content of your book and gives it a personality. On Bubblin every page of a book is a virgin iframe you can apply CSS to:</p>
+    <ol>
+      <li>Via CSS template for the entire book, or</li>
+      <li>Via page level CSS for isolated control. </li>
+    </ol>
+    <p> Before writing your first CSS rule please take a look at Bubblin's prescribed <a href="https://bubblin.io/standards">standard</a> for Superbook layouts. Do not use heavy CSS frameworks like <span class="monospace"> bootstrap </span> or
+      <span class="monospace"> normalize</span> inside, it will not work.  </p>
+    <p> Refer our <a href="https://github.com/bubblin/Official-Handbook/blob/master/templates/template.css">free template</a> for intrinsic design.</p>
+    <hr/>
+    <p>Role of CSS doesn't stop with layouts. CSS can also become content itself. Take a look at our <a href="41" class="page">Sleepy Parakeet</a> on the next page that is made up entirely of CSS. </p>
   </div>
 </div>
   <script></script>

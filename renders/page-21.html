@@ -6,15 +6,15 @@
 
 <title> Bubblin's Official Guide </title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+  
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,20 +93,22 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
@@ -208,29 +210,39 @@ ol {
   }
 }
 
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    
   </style>
 </head>
 <body>
   <div class="leaf ">
-  <div class="inner justify ">
-    <p> Now press: </p>
-    <div class="code-block turnoff">
-      <p>Command (⌘) + I <span class="right"> # If you're on Mac</span> </p>
-      <p> CTRL + I <span class="right"> ## if you're on Windows or Linux </span></p>
+  <div class="inner ">
+    <p> It will 🔥 up your manuscript on a local server and output the book at <span class="code">http://localhost:4567. </span></p>
+
+    <p>Bookiza will watch for changes as you write your story. Open the project on your favorite editor (Visual Studio, Sublime or Atom) and start building your story. </p>
+    <p>  Once it is ready, hit: </p>
+    <div class="terminal turnoff">
+      <p> $ bookiza publish </p>
     </div>
-    <p>
-      to <span class="code">initialize</span> a new book.
-    Voila, your fresh new project is ready to take off. </p>
-    <p>If you're on the iPad or iPhone simply tap the logo to open the same menu and then tap the <i class="fa fa-book large"> </i> button to initialize a new book. </p>
+    <p> Boom!, your book will be relayed to your Bubblin (Open '/drafts' on Bubblin to see) account. It can now go live for the world to read. </p>
 
-    <hr/>
-    <p>By default there will be four blank pages (minimum) in your book folded in a bifolium. Use <i class="fa fa-arrow-circle-o-left"> / </i> <i class="fa fa-arrow-circle-o-right"> </i> arrow keys to flip around. </p>
+    <p> Complete bookiza vocabulary is available with: </p>
+    <div class="terminal turnoff">
+      <p> $ bookiza --help </p>
+    </div>
 
-    <p> Since mobiles/tablets aren't an ideal device nor situation for writing books, our editing tools are limited to desktops only.  </p>
-    <p class="alert">
-    <i class="fa fa-info-circle"> </i> Previews are available on all devices though. </p>
+    <p> Learn more about Bookiza on its <a href="https://bookiza.github.io/docs/">documentation</a> page. </p>
+
+
   </div>
 </div>
+
   <script></script>
 </body>
 </html>

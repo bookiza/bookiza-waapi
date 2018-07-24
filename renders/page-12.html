@@ -6,15 +6,15 @@
 
 <title> Bubblin's Official Guide </title>
 
-
+  
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,20 +93,22 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
@@ -208,15 +210,37 @@ ol {
   }
 }
 
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    
   </style>
 </head>
 <body>
-  <div class="leaf flex">
-    <div class="inner justify ">
-        <p> Similarities are visible in every step of the way: with operative verbs like to <em>publish</em>, to <em>bump up a version</em>, to <em>add another page</em> etc. Book writers thrive on masterful use of grammatical constructs and subtle nuances of a human language (like English). The pursuit is to punch with an impeccable prose. </p>
-        <p> Software writers too thrive exactly on the same parapet of expertise, but only in a computer language. Given that higher level computer languages vie for human-ness, one can only imagine if a convergance of trades has already occurred or is imminent. I'd think the former but there is no way to know for sure.</p>
-        <p> Similarities don't end with pursuit of authors alone. Both books and apps have a design need. A need for layout and thoughtful typography to engage and wow the consumer. Thankfully, design is considered separate from content in the world of books too, so much of our app design processes are also valid for book design. </p>
-    </div>
+  <div class="leaf ">
+  <div class="inner justify ">
+    <h1> Writer's Set Up</h1>
+    <p>
+      First thing you need to be able to publish on Bubblin is a Bubblin account. <a href="https://bubblin.io/users/new">Sign up</a> now if you haven’t already.
+    </p>
+    <p>
+      Once you've signed up and logged into Bubblin, press the keys <span class="code"> ⌘ / CTRL + U </span> to open a menu on your left. Click → <span class="code">New</span> to open a new project with a <a href="26" class="page">code playground</a> around it.
+    </p>
+    <p>
+      Feel free to jump to this <a href="">quick tutorial </a> now to see how to write a Superbook using the in-browser code playground. No further setup is required.
+    </p>
+    <p>
+      The online editor is enough for short novellas, magazines or comic books i.e. tiny packages.
+    </p>
+    <p>
+      For large projects like a textbook, photobook or an interactive story and even for heavy commercial publishing it is recommended to install and use <a href="https://github.com/bubblin/bookiza">Bookiza</a> (discussed next) instead.
+    </p>
+
+  </div>
 </div>
 
   <script></script>

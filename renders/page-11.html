@@ -6,15 +6,15 @@
 
 <title> Bubblin's Official Guide </title>
 
-
+  
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,20 +93,22 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
@@ -208,15 +210,181 @@ ol {
   }
 }
 
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    
+/*** Table Styles **/
+
+.table-fill {
+  background: white;
+  border-radius:3px;
+  border-collapse: collapse;
+  height: 32vw;
+  margin: auto;
+  max-width: 100%;
+  padding:0.5vw;
+  width: 100%;
+  box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.1);
+  animation: float 5s infinite;
+}
+
+th {
+  color:#D5DDE5;;
+  background:#1b1e24;
+  border-bottom:4px solid #9ea7af;
+  border-right: 1px solid #343a45;
+  font-size:3vw;
+  font-weight: 100;
+  padding:2.4vw;
+  text-align:left;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align:middle;
+}
+
+th:first-child {
+  border-top-left-radius:3px;
+}
+
+th:last-child {
+  border-top-right-radius:3px;
+  border-right:none;
+}
+
+tr {
+  border-top: 1px solid #C1C3D1;
+  border-bottom-: 1px solid #C1C3D1;
+  color:#666B85;
+  font-size:2vw;
+  font-weight:normal;
+  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+}
+
+tr:first-child {
+  border-top:none;
+}
+
+tr:last-child {
+  border-bottom:none;
+}
+
+tr:nth-child(odd) td {
+  background:#EBEBEB;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius:3px;
+}
+
+tr:last-child td:last-child {
+  border-bottom-right-radius:3px;
+}
+
+td {
+  background:#FFFFFF;
+  padding:1.5vw;
+  text-align:left;
+  vertical-align:middle;
+  font-weight:300;
+  font-size:2.5vw;
+  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #C1C3D1;
+}
+
+td:last-child {
+  border-right: 0px;
+}
+
+th.text-left {
+  text-align: left;
+}
+
+th.text-center {
+  text-align: center;
+}
+
+th.text-right {
+  text-align: right;
+}
+
+td.text-left {
+  text-align: left;
+}
+
+td.text-center {
+  text-align: center;
+}
+
+td.text-right {
+  text-align: right;
+}
+
   </style>
 </head>
 <body>
-  <div class="leaf flex">
-    <div class="inner justify ">
-        <h1> Preface </h1>
-        <p> On the surface <em>book writing</em> may seem very different from app development — they are different trades after all — but at the heart of writing one, the steps of its reification are essentially the same. More or less. For authors, both of books and software, it is ultimately a run for a great story, impeccable storytelling, seductive design and perhaps skilled packaging. It's the usual wrestle to emerge a winner. </p>
-        <p>Compare a day in life of a book writer with that of an app developer. How similar their habits are? How each pushes towards the goalpost slowly but steadily — how a deadline must be met! How lines after lines, pages after pages, edits after edits authors find cathartic meaning to their thoughts. It's almost magical to see how ideas manifest into a thing called app or a book even when there's hardly any difference between the processes of their making. </p>
-  </div>
+  <div class="leaf ">
+				<div class="inner justify ">
+								<h1> Keyboard shortcuts:</h1>
+								<table class="table-fill">
+												<thead>
+																<tr>
+																				<th class="text-left">KEYS</th>
+																				<th class="text-left">ACTION</th>
+																</tr>
+												</thead>
+												<tbody class="table-hover">
+																<tr>
+																				<td class="text-left"> ← / → or Spacebar: </td>
+																				<td class="text-left"> Previous / Next page </td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + ←:</td>
+																				<td class="text-left">Start of book</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + →:</td>
+																				<td class="text-left">End of book</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + U:</td>
+																				<td class="text-left">Open menu</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + M:</td>
+																				<td class="text-left">New manuscript</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + S:</td>
+																				<td class="text-left">Save changes</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + P:</td>
+																				<td class="text-left">Publish book</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + K:</td>
+																				<td class="text-left">See shortcuts</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + E:</td>
+																				<td class="text-left">Go home</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + J:</td>
+																				<td class="text-left">Search</td>
+																</tr>
+																<tr>
+																				<td class="text-left">⌘ + L:</td>
+																				<td class="text-left">Login / logout</td>
+																</tr>
+												</tbody>
+								</table>
+								<p> Shortcuts work only on desktop & tablet browsers when a hardware keyboard is attached.</p>
+				</div>
 </div>
 
   <script></script>

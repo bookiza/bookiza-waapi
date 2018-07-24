@@ -6,15 +6,15 @@
 
 <title> Bubblin's Official Guide </title>
 
-
+  
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,20 +93,22 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
@@ -208,18 +210,39 @@ ol {
   }
 }
 
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    
   </style>
 </head>
 <body>
-  <div class="leaf flex">
-    <div class="inner justify ">
-        <p> In many ways flash undid the cause of books on the web. It left such a bad aftertaste that many authors chose to ripping their books apart and turning them into plain (even ugly) websites; often ending up with poor readership and lower than expected sales. </p>
-        <p> I wish web had better support for books with a <span class="code"> spine_url</span> to hold and thread pages on. A tag that considers all semantic and interaction elements of a book, especially now when the web isn't limited to desktops alone. Wouldn't it be nice to bring up web and books together like a single unified resource? </p>
-        <p>This will require us to reconsider our assumptions about design and accessability and understand what is good for long form storytelling. But that's a discussion for another place and time. Let's look at the third and the last blurry difference between books and apps: a database.</p>
+  <div class="leaf ">
+  <div class="inner justify ">
+    <p> To see if it worked correctly, type:</p>
+    <div class="terminal turnoff"> $ ssh -T git@github.com </div>
+    <p> You'll get a message like this: </p>
+    <div class="terminal turnoff"> $ Hi marvin! You've successfully authenticated, but GitHub does not provide shell access.</div>
+    <p>Great! Everything is now in place to version and manage our book project (manuscripts). </p>
+    <p> There is <span class="monospace">Homebrew</span> to manage software packages, <span class="monospace">git</span> to keep track of changes and manage versioning of our project and there is <span class="monospace">Github</span>, a repository where we'll
+      save all our work. </p>
+    <p>Let's go over and finish installation of Bookiza, next. </p>
 
+    <div class="code-block italics">
+      <p>
+        It is pertinent to mention here that Bubblin doesn't consider the history of development (GIT Tree) of your story.
+        It will <strong> hold</strong> and <strong> serve</strong> only the HEAD version, i.e. the last published work that was supplied to the production container (Superbook). All previous versions are OVERWRITTEN.
+      </p>
+      <p>
+        Therefore, a versioning software like GIT or SVN <em> must </em> always be used to retain history elsewhere.
+      </p>
     </div>
+  </div>
 </div>
-
   <script></script>
 </body>
 </html>

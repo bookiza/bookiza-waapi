@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='//fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'> 
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
 <title> Bubblin's Official Guide </title>
 
   
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
   color: #2f2f2f;
   background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #667;
 }
 
 
@@ -24,7 +24,7 @@ h1 {
   text-transform: uppercase;
   display: inline-block;
   line-height: 1.5;
-  margin: 1vw 0 2vw;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
@@ -93,27 +93,29 @@ strong {
 
 .code-block {
   margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
+  border: 1px solid #aaa;
+  padding: 3vw;
   border-radius: 1vw;
+  color: black;
 }
 
 .code {
   background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
   border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
 .monospace, .highlight {
   font-family: monospace;
   font-size: 2.5vw;
   background: #ff0;
-  border: 1px solid #ff0;  
+  border: 1px solid #ff0;
   color: #444;
   padding: .2vw 1vw;
   border-radius: .5vw;
@@ -207,293 +209,395 @@ ol {
     background: transparent;
   }
 }
-    @font-face {
-  font-family: 'Great Vibes';
-  font-style: normal;
-  font-weight: 400;
-  src: local("Great Vibes"), local("GreatVibes-Regular"), url(//themes.googleusercontent.com/static/fonts/greatvibes/v1/6q1c0ofG6NKsEhAc2eh-3YbN6UDyHWBl620a-IRfuBk.woff) format("woff");
+
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    html, body {
+
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  margin: 0 0;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 body {
-  font: 2vw "Palatino Linotype", Georgia, serif;
-  margin: 0;
-  padding: 0;
-  color: #646464;
-}
-
-.split {
-  position: absolute;
-  bottom: 0;
-  padding: 3vh 10vw;
-  width: 80vw;
-  height: 65vh;
-  text-align: justify;
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 10px;
-}
-
-.heading {
-  height: 35vw;
-  width: 100vw;
-}
-
-.ribbon {
-  width: 60vw;
-  height: 6vh;
-  margin: 12vw auto 0;
-  position: relative;
-  color: #fff;
-  font: 4vw/8vw sans-serif;
-  text-align: center;
-  text-transform: uppercase;
-  background: #3D79D0;
-  -webkit-animation: main 250ms;
-  -moz-animation: main 250ms;
-  -ms-animation: main 250ms;
-  animation: main 250ms;
-}
-
-.ribbon i {
-  position: absolute;
-}
-
-.ribbon i:first-child,
-.ribbon i:nth-child(2) {
-  position: absolute;
-  left: -3.3vw;
-  bottom: -3.3vw;
-  z-index: -1;
-  border: 3vw solid transparent;
-  border-right-color: #043140;
-  -webkit-animation: edge 1000ms;
-  -moz-animation: edge 1000ms;
-  -ms-animation: edge 1000ms;
-  animation: edge 1000ms;
-}
-
-.ribbon i:nth-child(2) {
-  left: auto;
-  right: -3.3vw;
-  border-right-color: transparent;
-  border-left-color: #043140;
-}
-
-.ribbon i:nth-child(3),
-.ribbon i:last-child {
-  width: 3.2vw;
-  bottom: -3.3vw;
-  left: -9vw;
-  z-index: -2;
-  border: 4.2vw solid #1D53C0;
-  border-left-color: transparent;
-  -webkit-animation: back 2000ms;
-  -moz-animation: back 2000ms;
-  -ms-animation: back 2000ms;
-  animation: back 2000ms;
-  -webkit-transform-origin: 100% 0;
-  -moz-transform-origin: 100% 0;
-  -ms-transform-origin: 100% 0;
-  transform-origin: 100% 0;
-}
-
-.ribbon i:last-child {
-  bottom: -3.3vw;
-  left: auto;
-  right: -9vw;
-  border: 4.2vw solid #1D53C0;
-  border-right-color: transparent;
-  -webkit-transform-origin: 0 0;
-  -moz-transform-origin: 0 0;
-  -ms-transform-origin: 0 0;
-  transform-origin: 0 0;
-}
-/* animations */
-
-@-webkit-keyframes main {
-  0% {
-    -webkit-transform: scaleX(0);
-  }
-  100% {
-    -webkit-transform: scaleX(1);
-  }
-}
-
-@-webkit-keyframes edge {
-  0%, 50% {
-    -webkit-transform: scaleY(0);
-  }
-  100% {
-    -webkit-transform: scaleY(1);
-  }
-}
-
-@-webkit-keyframes back {
-  0%, 75% {
-    -webkit-transform: scaleX(0);
-  }
-  100% {
-    -webkit-transform: scaleX(1);
-  }
-}
-
-@-moz-keyframes main {
-  0% {
-    -moz-transform: scaleX(0);
-  }
-  100% {
-    -moz-transform: scaleX(1);
-  }
-}
-
-@-moz-keyframes edge {
-  0%, 50% {
-    -moz-transform: scaleY(0);
-  }
-  100% {
-    -moz-transform: scaleY(1);
-  }
-}
-
-@-moz-keyframes back {
-  0%, 75% {
-    -moz-transform: scaleX(0);
-  }
-  100% {
-    -moz-transform: scaleX(1);
-  }
-}
-
-@keyframes main {
-  0% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes edge {
-  0%, 50% {
-    transform: scaleY(0);
-  }
-  100% {
-    transform: scaleY(1);
-  }
-}
-
-@keyframes back {
-  0%, 75% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Trajan Pro";
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 4vw;
-}
-
-h2 {
-  display: inline-block;
-  margin-bottom: 0;
-  padding-bottom: 0;
-  line-height: 1;
-  padding-top: 0.5em;
-  border-top: 1px dotted #333;
+  display: table;
+  background: #333;
+  font-size: 100%;
+  font-family: "Roboto", sans-serif;
+  font-weight: normal;
 }
 
 p {
-  text-indent: vw;
+  margin: 0 0;
 }
 
-p.autor {
-  font-family: 'Great Vibes', cursive;
+.card-container {
+  background-image: -webkit-radial-gradient(#4f6875, #263238);
+  background-image: radial-gradient(#4f6875, #263238);
+  border-radius: 0.9375em;
+  display: table-cell;
+  font-size: .3rem;
+  height: 100%;
+  overflow: hidden;
   text-align: center;
-  margin-top: 0;
-  font-size: 150%;
-  text-indent: 0;
+  vertical-align: middle;
+  width: 100%;
 }
 
-p.capitular {
-  text-indent: 0;
-  padding-left: 0vw;
+@media (min-width: 25.625em) {
+  .card-container {
+    font-size: .4rem;
+  }
 }
 
-p.capitular:first-letter {
-  font-size: 16vw;
-  float: left;
-  line-height: 0.8;
-  margin: 0vw 1vw 0 0;
+@media (min-width: 47.5em) {
+  .card-container {
+    font-size: .75rem;
+  }
 }
 
-p + h2,
-p + h3,
-p + h4,
-p + h5,
-p + h6 {
-  margin-top: 2vw;
+@media (min-width: 60.625em) {
+  .card-container {
+    font-size: 1rem;
+  }
 }
 
-h2 + p {
-  display: inline;
+h1 {
+  color: #fff;
+  font-family: "Bevan", cursive;
+  font-size: 4.75em;
+  font-weight: normal;
+  margin: 0 0 .5em;
+  text-align: center;
+  text-shadow: 0.013em 0.039em 0.132em rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
 }
 
-blockquote {
-  padding: 10px;
-  font-size: 1.3em;
+.card {
+  background: #fff;
+  border-radius: 0.25em;
+  box-shadow: 0 0.039em 0.132em rgba(0, 0, 0, 0.4);
+  display: inline-block;
+  font-size: 1em;
+  height: 3em;
+  overflow: hidden;
+  position: relative;
+  margin-right: 1em;
+  vertical-align: middle;
+  width: 5em;
 }
 
-blockquote:before {
-  content: open-quote;
+.card:nth-of-type(5) {
+  margin-right: 0;
+}
+
+.visa {
+  font-family: "Open Sans", sans-serif;
+  font-size: 2em;
+  font-style: italic;
+  font-weight: 800;
+  padding: .05em;
+  z-index: 0;
+}
+
+.visa:before,
+.visa:after {
+  background: #00579F;
+  border-top-left-radius: 0.25em;
+  border-top-right-radius: 0.25em;
+  content: "";
+  display: block;
+  height: .75em;
+  left: 50%;
+  position: absolute;
+  top: 1.75%;
+  -webkit-transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  width: 96%;
+  z-index: 200;
+}
+
+.visa:after {
+  background: #FBA31B;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
+  bottom: 1.75%;
+  top: auto;
+}
+
+.visa p {
+  color: #00579F;
+  line-height: 3em;
+  position: relative;
+}
+
+.visa p:after {
+  border-top: .1em solid transparent;
+  border-bottom: .1em solid transparent;
+  border-left: 0.4em solid #FBA31B;
+  border-radius: 0.0625em;
+  content: "";
+  display: block;
+  height: 0;
+  left: 25.5%;
+  position: absolute;
+  top: 37.25%;
+  -webkit-transform: rotateZ(189deg);
+  transform: rotateZ(189deg);
+  width: 0;
+  z-index: 600;
+}
+
+.mc {
+  background: #0059B3;
   font-size: 2em;
 }
 
-blockquote:after {
-  content: close-quote;
+.mc:before,
+.mc:after {
+  background: #EF3526;
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: 2em;
+  left: 35%;
+  position: absolute;
+  top: 50%;
+  width: 2em;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 200;
 }
 
-blockquote.dir {
-  float: right;
-  width: 33%;
-  margin: 1vw;
-  text-align: left;
+.mc:after {
+  background: #FCB836;
+  left: 65%;
+}
+
+.mc hr {
+  background: #EF3526;
+  border: none;
+  border-top-right-radius: 0.25em;
+  height: .14em;
+  margin: .14em auto;
+  position: relative;
+  top: 25%;
+  width: .65em;
+  z-index: 600;
+}
+
+.mc hr:nth-of-type(1),
+.mc hr:nth-of-type(5) {
+  -webkit-transform: translate(-28%, 0);
+  -ms-transform: translate(-28%, 0);
+  transform: translate(-28%, 0);
+}
+
+.mc hr:nth-of-type(2),
+.mc hr:nth-of-type(4) {
+  -webkit-transform: translate(-10%, 0);
+  -ms-transform: translate(-10%, 0);
+  transform: translate(-10%, 0);
+}
+
+.mc hr:nth-of-type(4),
+.mc hr:nth-of-type(5) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0.25em;
+}
+
+.mc hr:nth-of-type(3) {
+  border-top-right-radius: 4;
+  border-bottom-right-radius: 0.25em;
+}
+
+.mc p {
+  color: #fff;
+  font-size: .63em;
+  font-weight: 600;
+  line-height: 1.5em;
+  position: relative;
+  text-shadow: 0.0625em 0.0625em 0.0625em black;
+  top: -.8em;
+  z-index: 600;
+}
+
+.amex {
+  background: #0971bc;
+  background-image: -webkit-radial-gradient(circle farthest-corner at top left, #7ecdf2, #0971bc 60%);
+  background-image: radial-gradient(circle farthest-corner at top left, #7ecdf2, #0971bc 60%);
+  font-size: 2em;
+  font-weight: 900;
+}
+
+.amex hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin: .15em 0;
+}
+
+.amex .svg {
+  color: #FFF;
+  font-size: .8em;
+  left: 0;
+  position: absolute;
+  top: 0;
+  stroke-width: 1;
+}
+
+.discover {
+  font-size: 2em;
+}
+
+.discover:after {
+  border-top: .75em solid transparent;
+  border-bottom: 0 solid transparent;
+  border-right: 1.75em solid #FF7800;
+  bottom: 0;
+  content: "";
+  height: 0;
+  position: absolute;
+  right: 0;
+  width: 0;
+}
+
+.discover p {
+  font-size: .75em;
   font-weight: bold;
-  font-style: italic;
-  border-left: 1px dotted #333;
+  letter-spacing: .0625em;
+  line-height: 4em;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.discover p:after {
+  background: #FF7800;
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: .85em;
+  left: 3.11em;
+  position: absolute;
+  top: 1.5em;
+  width: .85em;
+}
+
+@media (min-width: 25.625em) {
+  .discover p:after {
+    top: 1.59em;
+  }
+}
+
+.back {
+  background: #ccc;
+  font-size: 2em;
+  padding: .5em .12em;
+}
+
+.back:before {
+  background: #333;
+  content: "";
+  display: block;
+  height: .6em;
+  width: 100%;
+}
+
+.back:after {
+  background: #333;
+  border: 0.2em solid #fff;
+  content: "";
+  display: block;
+  height: .55em;
+  margin-left: 0.2em;
+  margin-top: 0.28em;
+  width: 55%;
+}
+
+.back span {
+  background: #333;
+  border: 0.15em solid #fff;
+  display: block;
+  height: .43em;
+  margin-left: .2em;
+  margin-top: .5em;
+  position: absolute;
+  right: .65em;
+  top: 0.95em;
+  width: .55em;
+  z-index: 0;
+}
+
+.back span:before {
+  border: 0.15em solid red;
+  border-radius: 50%;
+  content: "";
+  height: .95em;
+  left: -0.35em;
+  position: absolute;
+  top: -0.4em;
+  width: .95em;
+  z-index: 600;
 }
   </style>
 </head>
 <body>
-  <div class="heading center">
-  <h1 class="ribbon">
-    Sample
-    <i></i>
-    <i></i>
-    <i></i>
-    <i></i>
-  </h1>
-  <p> Resize your browser to test: </p>
-</div>
-<div class="split">
-  <h1>Lorem ipsum ullamco veniam</h1>
-  <p class="autor">por Leonardo Baptista Lopes</p>
-  <p>Quero ver se tento fazer um projeto de estilização tipográfica baseada em classes do body que determinem se há capitulares ou não, se os parágrafos são indentados, espaçados, se os títulos são ao lado dos textos, como são as capitulares...</p>
-  <h2>Lorem ipsum minim.</h2>
-  <p>Lorem ipsum minim magna amet commodo in ex ex sint Excepteur nostrud velit aliqua aliquip laborum ex sint Excepteur quis enim aute est non elit laborum Excepteur nisi deserunt est culpa ex dolore dolore occaecat ex amet ullamco velit esse id Duis consequat
-    quis Duis id laboris in amet dolore anim deserunt.</p>
-  <blockquote class="dir">Cupidatat culpa esse cupidatat ullamco dolore ad nostrud eiusmod</blockquote>
-  <p>Lorem ipsum minim magna amet commodo in ex ex sint Excepteur nostrud velit aliqua aliquip laborum ex sint Excepteur quis enim aute est non elit laborum Excepteur nisi deserunt est culpa ex dolore dolore occaecat ex amet ullamco velit esse id Duis consequat
-    quis Duis id laboris in amet dolore anim deserunt.</p>
-  <p class="capitular">Meu et minim elit ullamco minim id mollit anim cupidatat reprehenderit reprehenderit ullamco fugiat pariatur minim consequat ullamco culpa amet cupidatat enim anim in enim dolor in et est fugiat commodo culpa incididunt est deserunt labore commodo ex
-    non id proident laboris incididunt amet adipisicing veniam magna elit ea.</p>
+  <div class="card-container">
+  <h1>Online Payments</h1>
+  <div class="card visa">
+    <p>VISA</p>
+  </div>
+  <div class="card mc">
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <p>MasterCard</p>
+  </div>
+  <div class="card amex">
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <hr/>
+    <svg class='svg' height="100%" width="100%">
+      <text x="9%" y="45%" fill="none" stroke="#fff">AMERICAN</text>
+    </svg>
+    <svg class='svg' height="100%" width="100%">
+      <text x="23%" y="75%" fill="none" stroke="#fff">EXPRESS</text>
+    </svg>
+  </div>
+  <div class="card discover">
+    <p>Discover</p>
+  </div>
+  <div class="card back"><span></span></div>
 </div>
   <script></script>
 </body>
