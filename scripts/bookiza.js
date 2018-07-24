@@ -17,11 +17,13 @@
 				// 'eventsCache': [],
 				'mode': _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			}
-			/* @plotter.origin is set at the center of the viewport,
+
+			/******************************************************
+			*  @plotter.origin is set at the center of the viewport,
 			*  thus splitting the screen into four quadrants instead
-			*  of the default IV-quadrant referencing used in
-			*  scroll animation mechanics.
-			*/
+			*  of the default IV-quadrant referencing used in basic
+			*  scroll animation mechanics of the browser.
+			*******************************************************/
 			this.plotter = {
 				'origin': {
 					"x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -31,7 +33,13 @@
 			this.plotter.bounds = _setGeometricalPremise(this.node)
 			this.pages = [...this.node.children] // Source via http request. Or construct via React/JSX like template transformation.
 			this.buttons = this.pages.splice(0, 2)
-			this.frames = this.pages.map((page, index) => _addPageWrappersAndBaseClasses(page, index)) // Frame is a page with necessary wrappers and shadow elements | or pseudo before: :after elements.
+			this.frames = this.pages.map((page, index) => _addPageWrappersAndBaseClasses(page, index)) // Frame is a page with necessary wrappers and shadow elements and/or pseudo before: :after elements.
+
+			/******************************************************
+			*  @range is set of printable frames for the viewport.
+			*  [ p, q, r, s, t, u, v ]
+			*******************************************************/
+			this.range = [] 
 		}
 		// PROPERTIES
 		dimensions() {
@@ -227,7 +235,7 @@
 	const _handleMouseDown = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('Execute half curl over')
+				// console.log('Execute half curl over')
 				break
 			case 'DIV':
 				// console.log('Page picked, execute curl')
@@ -240,7 +248,7 @@
 	const _handleMouseUp = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('Complete the flip')
+				// console.log('Complete the flip')
 				break
 			case 'DIV':
 				// console.log('up', event.pageX) // Calculate x-shift, y-shift.
@@ -253,11 +261,8 @@
 		switch (event.target.nodeName) {
 			case 'A':
 				_book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
-
-				_book.targetPage = (_book.state.direction) === 'forward' ? _setCurrentPage(_book.targetPage + _step()) : _setCurrentPage(_book.targetPage - _step())
-
-					
-				// _animateLeaf()
+				_book.targetPage = _target(_book.state.direction)
+				_animateLeaf(_book.targetPage)
 
 				break
 			case 'DIV':
@@ -282,7 +287,8 @@
 			case 'A':
 				_book.state.direction = (event.deltaY < 0) ? 'backward' : 'forward'
 
-				// console.log(_book.state.direction)
+				_book.targetPage = _target(_book.state.direction)
+
 
 				break
 			case 'DIV':
@@ -293,15 +299,15 @@
 	}
 
 	const _handleKeyPressEvent = (event) => {
-		console.log('pressed', event.keyCode)
+		// console.log('pressed', event.keyCode)
 	}
 
 	const _handleKeyDownEvent = (event) => {
-		console.log('down', event.keyCode)
+		// console.log('down', event.keyCode)
 	}
 
 	const _handleKeyUpEvent = (event) => {
-		console.log('up', event.keyCode)
+		// console.log('up', event.keyCode)
 	}
 
 	const _handleTouchStart = (event) => {
@@ -316,7 +322,7 @@
 	}
 
 	const _handleTouchEnd = (event) => {
-		console.log('Touch moving')
+		console.log('Touch stopped')
 	}
 
 	/**********************************/
@@ -336,11 +342,11 @@
 	})
 
 
-	const _animateLeaf = () => {
+	const _animateLeaf = (targetPage) => {
 
 		_book.state.isTurning = true
 
-		// console.log(_book.state.isTurning)
+		console.log(targetPage) 
 
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -350,19 +356,20 @@
 				if (_book.state.direction === 'forward') {
 
 					let animation1 = _book.frames[_book.currentViewIndices[1]].animate(_keyframes(), _options({}))
-					let animation2 = _book.frames[_book.range.rightPageIndices[0]].animate(_keyframes(), _options({}))
+					// let animation2 = _book.frames[_book.range.rightPageIndices[0]].animate(_keyframes(), _options({}))
 					console.log(animation1.playState)
-					console.log(animation2.playState)
+					// console.log(animation2.playState)
 
 					animation1.onfinish = function (event) {
 						_book.frames[_book.currentViewIndices[1]].remove()
 						console.log(animation1.playState)
+						_calculateIndices(targetPage)
 					}
 
-					animation2.onfinish = function (event) {
-						// _book.frames[_book.currentViewIndices[1]].remove()
-						console.log(animation2.playState)
-					}
+					// animation2.onfinish = function (event) {
+					// 	// _book.frames[_book.currentViewIndices[1]].remove()
+					// 	console.log(animation2.playState)
+					// }
 
 
 				}
@@ -402,15 +409,18 @@
 
 	const λ = (angle) => { }  // Cone angle
 
-	const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
+	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
 	const _step = () => (_book.state.direction) === 'forward' ? isEven(_book.targetPage)? _stepper(_book.state.mode) : 1 : isOdd(_book.targetPage)? _stepper(_book.state.mode) : 1
 
+	const _target = (direction) => (direction) === 'forward' ? _setCurrentPage(_book.targetPage + _step()) : _setCurrentPage(_book.targetPage - _step())
 
 	const _calculateIndices = (pageNo) => {
 		_book.targetPage = _book.currentPage = _setCurrentPage(pageNo)
 		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
+
+		console.log(_book.range, _book.currentViewIndices, _book.currentPage)
 	}
 
 	const _setCurrentPage = pageNo => (pageNo === undefined) ? 1 : (parseInt(pageNo) > 0 && parseInt(pageNo) < parseInt(_book.pages.length)) ? parseInt(pageNo) % parseInt(_book.pages.length) : (parseInt(pageNo) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(pageNo) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(pageNo) % parseInt(_book.pages.length) : parseInt(pageNo) % parseInt(_book.pages.length) // Cyclic array
