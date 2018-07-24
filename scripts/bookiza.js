@@ -254,14 +254,9 @@
 			case 'A':
 				_book.state.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
 
-				let step = (_book.state.direction) === 'forward' ? isEven(_book.targetPage)? _stepper(_book.state.mode) : 1 : isOdd(_book.targetPage)? _stepper(_book.state.mode) : 1
-
-				_book.targetPage = (_book.state.direction) === 'forward' ? _setCurrentPage(_book.targetPage + step) : _setCurrentPage(_book.targetPage - step)
+				_book.targetPage = (_book.state.direction) === 'forward' ? _setCurrentPage(_book.targetPage + _step()) : _setCurrentPage(_book.targetPage - _step())
 
 					
-					
-					console.log('targetPage ', _book.targetPage, 'step ', step)
-
 				// _animateLeaf()
 
 				break
@@ -408,6 +403,9 @@
 	const λ = (angle) => { }  // Cone angle
 
 	const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
+
+	const _step = () => (_book.state.direction) === 'forward' ? isEven(_book.targetPage)? _stepper(_book.state.mode) : 1 : isOdd(_book.targetPage)? _stepper(_book.state.mode) : 1
+
 
 	const _calculateIndices = (pageNo) => {
 		_book.targetPage = _book.currentPage = _setCurrentPage(pageNo)
