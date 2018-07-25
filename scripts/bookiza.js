@@ -332,35 +332,35 @@
 
 
 	const _keyframes = () => [
-		{ transform: 'rotateY(0deg)', transformOrigin: '0 center 0', },
-		{ transform: 'rotateY(-180deg)', transformOrigin: '0 center 0', }
+		{ transform: 'rotateY(0deg)', transformOrigin: 'left center 0' },
+		{ transform: 'rotateY(-180deg)', transformOrigin: 'left center 0' }
 	]
 
 	const _kf = () => [
-		{ transform: 'rotateY(180deg)', transformOrigin: '100% 50% 0', },
-		{ transform: 'rotateY(0deg)', transformOrigin: '100% 50% 0', }
+		{ transform: 'rotateY(180deg)', transformOrigin: 'right center 0' },
+		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' }
 	]
-
 
 	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in' }) => ({
 		duration: duration,
 		easing: bezierCurvature,
-		fill: 'forwards'
+		fill: 'forwards',
+		iterations: 1
 	})
 
 
 	const _animateLeaf = (targetPage) => {
 
-	// _book.range.rightPageIndices.map(index => _removeElementFromDOMById(index + 1)) : _book.range.leftPageIndices.map(index => _removeElementFromDOMById(index + 1))
-	// _book.state.direction === 'forward'?
-	// 	_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`])) : _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
+		// _book.range.rightPageIndices.map(index => _removeElementFromDOMById(index + 1)) : _book.range.leftPageIndices.map(index => _removeElementFromDOMById(index + 1))
+		// _book.state.direction === 'forward'?
+		// 	_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`])) : _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
 
 
 		_raiseAnimatablePages()
 
 		_book.state.isTurning = true
 
-		console.log('target', targetPage)
+		// console.log('target', targetPage)
 
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -369,15 +369,20 @@
 			case 'landscape':
 				if (_book.state.direction === 'forward') {
 
+
+
 					let animation1 = _book.frames[_book.currentViewIndices[1]].childNodes[0].animate(_keyframes(), _options({}))
 					let animation2 = _book.frames[_book.range.rightPageIndices[0]].childNodes[0].animate(_kf(), _options({}))
 
 					// console.log(animation1.playState)
 					// console.log(animation2.playState)
 
+					// console.log(animation2)
+
 					animation2.onfinish = function (event) {
 						// _book.frames[_book.currentViewIndices[1]].remove()
-						console.log(animation1.playState)
+						// console.log(animation1.playState)
+
 						_calculateIndices(targetPage)
 						_book.state.isTurning = false
 
@@ -399,6 +404,59 @@
 				break
 		}
 	}
+
+	const _raiseAnimatablePages = () => {
+		let currentIndex = parseInt(_book.currentPage) - 1
+		switch (_book.state.direction) {
+			case 'forward':
+				switch (_book.state.mode) {
+					case 'portrait':
+						// _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
+						// d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+						break
+					case 'landscape':
+						_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+
+						// // _book.frames[_book.currentViewIndices[1]].remove()
+						_book.frames[_book.currentViewIndices[0]].style.zIndex = 1
+						_book.frames[_book.currentViewIndices[1]].style.zIndex = 2
+						_book.frames[_book.range.rightPageIndices[0]].style.zIndex = 4
+						_book.frames[_book.range.rightPageIndices[0]].style.visibility = 'visible'
+						_book.frames[_book.range.rightPageIndices[1]].style.visibility = 'visible'
+
+						// d.getElementById(_book.currentViewIndices[0] + 1).style.zIndex = 1
+						// d.getElementById(_book.range.rightPageIndices[0] + 1).style.zIndex = 4
+						// d.getElementById(_book.range.rightPageIndices[0] + 1).style.visibility = 'visible'
+						// d.getElementById(_book.range.rightPageIndices[1] + 1).style.visibility = 'visible'
+
+						break
+					default:
+						break
+
+				}
+				break
+			case 'backward':
+				switch (_book.state.mode) {
+					case 'portrait':
+						// _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+						break
+					case 'landscape':
+						// _book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+						// d.getElementById(_book.currentViewIndices[1] + 1).style.zIndex = 1
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 4
+						// d.getElementById(_book.range.leftPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+						break
+					default:
+						break
+				}
+				break
+		}
+	}
+
+
 
 	// pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg); transform-origin: 0px center 0px; visibility: visible;
 
@@ -434,7 +492,7 @@
 
 	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
-	const _step = () => (_book.state.direction) === 'forward' ? _isEven(_book.targetPage)? _stepper(_book.state.mode) : 1 : _isOdd(_book.targetPage)? _stepper(_book.state.mode) : 1
+	const _step = () => (_book.state.direction) === 'forward' ? _isEven(_book.targetPage) ? _stepper(_book.state.mode) : 1 : _isOdd(_book.targetPage) ? _stepper(_book.state.mode) : 1
 
 	const _target = (direction) => (direction) === 'forward' ? _setCurrentPage(_book.targetPage + _step()) : _setCurrentPage(_book.targetPage - _step())
 
@@ -522,17 +580,17 @@
 
 	const _removeChildren = node => { node.innerHTML = '' }
 
-    // const _removeElementsFromDOMByClassName = (className) => { node.getElementsByClassName(className).remove() }
+	// const _removeElementsFromDOMByClassName = (className) => { node.getElementsByClassName(className).remove() }
 
-    const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
+	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.frames[`${index}`]))
 
 		// Can be moved out of here.
-        _printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
-        _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
+		_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
+		_printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
 
 	}
 
@@ -608,7 +666,7 @@
 			case 'landscape':
 				switch (type) {
 					case 'view':
-						cssString = _isEven(currentIndex) ? 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center;' : 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center;'
+						cssString = _isEven(currentIndex) ? 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg);' : 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg);'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
 						cssString = 'z-index: 3; pointer-events:none;'
@@ -618,7 +676,7 @@
 					case 'rightPages':
 						// inner
 						cssString = 'pointer-events:none;'
-						cssString += _isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% center; visibility: hidden;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center; visibility: hidden;'
+						cssString += _isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: right center 0px;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: left center 0px;'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
 						cssString = 'pointer-events:none;'
@@ -628,7 +686,7 @@
 					case 'leftPages':
 						// inner
 						cssString = 'pointer-events:none;'
-						cssString += _isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center; visibility: hidden;' : 'transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: 0 center; visibility: hidden;'
+						cssString += _isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: right center 0px; visibility: hidden;' : 'transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px; visibility: hidden;'
 						pageObj.childNodes[0].style = cssString
 
 						// wrapper
@@ -645,7 +703,7 @@
 
 	const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
 		_removeClassesFromElem(pageObj, 'page')
-		let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
+		let classes = `inner page-${parseInt(currentIndex) + 1}`
 		classes += _isEven(currentIndex) ? ' odd' : ' even'
 		_addClassesToElem(pageObj, classes)
 		let wrappedHtml = _wrapHtml(pageObj, currentIndex)
@@ -664,53 +722,6 @@
 		newWrapper.appendChild(pageObj)
 		return newWrapper
 	}
-
-
-
-    const _raiseAnimatablePages = () => {
-        let currentIndex = parseInt(_book.currentPage) - 1
-        switch (_book.state.direction) {
-            case 'forward':
-                switch (_book.state.mode) {
-                    case 'portrait':
-                        _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-                        d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-                        break
-					case 'landscape':
-						_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
-
-						// _book.frames[_book.currentViewIndices[1]].remove()
-						// _book.frames[_book.currentViewIndices[1]].style.zIndex = 1
-						_book.frames[_book.range.rightPageIndices[0]].style.zIndex = 4
-						_book.frames[_book.range.rightPageIndices[0]].childNodes[0].style.visibility = 'visible'
-						_book.frames[_book.range.rightPageIndices[1]].childNodes[0].style.visibility = 'visible'
-
-						break
-					default:
-                        break
-
-                }
-                break
-            case 'backward':
-                switch (_book.state.mode) {
-                    case 'portrait':
-                        _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
-                        d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
-                        d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
-                        break
-                    case 'landscape':
-						_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
-                        // d.getElementById(_book.currentViewIndices[1] + 1).style.zIndex = 1
-                        // d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 4
-                        // d.getElementById(_book.range.leftPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-                        // d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
-                        break
-                    default:
-                        break
-                }
-                break
-        }
-    }
 
 	const _updateGeometricalPlotValues = (event) => {
 		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
