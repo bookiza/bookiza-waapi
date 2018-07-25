@@ -374,16 +374,12 @@
 					let animation1 = _book.frames[_book.currentViewIndices[1]].childNodes[0].animate(_keyframes(), _options({}))
 					let animation2 = _book.frames[_book.range.rightPageIndices[0]].childNodes[0].animate(_kf(), _options({}))
 
-					// console.log(animation1.playState)
-					// console.log(animation2.playState)
-
-					// console.log(animation2)
-
 					animation2.onfinish = function (event) {
 						// _book.frames[_book.currentViewIndices[1]].remove()
 						// console.log(animation1.playState)
 
 						_calculateIndices(targetPage)
+
 						_book.state.isTurning = false
 
 						_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
