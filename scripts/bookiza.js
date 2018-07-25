@@ -332,8 +332,8 @@
 
 
 	const _keyframes = () => [
-		{ transform: 'rotateY(0deg)', transformOrigin: '0 50% 0', },
-		{ transform: 'rotateY(-180deg)', transformOrigin: '0 50% 0', }
+		{ transform: 'rotateY(0deg)', transformOrigin: '0 center 0', },
+		{ transform: 'rotateY(-180deg)', transformOrigin: '0 center 0', }
 	]
 
 	const _kf = () => [
@@ -380,7 +380,17 @@
 						console.log(animation1.playState)
 						_calculateIndices(targetPage)
 						_book.state.isTurning = false
+
 						_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
+						_book.frames[_book.currentViewIndices[0]].style.zIndex = 3
+						_book.frames[_book.currentViewIndices[1]].style.zIndex = 3
+						_book.frames[_book.currentViewIndices[0]].style.visibility = 'visible'
+						_book.frames[_book.currentViewIndices[1]].style.visibility = 'visible'
+
+						_book.frames[_book.range.leftPageIndices[0]].style.zIndex = 1
+						_book.frames[_book.range.leftPageIndices[1]].style.zIndex = 2
+						_book.frames[_book.range.leftPageIndices[0]].style.visibility = 'hidden'
+						_book.frames[_book.range.leftPageIndices[1]].style.visibility = 'hidden'
 
 					}
 
@@ -388,10 +398,11 @@
 
 				break
 		}
-
-
-
 	}
+
+	// pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg); transform-origin: 0px center 0px; visibility: visible;
+
+	// pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg); transform-origin: 0px center 0px;
 
 	/**********************************/
 	/********** Helper methods ********/
@@ -511,7 +522,7 @@
 
 	const _removeChildren = node => { node.innerHTML = '' }
 
-    const _removeElementsFromDOMByClassName = (className) => { node.getElementsByClassName(className).remove() }
+    // const _removeElementsFromDOMByClassName = (className) => { node.getElementsByClassName(className).remove() }
 
     const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
@@ -519,7 +530,7 @@
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.frames[`${index}`]))
 
-		// Can be moved from here.
+		// Can be moved out of here.
         _printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.frames[`${index}`]))
         _printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.frames[`${index}`]))
 
@@ -654,6 +665,8 @@
 		return newWrapper
 	}
 
+
+
     const _raiseAnimatablePages = () => {
         let currentIndex = parseInt(_book.currentPage) - 1
         switch (_book.state.direction) {
@@ -672,10 +685,6 @@
 						_book.frames[_book.range.rightPageIndices[0]].childNodes[0].style.visibility = 'visible'
 						_book.frames[_book.range.rightPageIndices[1]].childNodes[0].style.visibility = 'visible'
 
-                        // d.getElementById(_book.currentViewIndices[0] + 1).style.zIndex = 1
-                        // d.getElementById(_book.range.rightPageIndices[0] + 1).style.zIndex = 4
-                        // d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-                        // d.getElementById(_book.range.rightPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
 						break
 					default:
                         break
