@@ -265,7 +265,7 @@
 
 		console.log(_book.targetPage)
 
-        // _animateLeaf(_book.targetPage)
+        _animateLeaf(_book.targetPage)
 
         break
       case 'DIV':
@@ -529,7 +529,7 @@
     _book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
     _book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
 
-    console.log(_book.range, _book.currentViewIndices, _book.currentPage)
+    // console.log(_book.range, _book.currentViewIndices, _book.currentPage)
   }
 
   const _setCurrentPage = (pageNo) =>
