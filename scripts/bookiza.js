@@ -336,6 +336,7 @@
   ]
 
   const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in' }) => ({
+	currentTime: 0,
     duration: duration,
     easing: bezierCurvature,
     fill: 'forwards',
@@ -361,17 +362,21 @@
           let animation1 = _book.frames[_book.currentViewIndices[1]].childNodes[0].animate(
             _kf1(),
             _options({})
-          )
+		  )
+
           let animation2 = _book.frames[_book.range.rightPageIndices[0]].childNodes[0].animate(
             _kf2(),
             _options({})
           )
 
+
           animation2.onfinish = function (event) {
             // _book.frames[_book.currentViewIndices[1]].remove()
             // console.log(animation2.playState)
 
-            // console.log('time', animation2.startTime)
+			// console.log('time', animation2.currentTime)
+
+			animation1.cancel()
 
             _calculateIndices(targetPage)
 
@@ -408,12 +413,12 @@
             break
           case 'landscape':
             // Horrible way to clearAnimation from the transitioned element
-            let animation2 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(
-              _kf2(),
-              _options({ duration: 0 })
-            )
+            // let animation2 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(
+            //   _kf2(),
+            //   _options({ duration: 0 })
+            // )
 
-            console.log(animation2)
+            // console.log(animation2)
             _book.range.leftPageIndices.map((index) => {
               _removeElementFromDOMById(index + 1)
             })
