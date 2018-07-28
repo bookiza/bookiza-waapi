@@ -40,6 +40,7 @@
 						*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots
 						*******************************************************/
 			this.range = []
+			this.ticker = 0
 		}
 		// PROPERTIES
 		dimensions() {
@@ -47,7 +48,7 @@
 		}
 
 		view() {
-			return _book.currentViewIndices.map((i) => i + 1) // Array of page numbers in the [View].
+			return _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
 		}
 
 		page() {
@@ -95,7 +96,7 @@
 
 		_book.options = options // Save new or default settings
 
-		_applyEventListenersOnBook(_calculateIndices(options.startPage)) // Event delegation via #plotter node.
+		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
 		// const worker = new Worker('../workers/base.js')
 
@@ -209,7 +210,7 @@
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('Anchor over', event.target.id)
+				// console.log('Anchor over', event.target.id)
 				break
 			case 'DIV':
 				break
@@ -221,7 +222,7 @@
 		// TODO: This is where we calculate range pages according to QI-QIV.
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('Anchor out', event.target.id)
+				// console.log('Anchor out', event.target.id)
 				break
 			case 'DIV':
 				break
@@ -237,10 +238,6 @@
 		_book.plotter.side === 'right'
 			? _book.state.direction = 'forward'
 			: _book.state.direction = 'backward'
-
-		_book.state.direction === 'forward'
-			? _printElementsToDOM('rightPages', _book.range.rightPageIndices.map((index) => _book.frames[`${index}`]))
-			: _printElementsToDOM('leftPages', _book.range.leftPageIndices.map((index) => _book.frames[`${index}`]))
 
 		switch (event.target.nodeName) {
 			case 'A':
@@ -270,9 +267,20 @@
 		switch (event.target.nodeName) {
 			case 'A':
 				_book.state.direction = event.target.id === 'next' ? 'forward' : 'backward'
-				_book.targetPage = _target(_book.state.direction)
+
+				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 1
+
+				_book.state.isTurning = true
+
+				_book.state.direction === 'forward'
+					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]))
+					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]))
+
+				_raiseAnimatablePages(_book.targetPage, _book.ticker)
 
 				_animateLeaf(_book.targetPage)
+
+				_book.targetPage = _target(_book.state.direction)
 
 				break
 			case 'DIV':
@@ -365,9 +373,55 @@
 		direction: 'normal'
 	})
 
-	const _animateLeaf = (targetPage) => {
-		_raiseAnimatablePages()
-		_book.state.isTurning = true
+	const _raiseAnimatablePages = (pageNo, tick) => {
+
+		switch (_book.state.direction) {
+			case 'forward':
+				switch (_book.state.mode) {
+					case 'portrait':
+						// _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
+						// d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
+						break
+					case 'landscape':
+						if (!_book.state.isTurning) {
+							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 + tick
+							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = -1 + tick
+						}
+
+						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 0 + tick // z-index for subsequent pages to turn while isTurning === true
+						// _book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).rightPageIndices[0]].style.visibility = 'visible'
+						// _book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).rightPageIndices[1]].style.visibility = 'visible'
+
+						break
+					default:
+						break
+				}
+				break
+			case 'backward':
+				switch (_book.state.mode) {
+					case 'portrait':
+						// _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
+						// d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
+						break
+					case 'landscape':
+						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[1]].style.zIndex = 1
+						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[0]].style.zIndex = 2
+						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.zIndex = 4 + tick // z-index for subsequent pages to turn while isTurning === true
+						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.visibility = 'visible'
+						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[0]].style.visibility = 'visible'
+
+						break
+					default:
+						break
+				}
+				break
+		}
+	}
+
+
+
+	const _animateLeaf = (pageNo) => {
 
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -375,12 +429,12 @@
 			case 'landscape':
 				switch (_book.state.direction) {
 					case 'forward':
-						let animation1 = _book.frames[_book.currentViewIndices[1]].childNodes[0].animate(_kf1(), _options({}))
+						let animation1 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
 
-						let animation2 = _book.frames[_book.range.rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
+						let animation2 = _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
 
 						animation1.onfinish = (event) => {
-							_calculateIndices(targetPage)
+							_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).leftPageIndices.map((index) => { _removeElementFromDOMById(index + 1) })
 						}
 
 						animation2.onfinish = (event) => {
@@ -388,14 +442,11 @@
 
 							_book.state.isTurning = false
 
-							_book.range.leftPageIndices.map((index) => { _removeElementFromDOMById(index + 1) })
 
-							_book.frames[_book.currentViewIndices[0]].style.zIndex = 3
-							_book.frames[_book.currentViewIndices[1]].style.zIndex = 3
-							_book.frames[_book.range.leftPageIndices[0]].style.zIndex = 1
-							_book.frames[_book.range.leftPageIndices[1]].style.zIndex = 2
-							_book.frames[_book.range.leftPageIndices[0]].style.visibility = 'hidden'
-							_book.frames[_book.range.leftPageIndices[1]].style.visibility = 'hidden'
+							_setCurrentPage(_book.targetPage)
+
+							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = 0
+							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 0
 						}
 						break
 					case 'backward':
@@ -405,7 +456,7 @@
 						let animation4 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
 
 						animation3.onfinish = (event) => {
-							_calculateIndices(targetPage)
+							_setCurrentPage(targetPage)
 						}
 
 
@@ -432,56 +483,10 @@
 		}
 	}
 
-	const _raiseAnimatablePages = () => {
-		// let currentIndex = parseInt(_book.currentPage) - 1
-		switch (_book.state.direction) {
-			case 'forward':
-				switch (_book.state.mode) {
-					case 'portrait':
-						// _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-						// d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
-						break
-					case 'landscape':
-						_book.frames[_book.currentViewIndices[0]].style.zIndex = 1
-						_book.frames[_book.currentViewIndices[1]].style.zIndex = 2
-						_book.frames[_book.range.rightPageIndices[0]].style.zIndex = 4
-						_book.frames[_book.range.rightPageIndices[0]].style.visibility = 'visible'
-						_book.frames[_book.range.rightPageIndices[1]].style.visibility = 'visible'
 
-						break
-					default:
-						break
-				}
-				break
-			case 'backward':
-				switch (_book.state.mode) {
-					case 'portrait':
-						// _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
-						// d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
-						// d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
-						break
-					case 'landscape':
-						_book.frames[_book.currentViewIndices[1]].style.zIndex = 1
-						_book.frames[_book.currentViewIndices[0]].style.zIndex = 2
-						_book.frames[_book.range.leftPageIndices[1]].style.zIndex = 4
-						_book.frames[_book.range.leftPageIndices[1]].style.visibility = 'visible'
-						_book.frames[_book.range.leftPageIndices[0]].style.visibility = 'visible'
-
-						break
-					default:
-						break
-				}
-				break
-		}
-	}
-
-	// pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg); transform-origin: 0px center 0px; visibility: visible;
-
-	// pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(0deg) skewY(0deg); transform-origin: 0px center 0px;
-
-	/**********************************/
-	/** ******** Helper methods ********/
-	/**********************************/
+	/**********************************
+	********** @Helper methods ********
+	***********************************/
 
 	const _isTouch = () => 'ontouchstart' in w || n.MaxTouchPoints > 0 || n.msMaxTouchPoints > 0
 
@@ -522,18 +527,14 @@
 
 	const _target = (direction) =>
 		direction === 'forward'
-			? _setCurrentPage(_book.targetPage + _step())
-			: _setCurrentPage(_book.targetPage - _step())
+			? _getCurrentPage(_book.targetPage + _step())
+			: _getCurrentPage(_book.targetPage - _step())
 
-	const _calculateIndices = (pageNo) => {
-		_book.targetPage = _book.currentPage = _setCurrentPage(pageNo)
-		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.state.mode)
-		_book.range = _setRangeIndices(_book.currentPage, _book.state.mode) // Why range and why not rangeIndices? Why an object? Dang this is dumb.
-
-		console.log(_book.range, _book.currentViewIndices, _book.currentPage)
+	const _setCurrentPage = (pageNo) => {
+		_book.targetPage = _book.currentPage = _getCurrentPage(pageNo)
 	}
 
-	const _setCurrentPage = (pageNo) =>
+	const _getCurrentPage = (pageNo) =>
 		pageNo === undefined
 			? 1
 			: parseInt(pageNo) > 0 && parseInt(pageNo) < parseInt(_book.pages.length)
@@ -542,7 +543,7 @@
 					? parseInt(_book.pages.length)
 					: parseInt(pageNo) < 0
 						? parseInt(_book.pages.length) + 1 + parseInt(pageNo) % parseInt(_book.pages.length)
-						: parseInt(pageNo) % parseInt(_book.pages.length) // Cyclic array
+						: parseInt(pageNo) % parseInt(_book.pages.length) // Process current page cyclically.
 
 	const _setViewIndices = (currentPage = 1, mode) => {
 		let currentIndex = parseInt(currentPage) - 1
@@ -574,7 +575,7 @@
 		}
 	}
 
-	const _setRangeIndices = (currentPage = 1, mode) => {
+	const _getRangeIndices = (currentPage = 1, mode) => {
 		let currentIndex = parseInt(currentPage) - 1
 
 		/*****************************************
@@ -629,7 +630,7 @@
 
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
-		_printElementsToDOM('view', _book.currentViewIndices.map((index) => _book.frames[`${index}`]))
+		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]))
 	}
 
 	const _printElementsToDOM = (type, elements) => {
@@ -712,7 +713,7 @@
 							: 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transitions: none;'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
-						cssString = 'z-index: 3; pointer-events:none;'
+						cssString = 'z-index: 0; pointer-events:none;'
 						cssString += _isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
 						pageObj.style = cssString
 						break
@@ -726,8 +727,8 @@
 						// wrapper
 						cssString = 'pointer-events:none;'
 						cssString += _isEven(currentIndex)
-							? 'z-index: 2; float: left; left: 0; visibility: hidden;'
-							: 'z-index: 1; float: right; right: 0; visibility: hidden;'
+							? 'z-index: -1; float: left; left: 0;'
+							: 'z-index: -2; float: right; right: 0;'
 						pageObj.style.cssText = cssString
 						break
 					case 'leftPages':
@@ -742,8 +743,8 @@
 						cssString = 'pointer-events:none;'
 						pageObj.style.cssText = cssString
 						cssString += _isEven(currentIndex)
-							? 'z-index: 1; float: left; left: 0; visibility: hidden;'
-							: 'z-index: 2; float: right; right: 0; visibility: hidden;'
+							? 'z-index: -1; float: left; left: 0; visibility: hidden;'
+							: 'z-index: -2; float: right; right: 0; visibility: hidden;'
 						pageObj.style.cssText = cssString
 						break
 				}
