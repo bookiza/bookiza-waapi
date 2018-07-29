@@ -268,7 +268,7 @@
 			case 'A':
 				_book.state.direction = event.target.id === 'next' ? 'forward' : 'backward'
 
-				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 1
+				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 0
 
 				_book.state.isTurning = true
 
@@ -278,9 +278,13 @@
 
 				_raiseAnimatablePages(_book.targetPage, _book.ticker)
 
+				console.log('first', _book.targetPage)
+
 				_animateLeaf(_book.targetPage)
 
 				_book.targetPage = _target(_book.state.direction)
+
+				console.log('second', _book.targetPage)
 
 				break
 			case 'DIV':
@@ -375,23 +379,17 @@
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
 
+		console.log('raise', pageNo)
+
 		switch (_book.state.direction) {
 			case 'forward':
 				switch (_book.state.mode) {
 					case 'portrait':
-						// _removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-						// d.getElementById(_book.range.rightPageIndices[0] + 1).childNodes[0].style.visibility = 'visible'
 						break
 					case 'landscape':
-						if (!_book.state.isTurning) {
-							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 + tick
-							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = -1 + tick
-						}
-
-						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 0 + tick // z-index for subsequent pages to turn while isTurning === true
-						// _book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).rightPageIndices[0]].style.visibility = 'visible'
-						// _book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).rightPageIndices[1]].style.visibility = 'visible'
-
+						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 + tick
+						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = -1 + tick
+						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 0 + tick // z-index for subsequent pages to turn while
 						break
 					default:
 						break
@@ -400,14 +398,11 @@
 			case 'backward':
 				switch (_book.state.mode) {
 					case 'portrait':
-						// _removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
-						// d.getElementById(_book.range.leftPageIndices[1] + 1).style.zIndex = 3
-						// d.getElementById(_book.range.leftPageIndices[1] + 1).childNodes[0].style.visibility = 'visible'
 						break
 					case 'landscape':
 						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[1]].style.zIndex = 1
 						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[0]].style.zIndex = 2
-						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.zIndex = 4 + tick // z-index for subsequent pages to turn while isTurning === true
+						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.zIndex = 4 + tick // z-index for subsequent pages to turn
 						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.visibility = 'visible'
 						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[0]].style.visibility = 'visible'
 
@@ -422,6 +417,8 @@
 
 
 	const _animateLeaf = (pageNo) => {
+
+		return
 
 		switch (_book.state.mode) {
 			case 'portrait':
