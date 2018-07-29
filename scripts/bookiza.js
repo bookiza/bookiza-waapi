@@ -277,6 +277,15 @@
 
 				_animateLeaf(_book.targetPage)
 
+				// raf raf woof woof
+				function _try() {
+					if (!$("#element").size()) {
+						w.requestAnimationFrame(_try)
+					} else {
+						$("#element").do_some_stuff()
+					}
+				  }
+
 				_book.targetPage = _target(_book.state.direction)
 
 				break
@@ -301,7 +310,17 @@
 			case 'A':
 				_book.state.direction = event.deltaY < 0 ? 'backward' : 'forward'
 
-				_book.targetPage = _target(_book.state.direction)
+				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
+
+				// _book.state.direction === 'forward'
+				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+				// _raiseAnimatablePages(_book.targetPage, _book.tick)
+
+				// _animateLeaf(_book.targetPage)
+
+				// _book.targetPage = _target(_book.state.direction)
 
 				break
 			case 'DIV':
@@ -491,6 +510,9 @@
 	const λ = (angle) => { } // Cone angle
 
 	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
+
+	w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function(callback) { w.setTimeout(callback, 1E3 / 60) })()
+
 
 	const _step = () =>
 		_book.state.direction === 'forward'
