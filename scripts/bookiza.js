@@ -269,8 +269,6 @@
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
-				_book.state.isTurning = true
-
 				_book.state.direction === 'forward'
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
@@ -373,9 +371,7 @@
 	})
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
-
-		console.log('raise', pageNo)
-
+		console.log(tick, tick - _book.frames.length)
 		switch (_book.state.direction) {
 			case 'forward':
 				switch (_book.state.mode) {
@@ -386,8 +382,6 @@
 
 						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = - tick
 
-						// _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = + tick
-						// _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[1]].style.zIndex = tick - _book.frames.length
 						break
 					default:
 						break
@@ -398,11 +392,11 @@
 					case 'portrait':
 						break
 					case 'landscape':
-						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[1]].style.zIndex = 1
-						_book.frames[_setViewIndices(_getCurrentPage(currentPage), _book.state.mode)[0]].style.zIndex = 2
-						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.zIndex = 4 + tick // z-index for subsequent pages to turn
-						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[1]].style.visibility = 'visible'
-						_book.frames[_getRangeIndices(_getCurrentPage(currentPage), _book.state.mode).leftPageIndices[0]].style.visibility = 'visible'
+
+						if (!_book.state.isTurning) _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = tick - _book.frames.length
+
+						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = - tick
+
 
 						break
 					default:
@@ -415,6 +409,7 @@
 
 
 	const _animateLeaf = (pageNo) => {
+		_book.state.isTurning = true
 
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -427,42 +422,30 @@
 						let animation2 = _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
 
 						animation1.onfinish = (event) => {
-							_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).leftPageIndices.map((index) => { _removeElementFromDOMById(index + 1) })
+							animation1.cancel()
+							_setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((index) => { _removeElementFromDOMById(index + 1) })
 						}
 
 						animation2.onfinish = (event) => {
-							// animation1.cancel()
-
 							_book.state.isTurning = false
-
-
 							_setCurrentPage(_book.targetPage)
-
-							// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = 0
-							// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 0
 						}
 						break
 					case 'backward':
 
-						// let animation3 = _book.frames[_book.currentViewIndices[0]].childNodes[0].animate(_kf3(), _options({}))
+						let animation3 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
 
-						// let animation4 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
+						let animation4 = _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
 
 						animation3.onfinish = (event) => {
-							_setCurrentPage(targetPage)
+							animation3.cancel()
+							_setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((index) => { _removeElementFromDOMById(index + 1) })
 						}
 
-
 						animation4.onfinish = (event) => {
-							animation3.cancel()
-
 							_book.state.isTurning = false
+							_setCurrentPage(_book.targetPage)
 
-							// _printElementsToDOM('leftPages', _book.range.leftPageIndices.map((index) => _book.frames[`${index}`]))
-							_book.range.rightPageIndices.map((index) => { _removeElementFromDOMById(index + 1) })
-
-							_book.frames[_book.currentViewIndices[0]].style.zIndex = 3
-							_book.frames[_book.currentViewIndices[1]].style.zIndex = 3
 						}
 						break
 				}
@@ -732,8 +715,8 @@
 						cssString = 'pointer-events:none;'
 						pageObj.style.cssText = cssString
 						cssString += _isEven(currentIndex)
-							? 'z-index: -1; float: left; left: 0; visibility: hidden;'
-							: 'z-index: -2; float: right; right: 0; visibility: hidden;'
+							? `z-index: ${tick}; float: left; left: 0;`
+							: `z-index: ${tick - _book.frames.length}; float: right; right: 0; `
 						pageObj.style.cssText = cssString
 						break
 				}
