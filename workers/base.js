@@ -1,7 +1,9 @@
-self.addEventListener('message', event => {
+// self.addEventListener('message', event => {
 
-	console.log(event.data)
+// 	console.log(event.data)
 
-	// Send the message back.
-	self.postMessage('You said: ' + event.data);
-  }, false)
+// 	// Send the message back.
+// 	self.postMessage('You said: ' + event.data);
+//   }, false)
+
+console.log('what')

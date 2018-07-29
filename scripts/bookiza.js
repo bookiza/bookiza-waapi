@@ -268,7 +268,7 @@
 			case 'A':
 				_book.state.direction = event.target.id === 'next' ? 'forward' : 'backward'
 
-				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 0
+				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 1
 
 				_book.state.isTurning = true
 
@@ -387,9 +387,9 @@
 					case 'portrait':
 						break
 					case 'landscape':
-						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 + tick
-						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = -1 + tick
-						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 0 + tick // z-index for subsequent pages to turn while
+						// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 * tick
+						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 1 * tick
+						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 2 * tick
 						break
 					default:
 						break
