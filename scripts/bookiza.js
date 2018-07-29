@@ -36,11 +36,10 @@
 			this.frames = this.pages.map((page, index) => _addPageWrappersAndBaseClasses(page, index)) // Frame is a page with necessary wrappers and shadow elements and/or pseudo before: :after elements.
 
 			/******************************************************
-						*  @range is set of printable frames for the viewport.
-						*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots
-						*******************************************************/
-			this.range = []
-			this.ticker = 0
+			*  @range is set of printable frames for the viewport: 			// this.range = [] 	*
+			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
+			*******************************************************/
+			this.tick = 0
 		}
 		// PROPERTIES
 		dimensions() {
@@ -56,7 +55,7 @@
 		}
 
 		getLength() {
-			return _book.pages.length
+			return _book.frames.length
 		}
 
 		getMode() {
@@ -268,23 +267,19 @@
 			case 'A':
 				_book.state.direction = event.target.id === 'next' ? 'forward' : 'backward'
 
-				_book.state.isTurning ? _book.ticker += 1 : _book.ticker = 1
+				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
 				_book.state.isTurning = true
 
 				_book.state.direction === 'forward'
-					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]))
-					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]))
+					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
-				_raiseAnimatablePages(_book.targetPage, _book.ticker)
-
-				console.log('first', _book.targetPage)
+				_raiseAnimatablePages(_book.targetPage, _book.tick)
 
 				_animateLeaf(_book.targetPage)
 
 				_book.targetPage = _target(_book.state.direction)
-
-				console.log('second', _book.targetPage)
 
 				break
 			case 'DIV':
@@ -387,9 +382,12 @@
 					case 'portrait':
 						break
 					case 'landscape':
-						// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = -2 * tick
-						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 1 * tick
-						_book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = 2 * tick
+						if (!_book.state.isTurning) _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = tick - _book.frames.length
+
+						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = - tick
+
+						// _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].style.zIndex = + tick
+						// _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[1]].style.zIndex = tick - _book.frames.length
 						break
 					default:
 						break
@@ -418,8 +416,6 @@
 
 	const _animateLeaf = (pageNo) => {
 
-		return
-
 		switch (_book.state.mode) {
 			case 'portrait':
 				break
@@ -435,22 +431,22 @@
 						}
 
 						animation2.onfinish = (event) => {
-							animation1.cancel()
+							// animation1.cancel()
 
 							_book.state.isTurning = false
 
 
 							_setCurrentPage(_book.targetPage)
 
-							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = 0
-							_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 0
+							// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = 0
+							// _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = 0
 						}
 						break
 					case 'backward':
 
-						let animation3 = _book.frames[_book.currentViewIndices[0]].childNodes[0].animate(_kf3(), _options({}))
+						// let animation3 = _book.frames[_book.currentViewIndices[0]].childNodes[0].animate(_kf3(), _options({}))
 
-						let animation4 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
+						// let animation4 = _book.frames[_book.range.leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
 
 						animation3.onfinish = (event) => {
 							_setCurrentPage(targetPage)
@@ -467,10 +463,6 @@
 
 							_book.frames[_book.currentViewIndices[0]].style.zIndex = 3
 							_book.frames[_book.currentViewIndices[1]].style.zIndex = 3
-							_book.frames[_book.range.rightPageIndices[1]].style.zIndex = 1
-							_book.frames[_book.range.rightPageIndices[0]].style.zIndex = 2
-							_book.frames[_book.range.rightPageIndices[1]].style.visibility = 'hidden'
-							_book.frames[_book.range.rightPageIndices[0]].style.visibility = 'hidden'
 						}
 						break
 				}
@@ -627,10 +619,10 @@
 
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
-		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]))
+		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 	}
 
-	const _printElementsToDOM = (type, elements) => {
+	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
 		switch (type) {
 			case 'buttons':
@@ -640,7 +632,7 @@
 				break
 			case 'view':
 				let pageList = elements.map((page, currentIndex) => {
-					return _applyStyles(page, currentIndex, type)
+					return _applyStyles(page, currentIndex, type, tick)
 				})
 				pageList.forEach((page) => {
 					docfrag.appendChild(page)
@@ -648,7 +640,7 @@
 				break
 			case 'rightPages':
 				let rightPages = elements.map((page, currentIndex) => {
-					return _applyStyles(page, currentIndex, type)
+					return _applyStyles(page, currentIndex, type, tick)
 				})
 				rightPages.forEach((page) => {
 					docfrag.appendChild(page)
@@ -656,7 +648,7 @@
 				break
 			case 'leftPages':
 				let leftPages = elements.map((page, currentIndex) => {
-					return _applyStyles(page, currentIndex, type)
+					return _applyStyles(page, currentIndex, type, tick)
 				})
 				leftPages.forEach((page) => {
 					docfrag.appendChild(page)
@@ -666,7 +658,7 @@
 		_book.node.appendChild(docfrag)
 	}
 
-	const _applyStyles = (pageObj, currentIndex, type) => {
+	const _applyStyles = (pageObj, currentIndex, type, tick) => {
 		let cssString = ''
 		switch (_book.state.mode) {
 			case 'portrait':
@@ -710,7 +702,7 @@
 							: 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transitions: none;'
 						pageObj.childNodes[0].style = cssString
 						// wrapper
-						cssString = 'z-index: 0; pointer-events:none;'
+						cssString = `z-index: ${tick}; pointer-events:none;`
 						cssString += _isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
 						pageObj.style = cssString
 						break
@@ -724,8 +716,8 @@
 						// wrapper
 						cssString = 'pointer-events:none;'
 						cssString += _isEven(currentIndex)
-							? 'z-index: -1; float: left; left: 0;'
-							: 'z-index: -2; float: right; right: 0;'
+							? `z-index: ${tick}; float: left; left: 0;`
+							: `z-index: ${tick - _book.frames.length}; float: right; right: 0;`
 						pageObj.style.cssText = cssString
 						break
 					case 'leftPages':
