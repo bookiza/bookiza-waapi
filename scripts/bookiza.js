@@ -201,10 +201,13 @@
 
 		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
 
-
 		const mutator = mutations => {
 			for (const mutation of mutations) {
-				console.log('A child node has been added or removed.', mutation)
+				// console.log('A child node has been added or removed.', mutation)
+
+				/* TODO: Execute animation with better resolve… */
+				// _raiseAnimatablePages(_book.targetPage, _book.tick)
+				// _animateLeaf(_book.targetPage)
 			}
 		}
 
@@ -212,6 +215,7 @@
 
 		observer.observe(_book.node, mutationConfiguration)
 
+		// observer.disconnect()
 
 		if (callback && typeof callback === 'function') callback()
 	}
@@ -290,8 +294,6 @@
 
 				_raiseAnimatablePages(_book.targetPage, _book.tick)
 				_animateLeaf(_book.targetPage)
-
-				// Mutation observer required here somewhere.
 
 				_book.targetPage = _target(_book.state.direction)
 
@@ -397,7 +399,6 @@
 	})
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
-		console.log(tick, tick - _book.frames.length)
 		switch (_book.state.direction) {
 			case 'forward':
 				switch (_book.state.mode) {
@@ -405,9 +406,7 @@
 						break
 					case 'landscape':
 						if (!_book.state.isTurning) _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = tick - _book.frames.length
-
 						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = - tick
-
 						break
 					default:
 						break
@@ -418,12 +417,8 @@
 					case 'portrait':
 						break
 					case 'landscape':
-
 						if (!_book.state.isTurning) _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].style.zIndex = tick - _book.frames.length
-
 						_book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].style.zIndex = - tick
-
-
 						break
 					default:
 						break
