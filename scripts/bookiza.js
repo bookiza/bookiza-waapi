@@ -199,6 +199,20 @@
 			})
 		}
 
+		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
+
+
+		const mutator = mutations => {
+			for (const mutation of mutations) {
+				console.log('A child node has been added or removed.', mutation)
+			}
+		}
+
+		const observer = new MutationObserver(mutator)
+
+		observer.observe(_book.node, mutationConfiguration)
+
+
 		if (callback && typeof callback === 'function') callback()
 	}
 
@@ -273,18 +287,11 @@
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
-				_raiseAnimatablePages(_book.targetPage, _book.tick)
 
+				_raiseAnimatablePages(_book.targetPage, _book.tick)
 				_animateLeaf(_book.targetPage)
 
-				// raf raf woof woof
-				function _try() {
-					if (!$("#element").size()) {
-						w.requestAnimationFrame(_try)
-					} else {
-						$("#element").do_some_stuff()
-					}
-				  }
+				// Mutation observer required here somewhere.
 
 				_book.targetPage = _target(_book.state.direction)
 
@@ -511,7 +518,7 @@
 
 	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
-	w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function(callback) { w.setTimeout(callback, 1E3 / 60) })()
+	w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
 
 	const _step = () =>
