@@ -90,25 +90,20 @@
 		 *********** One time init **********
 		 ************************************/
 
-	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1 } }) => {
+	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
 		_removeChildren(_book.node)
 
 		_book.options = options // Save new or default settings
 
+		_book.frames = [...d.createRange().createContextualFragment(new String(new Array(options.length).fill().map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`))).querySelectorAll('div')].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-		// const worker = new Worker('../workers/base.js')
-
-		// worker.addEventListener('message', (event) => {
-		// 	console.log(event.data) // Log the workers message.
-		//   }, false)
-
-		// worker.postMessage('Hello World')
 		/* Initailization is complete */
-
 		_book.state.isInitialized = true
 
 		_printBookToDOM() // Go for the first print.
+		console.log('2')
 	}
 
 	const handler = (event) => {
@@ -192,7 +187,11 @@
 		w.addEventListener('mouseover', _applyBookEvents)
 		w.addEventListener('mouseout', _removeBookEvents)
 
-		/* Touch capability is used only to apply eventListeners pertaining to touch.  */
+		/*  Listen to @touch events only when capable of Touch.
+		*   Some Windows/Chrome will return true even when the
+		*   screen isn't touch capable. Do not use this to !listen
+		*   keyboard/mouse events. Plain and simple. */
+
 		if (_isTouch()) {
 			touchEvents.map((event) => {
 				_book.delegator.addEventListener(event, handler)
@@ -203,9 +202,8 @@
 
 		const mutator = mutations => {
 			for (const mutation of mutations) {
-				// console.log('A child node has been added or removed.', mutation)
+				console.log('A child node has been added or removed.', mutation)
 
-				/* TODO: Execute animation with better resolve… */
 				// _raiseAnimatablePages(_book.targetPage, _book.tick)
 				// _animateLeaf(_book.targetPage)
 			}
@@ -491,12 +489,12 @@
 
 	const _leftCircularIndex = (currentIndex, index) =>
 		parseInt(currentIndex) - parseInt(index) < 0
-			? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(index))
+			? parseInt(_book.frames.length) + (parseInt(currentIndex) - parseInt(index))
 			: parseInt(currentIndex) - parseInt(index)
 
 	const _rightCircularIndex = (currentIndex, index) =>
-		parseInt(currentIndex) + parseInt(index) >= parseInt(_book.pages.length)
-			? parseInt(currentIndex) + parseInt(index) - parseInt(_book.pages.length)
+		parseInt(currentIndex) + parseInt(index) >= parseInt(_book.frames.length)
+			? parseInt(currentIndex) + parseInt(index) - parseInt(_book.frames.length)
 			: parseInt(currentIndex) + parseInt(index)
 
 	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
@@ -513,8 +511,7 @@
 
 	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
-	w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
-
+	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
 	const _step = () =>
 		_book.state.direction === 'forward'
@@ -533,13 +530,13 @@
 	const _getCurrentPage = (pageNo) =>
 		pageNo === undefined
 			? 1
-			: parseInt(pageNo) > 0 && parseInt(pageNo) < parseInt(_book.pages.length)
-				? parseInt(pageNo) % parseInt(_book.pages.length)
-				: parseInt(pageNo) % parseInt(_book.pages.length) === 0
-					? parseInt(_book.pages.length)
+			: parseInt(pageNo) > 0 && parseInt(pageNo) < parseInt(_book.frames.length)
+				? parseInt(pageNo) % parseInt(_book.frames.length)
+				: parseInt(pageNo) % parseInt(_book.frames.length) === 0
+					? parseInt(_book.frames.length)
 					: parseInt(pageNo) < 0
-						? parseInt(_book.pages.length) + 1 + parseInt(pageNo) % parseInt(_book.pages.length)
-						: parseInt(pageNo) % parseInt(_book.pages.length) // Process current page cyclically.
+						? parseInt(_book.frames.length) + 1 + parseInt(pageNo) % parseInt(_book.frames.length)
+						: parseInt(pageNo) % parseInt(_book.frames.length) // Process current page cyclically.
 
 	const _setViewIndices = (currentPage = 1, mode) => {
 		let currentIndex = parseInt(currentPage) - 1
@@ -556,15 +553,15 @@
 					* P & Q may or may not lie in the range 0 < VALUES < 2N (_book.length)
 					****************************************/
 					let q =
-						parseInt(currentPage) + 1 > parseInt(_book.pages.length)
+						parseInt(currentPage) + 1 > parseInt(_book.frames.length)
 							? 1
-							: (parseInt(currentPage) + 1) % parseInt(_book.pages.length)
+							: (parseInt(currentPage) + 1) % parseInt(_book.frames.length)
 					return [currentIndex, q - 1]
 				} else {
 					let p =
 						parseInt(currentPage) - 1 < 1
-							? _book.pages.length
-							: (parseInt(currentPage) - 1) % parseInt(_book.pages.length)
+							? _book.frames.length
+							: (parseInt(currentPage) - 1) % parseInt(_book.frames.length)
 					return [p - 1, currentIndex]
 				}
 				break
@@ -584,10 +581,10 @@
 
 		switch (mode) {
 			case 'portrait':
-				// let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
-				// let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
-				// let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? (currentIndex + 1) - parseInt(_book.pages.length) : (currentIndex + 1)
-				// let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
+				// let p = (currentIndex - 2 < 0) ? parseInt(_book.frames.length) + (currentIndex - 2) : (currentIndex - 2)
+				// let q = (currentIndex - 1 < 0) ? parseInt(_book.frames.length) + (currentIndex - 1) : (currentIndex - 1)
+				// let r = (currentIndex + 1 >= parseInt(_book.frames.length)) ? (currentIndex + 1) - parseInt(_book.frames.length) : (currentIndex + 1)
+				// let s = (currentIndex + 2 >= parseInt(_book.frames.length)) ? (currentIndex + 2) - parseInt(_book.frames.length) : (currentIndex + 2)
 				p = _leftCircularIndex(currentIndex, 2)
 				q = _leftCircularIndex(currentIndex, 1)
 				r = _rightCircularIndex(currentIndex, 1)
@@ -595,19 +592,19 @@
 				break
 			case 'landscape':
 				if (_isEven(parseInt(currentPage))) {
-					// let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
-					// let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
-					// let r = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
-					// let s = (currentIndex + 3 >= parseInt(_book.pages.length)) ? (currentIndex + 3) - parseInt(_book.pages.length) : (currentIndex + 3)
+					// let p = (currentIndex - 2 < 0) ? parseInt(_book.frames.length) + (currentIndex - 2) : (currentIndex - 2)
+					// let q = (currentIndex - 1 < 0) ? parseInt(_book.frames.length) + (currentIndex - 1) : (currentIndex - 1)
+					// let r = (currentIndex + 2 >= parseInt(_book.frames.length)) ? (currentIndex + 2) - parseInt(_book.frames.length) : (currentIndex + 2)
+					// let s = (currentIndex + 3 >= parseInt(_book.frames.length)) ? (currentIndex + 3) - parseInt(_book.frames.length) : (currentIndex + 3)
 					p = _leftCircularIndex(currentIndex, 2)
 					q = _leftCircularIndex(currentIndex, 1)
 					r = _rightCircularIndex(currentIndex, 2)
 					s = _rightCircularIndex(currentIndex, 3)
 				} else {
-					// let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
-					// let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
-					// let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 1)
-					// let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 2)
+					// let p = (currentIndex - 3 < 0) ? parseInt(_book.frames.length) + (currentIndex - 3) : (currentIndex - 3)
+					// let q = (currentIndex - 2 < 0) ? parseInt(_book.frames.length) + (currentIndex - 2) : (currentIndex - 2)
+					// let r = (currentIndex + 1 >= parseInt(_book.frames.length)) ? currentIndex + 1 - parseInt(_book.frames.length) + 1 : (currentIndex + 1)
+					// let s = (currentIndex + 2 >= parseInt(_book.frames.length)) ? currentIndex + 1 - parseInt(_book.frames.length) + 1 : (currentIndex + 2)
 					p = _leftCircularIndex(currentIndex, 3)
 					q = _leftCircularIndex(currentIndex, 2)
 					r = _rightCircularIndex(currentIndex, 1)
@@ -624,8 +621,11 @@
 
 	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
+	const _createArrayFrames = () => {}
+
 	const _printBookToDOM = () => {
 		_printElementsToDOM('buttons', _book.buttons)
+
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 	}
 

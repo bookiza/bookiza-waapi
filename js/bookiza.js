@@ -907,6 +907,7 @@
     // ε = Epsilon = `y-distance` in pixels from origin of the book.
     // let Δ, θ, ω, Ω, α, β, δ = 0
 
+	Δ
     // Cone Angle λ (= )
     // const λ = (angle) => {
 
@@ -960,9 +961,9 @@
         }
     }
 
-    /**********************************/
-    /************* Polyfill **********/
-    /**********************************/
+    /**********************************
+    ************* Polyfills ***********
+    **********************************/
 
     DOMTokenList.prototype.addmany = function(classes) {
         let classArr = classes.split(' ')
