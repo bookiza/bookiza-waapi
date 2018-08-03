@@ -31,9 +31,15 @@
 				}
 			}
 			this.plotter.bounds = _setGeometricalPremise(this.node)
-			this.pages = [...this.node.children] // Source via http request. Or construct via React/JSX like template transformation.
-			this.buttons = this.pages.splice(0, 2)
-			this.frames = this.pages.map((page, index) => _addPageWrappersAndBaseClasses(page, index)) // Frame is a page with necessary wrappers and shadow elements and/or pseudo before: :after elements.
+			this.elements = [...this.node.children] // Source via http request. Or construct via React/JSX like template transformation.
+			this.buttons = this.elements.splice(0, 2)
+			/******************************************************
+			* @frame is a page element with wrappers
+			* and shadow elements and/or pseudos (before: :after)
+			* that is printable into the DOM.
+			*******************************************************/
+
+			this.frames = this.elements.map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 			/******************************************************
 			*  @range is set of printable frames for the viewport: 			// this.range = [] 	*
@@ -91,7 +97,7 @@
 		 ************************************/
 
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
-		_removeChildren(_book.node)
+		// _removeChildren(_book.node)
 
 		_book.options = options // Save new or default settings
 
@@ -103,7 +109,7 @@
 		_book.state.isInitialized = true
 
 		_printBookToDOM() // Go for the first print.
-		console.log('2')
+		console.log('Two')
 	}
 
 	const handler = (event) => {
@@ -624,7 +630,7 @@
 	const _createArrayFrames = () => {}
 
 	const _printBookToDOM = () => {
-		_printElementsToDOM('buttons', _book.buttons)
+		// _printElementsToDOM('buttons', _book.buttons)
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 	}
