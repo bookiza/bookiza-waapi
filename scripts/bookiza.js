@@ -19,11 +19,11 @@
 			}
 
 			/******************************************************
-						*  @plotter.origin is set at the center of the viewport,
-						*  thus splitting the screen into four quadrants instead
-						*  of the default IV-quadrant referencing used in basic
-						*  scroll animation mechanics of the browser.
-						*******************************************************/
+			*  @plotter.origin is set at the center of the viewport,
+			*  thus splitting the screen into four quadrants instead
+			*  of the default IV-quadrant referencing used in basic
+			*  scroll animation mechanics of the browser.
+			*******************************************************/
 			this.plotter = {
 				origin: {
 					x: `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
@@ -101,7 +101,10 @@
 
 		_book.options = options // Save new or default settings
 
-		_book.frames = [...d.createRange().createContextualFragment(new String(new Array(options.length).fill().map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`))).querySelectorAll('div')].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+		_book.frames = 	[...d.createRange()
+							.createContextualFragment(new String(new Array(options.length).fill().map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
+							.querySelectorAll('div')
+						].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
@@ -208,7 +211,7 @@
 
 		const mutator = mutations => {
 			for (const mutation of mutations) {
-				console.log('A child node has been added or removed.', mutation)
+				// console.log('A child node has been added or removed.', mutation)
 
 				// _raiseAnimatablePages(_book.targetPage, _book.tick)
 				// _animateLeaf(_book.targetPage)
