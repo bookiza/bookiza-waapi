@@ -1,7 +1,9 @@
 ((n, w, d) => {
-	/************************************
-		 ************* Public API ***********
-		 ***********************************/
+	/*************************************
+	*
+	* @exposed methods ala, Public API :-)
+	*
+	***********************************/
 	class Book {
 		constructor() {
 			this.node = d.getElementById('book')
@@ -98,14 +100,16 @@
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
 		_removeChildren(_book.node)
 
+		delete _book.elements // Clear Object property after mandatory DOM lookup.
+
 		_book.options = options // Save new or default settings
 
-		console.log(Number.isInteger(_book.elements.length))
-		console.log(_book.frames.length)
+		console.log(_isEven(_book.frames.length))
 
+		let bookLength = Number.isInteger(options.length)? options.length : 4
 
 		_book.frames = 	[...d.createRange()
-							.createContextualFragment(new String(new Array(options.length)
+							.createContextualFragment(new String(new Array(bookLength)
 							.fill()
 							.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
 							.querySelectorAll('div')
@@ -113,14 +117,14 @@
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-		/* Initailization is complete */
+		/* TODO: Do this initailization after first paint is complete */
 		_book.state.isInitialized = true
 
 		_printElementsToDOM('buttons', _book.buttons)
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
-		console.log('Second')
+		console.log(_book)
 	}
 
 	const handler = (event) => {
