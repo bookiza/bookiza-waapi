@@ -75,9 +75,7 @@
 
 	const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
-	const _resetGeometricalPremise = () => {
-		_book.plotter.bounds = _setGeometricalPremise(_book.node)
-	}
+	const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(_book.node) }
 
 	w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise.
 
@@ -86,23 +84,30 @@
 		y: `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}`
 	})
 
-	const _resetGeometricalOrigin = () => {
-		_book.plotter.origin = _setGeometricalOrigin()
-	}
+	const _resetGeometricalOrigin = () => { _book.plotter.origin = _setGeometricalOrigin() }
 
 	w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
-	/************************************
-		 *********** One time init **********
-		 ************************************/
+	/****************************************
+	* One time Superbook initialization.
+	* The minimum length of a book is 4 pages. (options.length)
+	* Pages could be provided to Bookiza via DOM or be synthesized
+	* via length property passed as object during library initialization
+	************************************/
 
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
-		// _removeChildren(_book.node)
+		_removeChildren(_book.node)
 
 		_book.options = options // Save new or default settings
 
+		console.log(Number.isInteger(_book.elements.length))
+		console.log(_book.frames.length)
+
+
 		_book.frames = 	[...d.createRange()
-							.createContextualFragment(new String(new Array(options.length).fill().map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
+							.createContextualFragment(new String(new Array(options.length)
+							.fill()
+							.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
 							.querySelectorAll('div')
 						].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
@@ -111,8 +116,11 @@
 		/* Initailization is complete */
 		_book.state.isInitialized = true
 
-		_printBookToDOM() // Go for the first print.
-		console.log('Two')
+		_printElementsToDOM('buttons', _book.buttons)
+
+		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+
+		console.log('Second')
 	}
 
 	const handler = (event) => {
@@ -630,13 +638,7 @@
 
 	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
-	const _createArrayFrames = () => {}
-
-	const _printBookToDOM = () => {
-		// _printElementsToDOM('buttons', _book.buttons)
-
-		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
-	}
+	const _createArrayFrames = () => { }
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()

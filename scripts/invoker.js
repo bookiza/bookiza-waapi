@@ -1,8 +1,8 @@
-const options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 30 }
+const options = { duration: 300, peel: true, zoom: true, startPage: 1 }
 
 const superbook = Bookiza.init({ options })
 
-document.addEventListener('DOMContentLoaded', (event) => { console.log('First')})
+document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 
 // console.log('invoker', superbook.execute('dimensions'))
 
