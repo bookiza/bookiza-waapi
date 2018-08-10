@@ -2,391 +2,538 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
 
-<title> Bubblin's Official Guide </title>
+<title>The Solar System by Marvin Danig</title>
 
-  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+
+
   <style>
-    html, body {
-  font: 3.1vw/1.5 'Playfair Display', serif;
-  color: #2f2f2f;
-  background-color: #f9f7f1;
-  margin: 0 0;
-  overflow: hidden;
-  color: #667;
+    body {
+    font: 4.4vw/1.2 'EB Garamond', serif;
+    margin: 0 0;
+    overflow: hidden;
+    background: #fff;
+    color: #555;
 }
 
-
-h1 {
-  font-weight: 900;
-  font-size: 6vw;
-  text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.5;
-  margin: 0vw 0 1vw;
-  padding: 0;
-  color: #444;
-  width: 100%;
-  text-align: center;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
 }
 
 p {
-  margin: 3vw 0;
+    margin: 2vw 0;
 }
 
-img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
+h1 {
+	font-size: 6vw;
+}
+
+.leaf {
+    height: 100vh;
+    width: 80%;
+    margin: auto;
+}
+
+.inner {
+    margin: 10% auto;
+    width: 100%;
+}
+
+.flex {
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: 80%;
 }
 
 a {
-  color: #0077ff;
-  outline: 0 none;
-  text-decoration: none;
-  text-rendering: optimizelegibility;
+    color: #0af;
+    outline: 0 none;
+    text-decoration: none;
+    text-rendering: optimizelegibility;
 }
-
 
 a:focus,
 a:active,
 a:hover {
-  outline: 0 none;
-  color: #0a4;
+    outline: 0 none;
+    border-bottom: 1px dotted #0af;
 }
 
-a:active {
-  text-shadow: 0 0 1px #050;
+blockquote {
+    margin: 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666
+    font-weight:100;
 }
 
-strong {
-  font-weight: bold;
+blockquote:before {
+    color: #0af;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
 }
 
-/* Page specific */
-
-.leaf {
-  height: 100%;
-  height: 100vh;
-  width: 80%;
-  margin: auto;
+blockquote:after {
+    color: #0af;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
 }
 
-.inner {
-  margin: 10% auto;
-  width: 100%;
-}
-
-.flex {
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.justify {
-  text-align: justify;
-}
-
-/* Your custom styles below */
-
-
-.code-block {
-  margin: 3vw 0;
-  font: 2vw/1.0 monospace, sans-serif;
-  width: 70vw;
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 3vw;
-  border-radius: 1vw;
-  color: black;
-}
-
-.code {
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 0.5vw 1vw;
-  border-radius: 1vw;
-  font: 2.7vw/1.1 monospace, sans-serif;
-  color: black;
-}
-
-.monospace, .highlight {
-  font-family: monospace;
-  font-size: 2.5vw;
-  background: #ff0;
-  border: 1px solid #ff0;
-  color: #444;
-  padding: .2vw 1vw;
-  border-radius: .5vw;
-  margin: 0 .5vw;
-}
-
-.center { text-align: center; }
-
-.right {
-  float: right;
-}
-
-.left {
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 4.5vw 1vw .1vw;
   float: left;
+  line-height: 10vw;
+  font-size: 18vw;
+  font-family: 'UnifrakturMaguntia', cursive;
 }
 
-.center {
-  text-align: center;
+.blue {
+	color: #0af;
 }
 
-ol {
-  list-style-type: lower-roman;
-  list-style-position: inside;
-  list-style-image: none;
-  margin: 0;
-  padding: 1vw 5vw;
+.centerize {
+	text-align: center;
+	margin: 0 auto;
 }
-
-.small {
-  font-size: 80%;
-}
-
-.gray {
-  background: #666;
+    body {
+  background-color: #080e24;
+  background-image: url('https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/galaxy_starfield.jpg');
+  background-size: 100% 100%;
   color: #fff;
-  font-size: 60%;
-  padding: 1vw;
+  height:100vh;
+  width:100vw;
+  text-align: center;
+  overflow: hidden;
 }
 
-
-.terminal {
-  background-color: black;
-  color: #55ff55;
-  margin: 3vw 0;
-  width: 70vw;
-  border: 1px solid #ccc;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
-  font-family: monospace;
-  font-size: 2.5vw;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-align: left;
+h2 {
+  padding: 0;
+  margin: 10vw;
+  font-size: 4vw;
 }
 
-.prompt {
-  background: #55ff55;
-  height: 1em;
-  width: 0.75em;
-  -webkit-animation: blink 1s linear infinite;
-  animation: blink 1s linear infinite;
+h4 {
+  font-size: 3vw;
 }
 
-
-@-webkit-keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-@keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-.italics{
-  font-style: italic;
-}
-
-.white-text{
-	color: white;
-}
-    
-/*** Table Styles **/
-
-.table-fill {
-  background: white;
-  border-radius:3px;
-  border-collapse: collapse;
-  height: 32vw;
-  margin: auto;
-  max-width: 100%;
-  padding:0.5vw;
+.absolute {
   width: 100%;
-  box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.1);
-  animation: float 5s infinite;
+  position: absolute;
+  bottom: 10vw;
+  margin: 0 auto;
 }
 
-th {
-  color:#D5DDE5;;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
-  font-size:3vw;
-  font-weight: 100;
-  padding:2.4vw;
-  text-align:left;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  vertical-align:middle;
+.earth {
+  height: 8vw;
+  width: 8vw;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background-color: #02a3d8;
+  background-image: url(https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/2_no_clouds_1k.jpg);
+  background-size: cover;
+  box-shadow: 0 0 5vw #0099e6;
 }
 
-th:first-child {
-  border-top-left-radius:3px;
+.planet1 {
+  height: 0.8vw;
+  width: 0.8vw;
+  position: absolute;
+  top: 1vw;
+  left: -.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #eee;
+  border: .25vw solid #eee;
 }
 
-th:last-child {
-  border-top-right-radius:3px;
-  border-right:none;
-}
-
-tr {
-  border-top: 1px solid #C1C3D1;
-  border-bottom-: 1px solid #C1C3D1;
-  color:#666B85;
-  font-size:2vw;
-  font-weight:normal;
-  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-}
-
-tr:first-child {
-  border-top:none;
-}
-
-tr:last-child {
-  border-bottom:none;
-}
-
-tr:nth-child(odd) td {
-  background:#EBEBEB;
-}
-
-tr:last-child td:first-child {
-  border-bottom-left-radius:3px;
-}
-
-tr:last-child td:last-child {
-  border-bottom-right-radius:3px;
-}
-
-td {
-  background:#FFFFFF;
-  padding:1.5vw;
-  text-align:left;
-  vertical-align:middle;
-  font-weight:300;
-  font-size:2.5vw;
-  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid #C1C3D1;
-}
-
-td:last-child {
-  border-right: 0px;
-}
-
-th.text-left {
-  text-align: left;
-}
-
-th.text-center {
+.epicycle1 {
+  position: absolute;
+  top: 0;
+  left: -2.25vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
   text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
 }
 
-th.text-right {
-  text-align: right;
+.orbit1 {
+  height: 15vw;
+  width: 15vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(245, 98, 77, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 10s linear infinite;
+  animation: spin 10s linear infinite;
 }
 
-td.text-left {
-  text-align: left;
+
+.planet2 {
+  height: .4vw;
+  width: .4vw;
+  position: absolute;
+  top: 0;
+  left: 2.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #af9;
+  border: .4vw solid #af9;
 }
 
-td.text-center {
+.epicycle2 {
+  position: absolute;
+  top: 1vw;
+  left: -.7vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
   text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
 }
 
-td.text-right {
-  text-align: right;
+.orbit2 {
+  height: 25vw;
+  width: 25vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(204, 35, 30, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 20s linear infinite;
+  animation: spin 20s linear infinite;
 }
 
+.planet3 {
+  height: 0.5vw;
+  width: 0.5vw;
+  position: absolute;
+  top: 0;
+  left: 2.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #efefef;
+  border: 0.6vw solid #efefef;
+}
+
+.epicycle3 {
+  position: absolute;
+  top: 1vw;
+  left: 2vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
+}
+
+.orbit3 {
+  height: 35vw;
+  width: 35vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(155, 05, 25, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 30s linear infinite;
+  animation: spin 30s linear infinite;
+}
+
+.orbit4 {
+  height: 45vw;
+  width: 45vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(52, 166, 95, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 40s linear infinite;
+  animation: spin 40s linear infinite;
+}
+
+.planet4 {
+  height: 0.8vw;
+  width: 0.8vw;
+  position: absolute;
+  top: 0;
+  left: 2.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #ff0;
+  border: .5vw solid #ff0;
+}
+
+.epicycle4 {
+  position: absolute;
+  top: 4.15vw;
+  left: 2vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
+}
+
+.orbit5 {
+  height: 55vw;
+  width: 55vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(15, 138, 95, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 50s linear infinite;
+  animation: spin 50s linear infinite;
+}
+
+.planet5 {
+  height: 0.8vw;
+  width: 0.8vw;
+  position: absolute;
+  top: 0;
+  left: 2.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #0ff;
+  border: .5vw solid #0ff;
+}
+
+.epicycle5 {
+  position: absolute;
+  top: 4.25vw;
+  left: 4.25vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
+}
+
+.orbit6 {
+  height: 65vw;
+  width: 65vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(35, 94, 111, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 60s linear infinite;
+  animation: spin 60s linear infinite;
+}
+
+.planet6 {
+  height: 0.8vw;
+  width: 0.8vw;
+  position: absolute;
+  top: 0;
+  left: 0vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #f9f;
+  border: .5vw solid #f9f;
+}
+
+.epicycle6 {
+  position: absolute;
+  top: 4.25vw;
+  left: 7.25vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
+}
+
+.orbit7 {
+  height: 75vw;
+  width: 75vw;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 4.5vw solid rgba(55, 155, 225, 0.5);
+  border-radius: 50%;
+  margin: auto;
+  -webkit-animation: spin 70s linear infinite;
+  animation: spin 70s linear infinite;
+}
+
+.planet7 {
+  height: 0.8vw;
+  width: 0.8vw;
+  position: absolute;
+  top: 0;
+  left: -.5vw;
+  margin: 0 auto;
+  border-radius: 50%;
+  background-color: #aff;
+  border: .5vw solid #aff;
+}
+
+.epicycle7 {
+  position: absolute;
+  top: 4.25vw;
+  left: 10.5vw;
+  height: 3.6vw;
+  width: 3.6vw;
+  border-radius: 50%;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+  border: 2px dotted #fff;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
+  }
+}
   </style>
 </head>
 <body>
-  <div class="leaf ">
-				<div class="inner justify ">
-								<h1> Keyboard shortcuts:</h1>
-								<table class="table-fill">
-												<thead>
-																<tr>
-																				<th class="text-left">KEYS</th>
-																				<th class="text-left">ACTION</th>
-																</tr>
-												</thead>
-												<tbody class="table-hover">
-																<tr>
-																				<td class="text-left"> ← / → or Spacebar: </td>
-																				<td class="text-left"> Previous / Next page </td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + ←:</td>
-																				<td class="text-left">Start of book</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + →:</td>
-																				<td class="text-left">End of book</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + U:</td>
-																				<td class="text-left">Open menu</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + M:</td>
-																				<td class="text-left">New manuscript</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + S:</td>
-																				<td class="text-left">Save changes</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + P:</td>
-																				<td class="text-left">Publish book</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + K:</td>
-																				<td class="text-left">See shortcuts</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + E:</td>
-																				<td class="text-left">Go home</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + J:</td>
-																				<td class="text-left">Search</td>
-																</tr>
-																<tr>
-																				<td class="text-left">⌘ + L:</td>
-																				<td class="text-left">Login / logout</td>
-																</tr>
-												</tbody>
-								</table>
-								<p> Shortcuts work only on desktop & tablet browsers when a hardware keyboard is attached.</p>
-				</div>
+  <h2 class="center">Ptolmey's Planetary Epicycles</h2>
+<div class="earth"></div>
+<div class="orbit1">
+  <div class="epicycle1">
+    <div class="planet1"></div>
+  </div>
 </div>
-
+<div class="orbit2">
+  <div class="epicycle2">
+    <div class="planet2"></div>
+  </div>
+</div>
+<div class="orbit3">
+  <div class="epicycle3">
+    <div class="planet3"></div>
+  </div>
+</div>
+<div class="orbit4">
+  <div class="epicycle4">
+    <div class="planet4"></div>
+  </div>
+</div>
+<div class="orbit5">
+  <div class="epicycle5">
+    <div class="planet5"></div>
+  </div>
+</div>
+<div class="orbit6">
+  <div class="epicycle6">
+    <div class="planet6"></div>
+  </div>
+</div>
+<div class="orbit7">
+  <div class="epicycle7">
+    <div class="planet7"></div>
+  </div>
+</div>
+<h4 class="small center absolute"> Earth at the center - The Geocentric model. </h4>
   <script></script>
 </body>
 </html>

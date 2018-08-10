@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+
+<title>The Solar System by Marvin Danig</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+
+  
+  <style>
+    body {
+    font: 4.4vw/1.2 'EB Garamond', serif;
+    margin: 0 0;
+    overflow: hidden;
+    background: #fff;
+    color: #555;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
+}
+
+p {
+    margin: 2vw 0;
+}
+
+h1 {
+	font-size: 6vw;
+}
+
+.leaf {
+    height: 100vh;
+    width: 80%;
+    margin: auto;
+}
+
+.inner {
+    margin: 10% auto;
+    width: 100%;
+}
+
+.flex {
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: 80%;
+}
+
+a {
+    color: #0af;
+    outline: 0 none;
+    text-decoration: none;
+    text-rendering: optimizelegibility;
+}
+
+a:focus,
+a:active,
+a:hover {
+    outline: 0 none;
+    border-bottom: 1px dotted #0af;
+}
+
+blockquote {
+    margin: 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666
+    font-weight:100;
+}
+
+blockquote:before {
+    color: #0af;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
+}
+
+blockquote:after {
+    color: #0af;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
+}
+
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 4.5vw 1vw .1vw;
+  float: left;
+  line-height: 10vw;
+  font-size: 18vw;
+  font-family: 'UnifrakturMaguntia', cursive;
+}
+
+.blue {
+	color: #0af;
+}
+
+.centerize {
+	text-align: center;
+	margin: 0 auto;
+}
+    [role=img] {
+  height: 100%;
+}
+
+.saturn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  width: 186px;
+  height: 186px;
+}
+
+.body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90px;
+  height: 90px;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  border-radius: 100px;
+  background: #cbb277;
+}
+
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 100%;
+  -webkit-transform: translate(-50%, -50%) rotateX(80deg);
+          transform: translate(-50%, -50%) rotateX(80deg);
+}
+.ring:nth-child(1) {
+  width: 150px;
+  height: 150px;
+  border: 25px solid #fff;
+}
+.ring:nth-child(2) {
+  width: 186px;
+  height: 186px;
+  border: 15px solid #fff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+.moons {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.moon {
+  position: absolute;
+  border-radius: 100%;
+  background: #fff;
+}
+.moon::before {
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: calc(50% - 1px);
+  width: 2px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.02);
+  content: '';
+}
+.moon:nth-child(1) {
+  top: 60%;
+  left: 7%;
+  width: 10px;
+  height: 10px;
+}
+.moon:nth-child(2) {
+  top: 40%;
+  left: 16%;
+  width: 6px;
+  height: 6px;
+}
+.moon:nth-child(3) {
+  top: 65%;
+  left: 30%;
+  width: 4px;
+  height: 4px;
+}
+.moon:nth-child(4) {
+  top: 55%;
+  left: 46%;
+  width: 8px;
+  height: 8px;
+}
+.moon:nth-child(5) {
+  top: 62%;
+  left: 58%;
+  width: 4px;
+  height: 4px;
+}
+.moon:nth-child(6) {
+  top: 45%;
+  left: 63%;
+  width: 2px;
+  height: 2px;
+}
+.moon:nth-child(7) {
+  top: 48%;
+  left: 66%;
+  width: 4px;
+  height: 4px;
+}
+.moon:nth-child(8) {
+  top: 37%;
+  left: 78%;
+  width: 14px;
+  height: 14px;
+}
+.moon:nth-child(9) {
+  top: 42%;
+  left: 92%;
+  width: 2px;
+  height: 2px;
+}
+
+* {
+  box-sizing: border-box;
+}
+*::before, *::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  background: #2a2a2a;
+}
+
+  </style>
+</head>
+<body>
+  <div role="img" aria-label="A flat version of Saturn depicted with 9 of its moons suspended from strings.">
+  <div class="saturn">
+    <div class="body"></div>
+    <div class="rings">
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
+  </div>
+  <div class="moons">
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+  </div>
+</div>
+
+  <script></script>
+</body>
+</html>

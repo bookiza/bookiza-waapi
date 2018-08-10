@@ -70,19 +70,15 @@
 			return _book.state.mode
 		}
 
-        hasPage(theArgs) {
-            let index = parseInt(theArgs[0]) - 1
+        hasPage(args) {
+            let index = parseInt(args[0]) - 1
             return !!index.between(0, _book.frames.length)
         }
 
-        addPage (theArgs) {
-        	let index = parseInt(theArgs[1]) - 1
-			// if (index.between(0, _book.pages.length)) _addPage(theArgs[0], index)
-
-			if (index.between(0, _book.pages.length)) console.log(index)
-        }
-
-
+		ready(callback) {
+			console.log(callback)
+			callback[0]()
+		}
 	}
 
 	/************************************
@@ -127,14 +123,14 @@
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-		_book.state.isInitialized = true
-
 		_printElementsToDOM('buttons', _book.buttons)
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
+		_book.state.isInitialized = true
 
-		console.log('Second') // Proves that the book was printed before DOMContentLoaded event is fired.
+
+		// console.log('Second') // To prove that the book is printed before DOMContentLoaded event is fired.
 
 	}
 
@@ -233,14 +229,27 @@
 		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
 
 		const mutator = mutations => {
-			for (const mutation of mutations) {
-				// console.log('A child node has been added or removed.', mutation)
 
-				if (_book.state.isInitialized) {
-					_raiseAnimatablePages(_book.targetPage, _book.tick)
-					_animateLeaf(_book.targetPage)
-				}
+			mutations.map((mutation, index) => {
+				// console.log(Array.from(mutation.addedNodes).includes('a#next.arrow-controls.next-page.flex'), index)
+				// Array.from(mutation.addedNodes).map(each => { console.log(each)})
+			})
+
+			// for (const mutation of mutations) {
+
+			// 	console.log(mutation.addedNodes)
+
+			// 	// console.log(mutation.addedNodes)
+
+			if (mutations.length !== 1) return
+
+			if (_book.state.isInitialized) {
+				// _raiseAnimatablePages(_book.targetPage, _book.tick)
+				// _animateLeaf(_book.targetPage)
 			}
+
+
+			// }
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -943,6 +952,20 @@
 				default:
 					return _book[methodName](theArgs)
 			}
+		}
+		is(methodName, ...callback) {
+			switch (methodName) {
+				case 'turning':
+					return false
+				case 'turned':
+					return true
+				case 'ready':
+					return _book['ready'](callback)
+				default:
+					return new Error('Event not found')
+			}
+
+
 		}
 	}
 

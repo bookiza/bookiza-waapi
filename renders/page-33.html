@@ -2,237 +2,314 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
 
-<title> Bubblin's Official Guide </title>
+<title>The Solar System by Marvin Danig</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
 
   
   <style>
-    html, body {
-  font: 3.1vw/1.5 'Playfair Display', serif;
-  color: #2f2f2f;
-  background-color: #f9f7f1;
-  margin: 0 0;
-  overflow: hidden;
-  color: #667;
+    body {
+    font: 4.4vw/1.2 'EB Garamond', serif;
+    margin: 0 0;
+    overflow: hidden;
+    background: #fff;
+    color: #555;
 }
 
-
-h1 {
-  font-weight: 900;
-  font-size: 6vw;
-  text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.5;
-  margin: 0vw 0 1vw;
-  padding: 0;
-  color: #444;
-  width: 100%;
-  text-align: center;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
 }
 
 p {
-  margin: 3vw 0;
+    margin: 2vw 0;
 }
 
-img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
+h1 {
+	font-size: 6vw;
+}
+
+.leaf {
+    height: 100vh;
+    width: 80%;
+    margin: auto;
+}
+
+.inner {
+    margin: 10% auto;
+    width: 100%;
+}
+
+.flex {
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: 80%;
 }
 
 a {
-  color: #0077ff;
-  outline: 0 none;
-  text-decoration: none;
-  text-rendering: optimizelegibility;
+    color: #0af;
+    outline: 0 none;
+    text-decoration: none;
+    text-rendering: optimizelegibility;
 }
-
 
 a:focus,
 a:active,
 a:hover {
-  outline: 0 none;
-  color: #0a4;
+    outline: 0 none;
+    border-bottom: 1px dotted #0af;
 }
 
-a:active {
-  text-shadow: 0 0 1px #050;
+blockquote {
+    margin: 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666
+    font-weight:100;
 }
 
-strong {
-  font-weight: bold;
+blockquote:before {
+    color: #0af;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
 }
 
-/* Page specific */
-
-.leaf {
-  height: 100%;
-  height: 100vh;
-  width: 80%;
-  margin: auto;
+blockquote:after {
+    color: #0af;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
 }
 
-.inner {
-  margin: 10% auto;
-  width: 100%;
-}
-
-.flex {
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.justify {
-  text-align: justify;
-}
-
-/* Your custom styles below */
-
-
-.code-block {
-  margin: 3vw 0;
-  font: 2vw/1.0 monospace, sans-serif;
-  width: 70vw;
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 3vw;
-  border-radius: 1vw;
-  color: black;
-}
-
-.code {
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 0.5vw 1vw;
-  border-radius: 1vw;
-  font: 2.7vw/1.1 monospace, sans-serif;
-  color: black;
-}
-
-.monospace, .highlight {
-  font-family: monospace;
-  font-size: 2.5vw;
-  background: #ff0;
-  border: 1px solid #ff0;
-  color: #444;
-  padding: .2vw 1vw;
-  border-radius: .5vw;
-  margin: 0 .5vw;
-}
-
-.center { text-align: center; }
-
-.right {
-  float: right;
-}
-
-.left {
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 4.5vw 1vw .1vw;
   float: left;
+  line-height: 10vw;
+  font-size: 18vw;
+  font-family: 'UnifrakturMaguntia', cursive;
 }
 
-.center {
-  text-align: center;
+.blue {
+	color: #0af;
 }
 
-ol {
-  list-style-type: lower-roman;
-  list-style-position: inside;
-  list-style-image: none;
-  margin: 0;
-  padding: 1vw 5vw;
+.centerize {
+	text-align: center;
+	margin: 0 auto;
+}
+    body{
+  margin:0;
+  overflow:hidden;
+  background:black;
+  height: 100vh;
+  width: 100vw;
 }
 
-.small {
-  font-size: 80%;
+h1{
+	font-size: 4vw;
+	color: #fff;
+	position: absolute;
+	top: 10vh;
+	left: 10vw;
 }
 
-.gray {
-  background: #666;
-  color: #fff;
-  font-size: 60%;
-  padding: 1vw;
+canvas{
+	width:100vw;
+	pointer-events: none;
+	background: red;
 }
-
-
-.terminal {
-  background-color: black;
-  color: #55ff55;
-  margin: 3vw 0;
-  width: 70vw;
-  border: 1px solid #ccc;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
-  font-family: monospace;
-  font-size: 2.5vw;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-align: left;
-}
-
-.prompt {
-  background: #55ff55;
-  height: 1em;
-  width: 0.75em;
-  -webkit-animation: blink 1s linear infinite;
-  animation: blink 1s linear infinite;
-}
-
-
-@-webkit-keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-@keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-.italics{
-  font-style: italic;
-}
-
-.white-text{
-	color: white;
-}
-    
   </style>
 </head>
 <body>
-  <div class="leaf ">
-  <div class="inner justify ">
-    <h1> Internal Links</h1>
-    <p> Internal links of the book are handled differently from the links that lead to webpages outside of the book.</p>
-    <p> Use <span class="turnoff code">class="page"</span> with <span class="turnoff code">href="[page_no]"</span> like so: </p>
-    <div class="code-block"> class="page" href="20" </div>
-    <p>to link to page number <span class="monospace">20</span> of the book. </p>
-    <p> Checkout the HTML of the <a href="https://github.com/bubblin/Official-Handbook/blob/master/manuscript/page-7/body.html">index page</a> of this book, for example. Internal linking is a cool way to connect pages of a book that is already loaded in the
-      dom. </p>
-    <p>It is mandatory to use Bubblin's <a href="https://bubbl.in/standards">Internal Linking API</a> when connecting to pages within the book.</p>
-  </div>
-</div>
-  <script></script>
+  <h1> An artist's rendition of a galaxy.</h1>
+<script id='vShader' type='x-vertex/x-shader'>
+			  uniform float size;
+  			uniform float pixelRatio;
+
+			  varying vec3 vPosition;
+			  varying float gas;
+
+			  void main(){
+			    vPosition=position;
+
+			    vec4 mvPosition=modelViewMatrix*vec4(position,1.);
+			    gl_Position=mvPosition*projectionMatrix;
+
+			    float a=length(position);
+			    gas=max(.0, sin(-a/20.));
+			    gl_PointSize=pixelRatio*size*(1.+gas*2.)/length(mvPosition.xyz);
+			  }
+</script>
+<script id='fShader' type='x-fragment/x-shader'>
+		  varying vec3 vPosition;
+		  varying float gas;
+
+  	void main(){
+		    float a=max(.32, .0065*length(vPosition));
+
+		    float b=distance(gl_PointCoord,vec2(.5));
+		    float gaslook=-(b-.5)*1.2*gas;
+		    float starlook=(1.-gas)/(b*10.);
+		    float result=gaslook+starlook;
+
+		    gl_FragColor=vec4(.32,.28,a,1.)*result;
+  		}
+</script>
+
+  <script>(function galaxy() {
+				setTimeout(function() {
+					if (!webglAvailable()) return
+
+									var renderer
+									var scene
+									var camera
+									var controls
+									var galaxy
+
+									setScene()
+
+									var w = window,
+													d = document,
+													e = d.documentElement,
+													g = d.getElementsByTagName('body')[0];
+
+									w.innerWidth = w.innerWidth || e.clientWidth || g.clientWidth
+									w.innerHeight = w.innerHeight || e.clientHeight || g.clientHeight
+
+
+									function setScene() {
+													scene = new THREE.Scene()
+													camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, .5, 1500);
+													camera.position.set(innerWidth/10, -(innerWidth/5), innerWidth/3);
+													camera.lookAt(scene.position);
+													renderTarget = new THREE.WebGLRenderTarget(innerWidth, innerHeight);
+													renderer = new THREE.WebGLRenderer();
+													renderer.setSize(innerWidth, innerHeight);
+													renderer.setClearColor(0x000000);
+													document.body.appendChild(renderer.domElement);
+													setGalaxy();
+													window.addEventListener('resize', function() {
+																	w.innerWidth = w.innerWidth || e.clientWidth || g.clientWidth
+																	w.innerHeight = w.innerHeight || e.clientHeight || g.clientHeight
+
+																	camera.aspect = innerWidth / innerHeight
+																	renderer.setSize(innerWidth, innerHeight)
+																	camera.updateProjectionMatrix()
+																	renderer.render(scene, camera)
+																	changeGalaxy()
+													}, false)
+													animate()
+									}
+
+									function webglAvailable() {
+													var canvas = document.createElement("canvas")
+													return !!window.WebGLRenderingContext &&
+																	(canvas.getContext("webgl") ||
+																					canvas.getContext("experimental-webgl"))
+									}
+
+									function setGalaxy() {
+													galaxyMaterial = new THREE.ShaderMaterial({
+																	vertexShader: document.getElementById('vShader').textContent,
+																	fragmentShader: document.getElementById('fShader').textContent,
+																	uniforms: {
+																					size: { type: 'f', value: 3.3 },
+																					pixelRatio: { type: "f", value: innerHeight }
+																	},
+																	transparent: true,
+																	depthTest: false,
+																	blending: THREE.AdditiveBlending
+													})
+													var stars1 = new THREE.Geometry()
+													stars1.vertices = newGalaxy()
+													galaxy = new THREE.Points(stars1, galaxyMaterial)
+													scene.add(galaxy)
+									}
+
+									function animate() {
+													requestAnimationFrame(animate);
+													renderer.render(scene, camera);
+													scene.rotation.z += .001;
+									}
+
+									function changeGalaxy() {
+													var stars2 = newGalaxy();
+													for (var i = 0; i < galaxy.geometry.vertices.length; i++) {
+																	TweenLite.to(galaxy.geometry.vertices[i], 5, {
+																					x: stars2[i].x,
+																					y: stars2[i].y,
+																					z: stars2[i].z,
+																					onUpdate: function() { galaxy.geometry.verticesNeedUpdate = true },
+																					ease: Quart.easeInOut
+																	})
+													}
+									}
+
+									function newGalaxy(_n, _axis1, _axis2, _armsAngle, _bulbSize, _ellipticity) {
+													var n = (typeof _n === 'undefined') ? 10000 : _n;
+													var axis1 = (typeof _axis1 === 'undefined') ? (60 + Math.random() * 20) : _axis1;
+													var axis2 = (typeof _axis2 === 'undefined') ? (axis1 + 20 + Math.random() * 40) : _axis2;
+													var maja, mina;
+													axis1 > axis2 ? (maja = axis1, mina = axis2) :
+																	axis1 == axis2 ? (maja = axis1 + 1, mina = axis2) : (maja = axis2, mina = axis1);
+													var armsAngle = (typeof _armsAngle === 'undefined') ? ((Math.random() * 2 - 1) > 0 ? 1 : -1) * 12 + 3 : _armsAngle;
+													var bulbSize = (typeof _bulbSize === 'undefined') ? Math.random() * .6 : _bulbSize > 1 ? 1 : _bulbSize < 0 ? 0 : _bulbSize;
+													var ellipticity = (typeof _ellipticity === 'undefined') ? .2 + Math.random() * .2 : _ellipticity > 1 ? 1 : _ellipticity < 0 ? 0 : _ellipticity;
+													var stars = [];
+													for (var i = 0; i < n; i++) {
+																	var dist = Math.random();
+																	var angle = (dist - bulbSize) * armsAngle;
+																	var a = maja * dist
+																	var b = mina * dist
+																	var e = Math.sqrt(a * a - b * b) / a
+																	var phi = ellipticity * Math.PI / 2 * (1 - dist) * (Math.random() * 2 - 1)
+																	var theta = Math.random() * Math.PI * 2
+																	var radius = Math.sqrt(b * b / (1 - e * e * Math.pow(Math.cos(theta), 2))) * (1 + Math.random() * 0.1)
+																	if (dist > bulbSize) theta += angle
+																	stars.push({
+																					x: Math.cos(phi) * Math.cos(theta) * radius,
+																					y: Math.cos(phi) * Math.sin(theta) * radius,
+																					z: Math.sin(phi) * radius
+																	})
+													}
+													return stars
+									}
+
+
+					}, 400);
+
+})()
+</script>
 </body>
 </html>
