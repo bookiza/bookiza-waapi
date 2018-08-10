@@ -69,6 +69,12 @@
 		getMode() {
 			return _book.state.mode
 		}
+
+        hasPage(theArgs) {
+            let index = parseInt(theArgs[0]) - 1
+            return !!index.between(0, _book.frames.length)
+        }
+
 	}
 
 	/************************************
@@ -104,16 +110,22 @@
 
 		_book.options = options // Save new or default settings
 
-		console.log(_isEven(_book.frames.length))
+		let size = _book.frames.length === 0 ? Number.isInteger(options.length) ? options.length >= 4 ? _isOdd(options.length) ? options.length + 1 : options.length : 4 : 4 : _isOdd(_book.frames.length) ? _book.frames.length + 1 : _book.frames.length
 
-		let bookLength = Number.isInteger(options.length)? options.length : 4
+		console.log(size)
 
-		_book.frames = 	[...d.createRange()
-							.createContextualFragment(new String(new Array(bookLength)
-							.fill()
-							.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
-							.querySelectorAll('div')
-						].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+		if (_book.frames.length === 0) {
+			_book.frames = _reifyPages(size)
+		} else if (_isOdd(_book.frames.length)) {
+			// console.table(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${_book.frames.length + 1}.html"></iframe></div>`))
+			index = _book.frames.length
+
+			console.log(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${index + 1}.html"></iframe></div>`).querySelector('div.page'))
+			// _addPageWrappersAndBaseClasses(, index )
+		}
+
+
+
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
@@ -124,7 +136,7 @@
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
-		console.log(_book)
+		console.log('Second')
 	}
 
 	const handler = (event) => {
@@ -642,7 +654,14 @@
 
 	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
-	const _createArrayFrames = () => { }
+	const _reifyPages = size => [...d.createRange()
+										.createContextualFragment(new String(new Array(size)
+										.fill()
+										.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
+									.querySelectorAll('div')
+								].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+
+	const _createFrame = (index) => {  _addPageWrappersAndBaseClasses(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${index + 1}.html"></iframe></div>`), index ) }
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
