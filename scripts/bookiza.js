@@ -75,6 +75,14 @@
             return !!index.between(0, _book.frames.length)
         }
 
+        addPage (theArgs) {
+        	let index = parseInt(theArgs[1]) - 1
+			// if (index.between(0, _book.pages.length)) _addPage(theArgs[0], index)
+
+			if (index.between(0, _book.pages.length)) console.log(index)
+        }
+
+
 	}
 
 	/************************************
@@ -97,46 +105,37 @@
 	w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
 	/****************************************
-	* One time Superbook initialization.
+	* One time @superbook initialization.
 	* The minimum length of a book is 4 pages. (options.length)
 	* Pages could be provided to Bookiza via DOM or be synthesized
-	* via length property passed as object during library initialization
+	* using length value passed as an object property for initialization.
+	* Force the book length to always be an even number: https://bubblin.io/docs/concept
 	************************************/
 
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
 		_removeChildren(_book.node)
 
-		delete _book.elements // Clear Object property after mandatory DOM lookup.
+		delete _book.elements /* Clear object property from { _book } after a mandatory DOM lookup. */
 
-		_book.options = options // Save new or default settings
+		_book.options = options /* Save options to the book */
 
 		let size = _book.frames.length === 0 ? Number.isInteger(options.length) ? options.length >= 4 ? _isOdd(options.length) ? options.length + 1 : options.length : 4 : 4 : _isOdd(_book.frames.length) ? _book.frames.length + 1 : _book.frames.length
 
-		console.log(size)
+		if (_book.frames.length === 0) _book.frames = _reifyPages(size)
 
-		if (_book.frames.length === 0) {
-			_book.frames = _reifyPages(size)
-		} else if (_isOdd(_book.frames.length)) {
-			// console.table(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${_book.frames.length + 1}.html"></iframe></div>`))
-			index = _book.frames.length
-
-			console.log(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${index + 1}.html"></iframe></div>`).querySelector('div.page'))
-			// _addPageWrappersAndBaseClasses(, index )
-		}
-
-
-
+		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length))
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-		/* TODO: Do this initailization after first paint is complete */
 		_book.state.isInitialized = true
 
 		_printElementsToDOM('buttons', _book.buttons)
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
-		console.log('Second')
+
+		console.log('Second') // Proves that the book was printed before DOMContentLoaded event is fired.
+
 	}
 
 	const handler = (event) => {
@@ -237,8 +236,10 @@
 			for (const mutation of mutations) {
 				// console.log('A child node has been added or removed.', mutation)
 
-				// _raiseAnimatablePages(_book.targetPage, _book.tick)
-				// _animateLeaf(_book.targetPage)
+				if (_book.state.isInitialized) {
+					_raiseAnimatablePages(_book.targetPage, _book.tick)
+					_animateLeaf(_book.targetPage)
+				}
 			}
 		}
 
@@ -246,7 +247,7 @@
 
 		observer.observe(_book.node, mutationConfiguration)
 
-		// observer.disconnect()
+		// observer.disconnect() // TODO: If we decide on close to cover functionality.
 
 		if (callback && typeof callback === 'function') callback()
 	}
@@ -323,8 +324,8 @@
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
 
-				_raiseAnimatablePages(_book.targetPage, _book.tick)
-				_animateLeaf(_book.targetPage)
+					_raiseAnimatablePages(_book.targetPage, _book.tick)
+					_animateLeaf(_book.targetPage)
 
 				_book.targetPage = _target(_book.state.direction)
 
@@ -661,7 +662,12 @@
 									.querySelectorAll('div')
 								].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
-	const _createFrame = (index) => {  _addPageWrappersAndBaseClasses(d.createDocumentFragment(`<div class="page"><iframe src="./renders/page-${index + 1}.html"></iframe></div>`), index ) }
+	const _createFrame = (index, html) =>
+		html === undefined
+			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/page-${index}.html"></iframe></div>`).firstChild, index)
+			: _addPageWrappersAndBaseClasses(html, index)
+
+
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
