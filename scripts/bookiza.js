@@ -48,7 +48,7 @@
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
 			*******************************************************/
 			this.tick = 0
-			this.turned = new Event('turned')
+			this.turning = new CustomEvent('turning')
 		}
 		// PROPERTIES
 		dimensions() {
@@ -71,15 +71,15 @@
 			return _book.state.mode
 		}
 
-        hasPage(args) {
-            let index = parseInt(args[0]) - 1
-            return !!index.between(0, _book.frames.length)
-        }
+		hasPage(args) {
+			let index = parseInt(args[0]) - 1
+			return !!index.between(0, _book.frames.length)
+		}
 
-		// ready(callback) {
-		// 	console.log(callback)
-		// 	callback[0]()
-		// }
+		addEvents(eventName, callback) {
+			_book.node.addEventListener(eventName, callback, false)
+		}
+
 	}
 
 	/************************************
@@ -260,6 +260,14 @@
 
 		// observer.disconnect() // TODO: If we decide on close to cover functionality.
 
+
+		_book.turned = new CustomEvent('turned', {
+			detail: {
+				page: () => _book.currentPage,
+				view: () => _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((i) => i + 1)
+			}
+		})
+
 		if (callback && typeof callback === 'function') callback()
 	}
 
@@ -335,8 +343,8 @@
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
 
-					_raiseAnimatablePages(_book.targetPage, _book.tick)
-					_animateLeaf(_book.targetPage)
+				_raiseAnimatablePages(_book.targetPage, _book.tick)
+				_animateLeaf(_book.targetPage)
 
 				_book.targetPage = _target(_book.state.direction)
 
@@ -671,11 +679,11 @@
 	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
 	const _reifyPages = size => [...d.createRange()
-										.createContextualFragment(new String(new Array(size)
-										.fill()
-										.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
-									.querySelectorAll('div')
-								].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
+		.createContextualFragment(new String(new Array(size)
+			.fill()
+			.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
+		.querySelectorAll('div')
+	].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 	const _createFrame = (index, html) =>
 		html === undefined
@@ -966,7 +974,7 @@
 		on(methodName, ...callback) {
 			switch (methodName) {
 				case 'turning':
-					return false
+					return _addEvents('turning', callback[0])
 				case 'turned':
 					return _addEvents('turned', callback[0])
 				default:

@@ -24,7 +24,7 @@ const superbook = Bookiza.init({ options })
 
 // console.log(superbook.is('turning', (e)=>{ console.log(e)}))
 
-superbook.on('turned', (event, page)=>{ console.log('yay')})
+superbook.on('turned', (event, page, view)=>{ console.log(event, event.detail.page(), event.detail.view())})
 
 
 
