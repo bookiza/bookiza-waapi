@@ -48,6 +48,7 @@
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
 			*******************************************************/
 			this.tick = 0
+			this.turned = new Event('turned')
 		}
 		// PROPERTIES
 		dimensions() {
@@ -75,10 +76,10 @@
             return !!index.between(0, _book.frames.length)
         }
 
-		ready(callback) {
-			console.log(callback)
-			callback[0]()
-		}
+		// ready(callback) {
+		// 	console.log(callback)
+		// 	callback[0]()
+		// }
 	}
 
 	/************************************
@@ -122,6 +123,7 @@
 		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length))
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
+
 
 		_printElementsToDOM('buttons', _book.buttons)
 
@@ -486,11 +488,15 @@
 						animation1.onfinish = (event) => {
 							animation1.cancel()
 							_setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((index) => { _removeElementFromDOMById(index + 1) })
+
 						}
 
 						animation2.onfinish = (event) => {
 							_book.state.isTurning = false
 							_setCurrentPage(_book.targetPage)
+
+							_book.node.dispatchEvent(_book.turned)
+
 						}
 						break
 					case 'backward':
@@ -935,6 +941,10 @@
 
 	// console.log(_book)
 
+	function _addEvents(eventName, callback) {
+		_book.node.addEventListener(eventName, callback, false)
+	}
+
 	class Superbook {
 		execute(methodName, ...theArgs) {
 			switch (methodName) {
@@ -953,19 +963,15 @@
 					return _book[methodName](theArgs)
 			}
 		}
-		is(methodName, ...callback) {
+		on(methodName, ...callback) {
 			switch (methodName) {
 				case 'turning':
 					return false
 				case 'turned':
-					return true
-				case 'ready':
-					return _book['ready'](callback)
+					return _addEvents('turned', callback[0])
 				default:
 					return new Error('Event not found')
 			}
-
-
 		}
 	}
 

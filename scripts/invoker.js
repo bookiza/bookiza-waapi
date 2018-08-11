@@ -1,4 +1,4 @@
-const options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 30 }
+const options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 60 }
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 
@@ -24,8 +24,11 @@ const superbook = Bookiza.init({ options })
 
 // console.log(superbook.is('turning', (e)=>{ console.log(e)}))
 
-// console.log(superbook.is('ready', ()=>{ console.log('yay')}))
+superbook.on('turned', (event, page)=>{ console.log('yay')})
 
-window.addEventListener('ready', (event) => { console.log(event) }, false)
 
-document.getElementById('book').addEventListener('ready', (event) => { console.log(event) }, false)
+
+
+// window.addEventListener('ready', (event) => { console.log(event) }, false)
+
+// document.getElementById('book').addEventListener('ready', (event) => { console.log(event) }, false)
