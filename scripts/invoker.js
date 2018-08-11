@@ -18,17 +18,7 @@ const superbook = Bookiza.init({ options })
 
 // console.log('invoker', superbook.execute('hasPage', 18)) True/False
 
+superbook.on('turning', (event) => { console.log(event) })
 
+superbook.on('turned', (event) => { console.log(event, event.page, event.view) })
 
-
-
-// console.log(superbook.is('turning', (e)=>{ console.log(e)}))
-
-superbook.on('turned', (event, page, view)=>{ console.log(event, event.detail.page(), event.detail.view())})
-
-
-
-
-// window.addEventListener('ready', (event) => { console.log(event) }, false)
-
-// document.getElementById('book').addEventListener('ready', (event) => { console.log(event) }, false)

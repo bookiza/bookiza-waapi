@@ -47,8 +47,11 @@
 			*  @range is set of printable frames for the viewport: 			// this.range = [] 	*
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
 			*******************************************************/
-			this.tick = 0
-			this.turning = new CustomEvent('turning')
+			this.tick = 0 /* Count the number of pages ticked before book goes to isTurning: false state again */
+
+			/* Turn events */
+			this.turned = new Event('turned')
+			this.turning = new Event('turning')
 		}
 		// PROPERTIES
 		dimensions() {
@@ -259,14 +262,6 @@
 		observer.observe(_book.node, mutationConfiguration)
 
 		// observer.disconnect() // TODO: If we decide on close to cover functionality.
-
-
-		_book.turned = new CustomEvent('turned', {
-			detail: {
-				page: () => _book.currentPage,
-				view: () => _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((i) => i + 1)
-			}
-		})
 
 		if (callback && typeof callback === 'function') callback()
 	}
@@ -483,6 +478,12 @@
 	const _animateLeaf = (pageNo) => {
 		_book.state.isTurning = true
 
+		_book.turning.page = _getCurrentPage(pageNo)
+		_book.turning.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
+
+		_book.node.dispatchEvent(_book.turning)
+
+
 		switch (_book.state.mode) {
 			case 'portrait':
 				break
@@ -503,6 +504,8 @@
 							_book.state.isTurning = false
 							_setCurrentPage(_book.targetPage)
 
+							_book.turned.page = _getCurrentPage(pageNo)
+							_book.turned.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
 							_book.node.dispatchEvent(_book.turned)
 
 						}
@@ -521,6 +524,11 @@
 						animation4.onfinish = (event) => {
 							_book.state.isTurning = false
 							_setCurrentPage(_book.targetPage)
+
+							_book.turned.page = _getCurrentPage(pageNo)
+							_book.turned.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
+							_book.node.dispatchEvent(_book.turned)
+
 
 						}
 						break
@@ -949,10 +957,7 @@
 
 	// console.log(_book)
 
-	function _addEvents(eventName, callback) {
-		_book.node.addEventListener(eventName, callback, false)
-	}
-
+	const _addEventListeners = (eventName, callback) => { _book.node.addEventListener(eventName, callback, false) }
 	class Superbook {
 		execute(methodName, ...theArgs) {
 			switch (methodName) {
@@ -971,12 +976,12 @@
 					return _book[methodName](theArgs)
 			}
 		}
-		on(methodName, ...callback) {
+		on(methodName, ...args) {
 			switch (methodName) {
 				case 'turning':
-					return _addEvents('turning', callback[0])
+					return _addEventListeners('turning', args[0])
 				case 'turned':
-					return _addEvents('turned', callback[0])
+					return _addEventListeners('turned', args[0])
 				default:
 					return new Error('Event not found')
 			}
