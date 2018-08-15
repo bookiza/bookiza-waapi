@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+
+<title>The Solar System by Marvin Danig</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+
+  <style>
+    body {
+    font: 4.4vw/1.2 'EB Garamond', serif;
+    margin: 0 0;
+    overflow: hidden;
+    background: #fff;
+    color: #555;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
+}
+
+p {
+    margin: 2vw 0;
+}
+
+h1 {
+	font-size: 6vw;
+}
+
+.leaf {
+    height: 100vh;
+    width: 80%;
+    margin: auto;
+}
+
+.inner {
+    margin: 10% auto;
+    width: 100%;
+}
+
+.flex {
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: 80%;
+}
+
+a {
+    color: #0af;
+    outline: 0 none;
+    text-decoration: none;
+    text-rendering: optimizelegibility;
+}
+
+a:focus,
+a:active,
+a:hover {
+    outline: 0 none;
+    border-bottom: 1px dotted #0af;
+}
+
+blockquote {
+    margin: 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666
+    font-weight:100;
+}
+
+blockquote:before {
+    color: #0af;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
+}
+
+blockquote:after {
+    color: #0af;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
+}
+
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 4.5vw 1vw .1vw;
+  float: left;
+  line-height: 10vw;
+  font-size: 18vw;
+  font-family: 'UnifrakturMaguntia', cursive;
+}
+
+.blue {
+	color: #0af;
+}
+
+.centerize {
+	text-align: center;
+	margin: 0 auto;
+}
+    .centerize {
+  padding: 2vw auto;
+  text-align: center;
+}
+
+.diagram {
+  margin: 4vw auto;
+  width: 70vw;
+  padding: 5vw;
+  position: relative;
+}
+
+.figure {
+  width: 100%;
+  height: 8vh;
+}
+
+.line1 {
+  height: 2px;
+  width: 50vw;
+  margin: 10vw auto;
+  background-color: #444;
+  position: absolute;
+  left: 15vw;
+}
+
+.line1 p {
+  margin: 1px auto;
+  font-size: 2vw;
+  text-align: center;
+  color: #444;
+}
+
+.line2 {
+  height: 2px;
+  width: 25vw;
+  margin: 0vw auto;
+  background-color: #a00;
+  position: absolute;
+  left: 15vw;
+}
+
+.line2 p {
+  margin: 1px auto;
+  font-size: 2vw;
+  text-align: center;
+  color: #a00;
+}
+
+
+.line3 {
+  height: 10vw;
+  width: 2px;
+  margin: 0vw auto;
+  border-right: 2px dotted blue;
+  position: absolute;
+  left: 40vw;
+}
+
+.line3 p {
+  margin: 5vw 1vw;
+  font-size: 3vw;
+  text-align: center;
+  color: blue;
+}
+
+
+
+.earth {
+  height: 20vw;
+  width: 20vw;
+  position: relative;
+  margin: auto;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px dotted blue;
+  box-shadow: 0 0 1vw #00aaff;
+  background-image: url('https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/2_no_clouds_1k.jpg');
+  background-size: cover;
+  float: left;
+  position: absolute;
+  color:white;
+}
+
+.moon {
+  position: relative;
+  height: 10vw;
+  width: 10vw;
+  background-color: transparent;
+  margin: 5vw auto;
+  padding: 0;
+  background-image: url('https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/small-moon.png');
+  background-size: cover;
+  position: absolute;
+  left: 60vw;
+}
+
+.origin {
+  height: 5vw;
+  width: 10vw;
+}
+  </style>
+</head>
+<body>
+  <div class="leaf">
+    <div class="inner justify">
+        <h1> Barycenter</h1>
+        <blockquote><em>The barycenter (or barycentre) is the point between two objects where they balance each other.</em> </blockquote>
+        <p> For example, it is the <em>center of mass</em> where two or more celestial bodies orbit each other. Let's consider the Earth-Moon system: </p>
+        <p> The <em>barycenter</em> of the Earth-Moon system is a point in space about which the Earth and Moon appear to orbit as they travel together around the Sun. It is located exactly along the line that connects the center of the Earth with the center of the Moon.</p>
+        <div class="diagram flex">
+            <div class="figure">
+                <div class="earth flex">
+                    <div class="origin">
+                        O
+                    </div>
+                </div>
+                <div class="moon"> </div>
+                <div class="line1">
+                    <p><em> D <sub>total</sub></em></p>
+                </div>
+                <div class="line2">
+                    <p><em> D <sub>barycenter</sub> </em></p>
+                </div>
+                <div class="line3">
+                    <p><em> X </em></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+  <script></script>
+</body>
+</html>

@@ -2,312 +2,237 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
-<title>The Solar System by Marvin Danig</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+<title> Bubblin's Official Guide </title>
 
   
   <style>
-    body {
-    font: 4.4vw/1.2 'EB Garamond', serif;
-    margin: 0 0;
-    overflow: hidden;
-    background: #fff;
-    color: #555;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  margin: 0 0;
+  overflow: hidden;
+  color: #667;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 0vw 0 1vw;
+  padding: 0;
+  color: #444;
+  width: 100%;
+  text-align: center;
 }
 
 p {
-    margin: 2vw 0;
+  margin: 3vw 0;
 }
 
-h1 {
-	font-size: 6vw;
-}
-
-.leaf {
-    height: 100vh;
-    width: 80%;
-    margin: auto;
-}
-
-.inner {
-    margin: 10% auto;
-    width: 100%;
-}
-
-.flex {
-    display: -webkit-box;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-.justify {
-    text-align: justify;
-}
-
-.center {
-    text-align: center;
-}
-
-.small {
-    font-size: 80%;
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
 }
 
 a {
-    color: #0af;
-    outline: 0 none;
-    text-decoration: none;
-    text-rendering: optimizelegibility;
+  color: #0077ff;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility;
 }
+
 
 a:focus,
 a:active,
 a:hover {
-    outline: 0 none;
-    border-bottom: 1px dotted #0af;
+  outline: 0 none;
+  color: #0a4;
 }
 
-blockquote {
-    margin: 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666
-    font-weight:100;
+a:active {
+  text-shadow: 0 0 1px #050;
 }
 
-blockquote:before {
-    color: #0af;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
+strong {
+  font-weight: bold;
 }
 
-blockquote:after {
-    color: #0af;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
+/* Page specific */
 
-p.chapter-begin:first-letter {
-  display: inline-block;
-  margin: 4.5vw 1vw .1vw;
-  float: left;
-  line-height: 10vw;
-  font-size: 18vw;
-  font-family: 'UnifrakturMaguntia', cursive;
-}
-
-.blue {
-	color: #0af;
-}
-
-.centerize {
-	text-align: center;
-	margin: 0 auto;
-}
-    body {
-  background-color: #000;
-  color: #fff;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.BG {
+.leaf {
   height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto;
+}
+
+.inner {
+  margin: 10% auto;
   width: 100%;
-  position: fixed;
-  will-change: transform;
-	transform: translate3d(0, 0, 0);
-  top: 0;
-  left: 0;
-  opacity: .1;
 }
 
-.dot {
-  height: 2vw;
-  width: 2vw;
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 50%;
-  background-color: #fff;
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
-.line1 {
-  height: 41vw;
-  width: 1px;
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 41vw;
-  border-radius: 50%;
-  background-color: #0af;
+.justify {
+  text-align: justify;
 }
 
-.line2 {
-  height: 20.5vw;
-  width: 1px;
-  position: absolute;
-  margin: auto;
-  top: 49.5vw;
-  left: 18.5vw;
-  right: 0;
-  bottom: 60.5vw;
-  transform: rotate(60deg);
-  -webkit-transform: rotate(60deg);
-  background-color: #f20;
-}
+/* Your custom styles below */
 
-.tangent {
-  height: 10vw;
-  width: 1px;
-  position: absolute;
-  margin: auto;
-  top: 0vw;
-  left: 0vw;
-  right: 0;
-  bottom: 0vw;
-  background-color: #000;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 monospace, sans-serif;
+  width: 70vw;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 3vw;
+  border-radius: 1vw;
   color: black;
 }
 
-.sun {
-  height: 20vw;
-  width: 20vw;
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: -30vw;
-  bottom: -30vw;
-  border-radius: 50%;
-  background-color: #ffd259;
-  border: .5vw solid #ffcb3f;
-  box-shadow: 0 0 10vw #ffbd0c;
+.code {
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
-.planet {
-  position: absolute;
-  top: 7vw;
-  left: 7vw;
-  ;
-  height: 10vw;
-  width: 10vw;
-  border-radius: 50%;
-  background-color: #1293f8;
-  margin: 0 auto;
-  animation: spin 2s linear infinite;
-  animation-direction: reverse;
-  -webkit-animation: spin 2s linear infinite;
-  -webkit-animation-direction: reverse;
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
 }
 
-.orbit1 {
-  height: 41vw;
-  width: 41vw;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 2px dashed #fff;
-  border-radius: 21vw;
-  margin: auto;
-  animation: spin 10s linear infinite;
-  -webkit-animation: spin 10s linear infinite;
+.center { text-align: center; }
+
+.right {
+  float: right;
 }
 
-@keyframes spin {
+.left {
+  float: left;
+}
+
+.center {
+  text-align: center;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
+  margin: 0;
+  padding: 1vw 5vw;
+}
+
+.small {
+  font-size: 80%;
+}
+
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
+}
+
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
+}
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
+}
+
+
+@-webkit-keyframes blink {
   0% {
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
   }
   100% {
-    transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
+    background: transparent;
   }
 }
 
-.orbit2 {
-  height: 82vw;
-  width: 82vw;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 2px dashed #fff;
-  border-radius: 42vw;
-  margin: auto;
-  animation: spin 10s linear infinite;
-  -webkit-animation: spin 10s linear infinite;
-}
-
-@-webkit-keyframes spin {
+@keyframes blink {
   0% {
-    transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
   }
   100% {
-    transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
+    background: transparent;
   }
 }
 
-.moon {
-  height: 1.75vw;
-  width: 1.75vw;
-  position: absolute;
-  top: 0;
-  left: -2.5vw;
-  margin: 0 auto;
-  border-radius: 50%;
-  background-color: #aaa;
+.italics{
+  font-style: italic;
 }
 
+.white-text{
+	color: white;
+}
+    
   </style>
 </head>
 <body>
-  <div class="dot">
-  <p>O</p>
-</div>
-<div class="line1"> &nbsp; R⊕</div>
-<div class="line2"> &nbsp; R☉</div>
-<div class="orbit1">
-  <div class="sun"> </div>
-</div>
-<div class="orbit2">
-  <div class="planet"> </div>
+  <div class="leaf ">
+				<div class="inner justify ">
+								<p>To toggle the editable page click on the page-numbers listed on the toolbar (see below:). </p>
+								<img class="overlay" src="https://raw.githubusercontent.com/bubblin/Official-Handbook/master/assets/images/active-page.jpg" width="100%" />
+								<p> Clicking on [2] above will activate <span class="code">page-2</span> and it will be higlighted with a green border. The code playground engine will render output to page-2 instead page-3.
+								</p>
+								<h5> Default Editor Format (on web): </h5>
+								<p> Editor on Bubblin website processes only the following format combination: </p>
+								<p class="code-block "> "mode": { "HTML": "html", "CSS": "css", "JS": "js", "HEAD": "html" }</p>
+								<p> The decision to use only HTML for book writing on web is <em>intentional</em>. If you prefer to use markdown (or any other preprocessor) we recommend you install <a href="http://bookiza.io">bookiza</a> on your local with the desired flavor on <span class="code">.bookrc</span> like so: </p>
+								<p class="code-block "> "mode": { "HTML": "markdown", "CSS": "less", "JS": "typescript", "HEAD": "haml" }</p>
+				</div>
 </div>
 
   <script></script>

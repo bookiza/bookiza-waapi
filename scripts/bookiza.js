@@ -16,7 +16,6 @@
 				// 'isZoomed': false,
 				// 'isPeeled': false,
 				// 'toTurnOrNotToTurn': false,
-				// 'eventsCache': [],
 				mode: _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			}
 
@@ -44,9 +43,11 @@
 			this.frames = this.elements.map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 			/******************************************************
-			*  @range is set of printable frames for the viewport: 			// this.range = [] 	*
+			*  @range is set of printable frames for the viewport:
+			*  this.range = []
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
 			*******************************************************/
+			this.eventsCache = []
 			this.tick = 0 /* Count the number of pages ticked before book goes to isTurning: false state again */
 
 			/* Turn events */
@@ -77,10 +78,6 @@
 		hasPage(args) {
 			let index = parseInt(args[0]) - 1
 			return !!index.between(0, _book.frames.length)
-		}
-
-		addEvents(eventName, callback) {
-			_book.node.addEventListener(eventName, callback, false)
 		}
 
 	}
@@ -128,15 +125,17 @@
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
 
+
+
+
+		// To be removed from here.
 		_printElementsToDOM('buttons', _book.buttons)
 
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
 		_book.state.isInitialized = true
 
-
-		// console.log('Second') // To prove that the book is printed before DOMContentLoaded event is fired.
-
+		console.log('Second') // To prove that the book is printed before DOMContentLoaded event is fired.
 	}
 
 	const handler = (event) => {
@@ -273,7 +272,8 @@
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				// console.log('Anchor over', event.target.id)
+				_book.state.direction = _direction(event.target.id)
+
 				break
 			case 'DIV':
 				break
@@ -285,7 +285,7 @@
 		// TODO: This is where we calculate range pages according to QI-QIV.
 		switch (event.target.nodeName) {
 			case 'A':
-				// console.log('Anchor out', event.target.id)
+				console.log('Anchor out', event.target.id)
 				break
 			case 'DIV':
 				break
@@ -305,10 +305,16 @@
 		switch (event.target.nodeName) {
 			case 'A':
 				// console.log('Execute half turn')
+
+				// _book.state.direction === 'forward'
+				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+
 				break
 			case 'DIV':
 				// console.log('Page picked, execute curl')
-				// console.log('down', event.pageX)
+				console.log('down', event.pageX)
 				break
 			default:
 		}
@@ -320,7 +326,7 @@
 				// console.log('Complete the flip')
 				break
 			case 'DIV':
-				// console.log('up', event.pageX) // Calculate x-shift, y-shift.
+				console.log('up', event.pageX) // Calculate x-shift, y-shift.
 				break
 			default:
 		}
@@ -329,7 +335,7 @@
 	const _handleMouseClicks = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction = event.target.id === 'next' ? 'forward' : 'backward'
+				_book.state.direction = _direction(event.target.id)
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
@@ -364,6 +370,8 @@
 		switch (event.target.nodeName) {
 			case 'A':
 				_book.state.direction = event.deltaY < 0 ? 'backward' : 'forward'
+
+				console.log(_book.state.direction)
 
 				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
@@ -410,8 +418,8 @@
 		console.log('Touch stopped')
 	}
 
-	/**********************************/
-	/** ****** Animation methods *******/
+	/*********************************
+	 * Animation objects/Conio-tubular math
 	/**********************************/
 
 	const _kf1 = () => [
@@ -576,6 +584,8 @@
 
 	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
 
+	const _direction = (id) => id === 'next' ? 'forward' : 'backward'
+
 	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
 	const _step = () =>
@@ -697,8 +707,6 @@
 		html === undefined
 			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/page-${index}.html"></iframe></div>`).firstChild, index)
 			: _addPageWrappersAndBaseClasses(html, index)
-
-
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
@@ -849,15 +857,12 @@
 			_book.plotter.side === 'right'
 				? _book.plotter.region === 'upper' ? 'I' : 'IV'
 				: _book.plotter.region === 'upper' ? 'II' : 'III'
-		_book.plotter.currentPointerPosition = JSON.parse(
-			`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${_book.plotter.origin.y - event.pageY}" }`
-		)
-		_book.plotter.θ = Math.acos(
-			parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)
-		) // θ in radians
+		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${_book.plotter.origin.y - event.pageY}" }`)
+		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x) // x-coord from origin.
 		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y) // y-coord from origin.
 
+		// console.log(_book.plotter.μ)
 		// console.log(_sign(_book.plotter.μ))
 
 		// _printCursorPosition(event) // delete this method call alongwith its function
@@ -951,13 +956,20 @@
 
 	_viewer.onChange('(orientation: landscape)', (match) => {
 		_book.state.mode = match ? 'landscape' : 'portrait'
+		console.log('switch gears baby!')
 	})
 
 	let _book = new Book()
 
 	// console.log(_book)
 
-	const _addEventListeners = (eventName, callback) => { _book.node.addEventListener(eventName, callback, false) }
+	/******************
+	 * Add `turned`, `turning` listeners to
+	 * allow callback execution with context
+	 * of the book, page & whatever is in view.
+	 * We'll call these TurnListeners.
+	*/
+	const _addTurnListeners = (eventName, callback) => { _book.node.addEventListener(eventName, callback, false) }
 	class Superbook {
 		execute(methodName, ...theArgs) {
 			switch (methodName) {
@@ -979,9 +991,9 @@
 		on(methodName, ...args) {
 			switch (methodName) {
 				case 'turning':
-					return _addEventListeners('turning', args[0])
+					return _addTurnListeners('turning', args[0])
 				case 'turned':
-					return _addEventListeners('turned', args[0])
+					return _addTurnListeners('turned', args[0])
 				default:
 					return new Error('Event not found')
 			}

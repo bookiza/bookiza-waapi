@@ -2,337 +2,244 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
-<title>The Solar System by Marvin Danig</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+<title> Bubblin's Official Guide </title>
 
   
   <style>
-    body {
-    font: 4.4vw/1.2 'EB Garamond', serif;
-    margin: 0 0;
-    overflow: hidden;
-    background: #fff;
-    color: #555;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  margin: 0 0;
+  overflow: hidden;
+  color: #667;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 0vw 0 1vw;
+  padding: 0;
+  color: #444;
+  width: 100%;
+  text-align: center;
 }
 
 p {
-    margin: 2vw 0;
+  margin: 3vw 0;
 }
 
-h1 {
-	font-size: 6vw;
-}
-
-.leaf {
-    height: 100vh;
-    width: 80%;
-    margin: auto;
-}
-
-.inner {
-    margin: 10% auto;
-    width: 100%;
-}
-
-.flex {
-    display: -webkit-box;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-.justify {
-    text-align: justify;
-}
-
-.center {
-    text-align: center;
-}
-
-.small {
-    font-size: 80%;
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
 }
 
 a {
-    color: #0af;
-    outline: 0 none;
-    text-decoration: none;
-    text-rendering: optimizelegibility;
+  color: #0077ff;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility;
 }
+
 
 a:focus,
 a:active,
 a:hover {
-    outline: 0 none;
-    border-bottom: 1px dotted #0af;
+  outline: 0 none;
+  color: #0a4;
 }
 
-blockquote {
-    margin: 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666
-    font-weight:100;
+a:active {
+  text-shadow: 0 0 1px #050;
 }
 
-blockquote:before {
-    color: #0af;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
+strong {
+  font-weight: bold;
 }
 
-blockquote:after {
-    color: #0af;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
+/* Page specific */
 
-p.chapter-begin:first-letter {
-  display: inline-block;
-  margin: 4.5vw 1vw .1vw;
-  float: left;
-  line-height: 10vw;
-  font-size: 18vw;
-  font-family: 'UnifrakturMaguntia', cursive;
-}
-
-.blue {
-	color: #0af;
-}
-
-.centerize {
-	text-align: center;
-	margin: 0 auto;
-}
-    h1 {
-  color: #ccc;
-  font-size: 8vw;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: 10vh;
-}
-
-h2 {
-  color: #ccc;
-  font-size: 4vw;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  bottom: 10vh;
-}
-
-@-moz-keyframes rot {
-  from {
-    -moz-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(-360deg);
-    transform: rotate(-360deg);
-  }
-}
-
-@-webkit-keyframes rot {
-  from {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes rot {
-  from {
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(-360deg);
-    -ms-transform: rotate(-360deg);
-    -webkit-transform: rotate(-360deg);
-    transform: rotate(-360deg);
-  }
-}
-
-html, body {
-  background-color: #000;
-  margin: 0 auto;
-  background-image: url(https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/galaxy_starfield.jpg);
-  background-size: cover;
-  height: 100vh;
-  width: 100vw;
-}
-
-html {
-  min-height: 100%;
-  min-width: 100%;
+.leaf {
   height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto;
+}
+
+.inner {
+  margin: 10% auto;
   width: 100%;
 }
 
-body {
-  top: 50%;
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
-.orbit {
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.justify {
+  text-align: justify;
 }
 
-.orbit:before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: 0%;
-}
+/* Your custom styles below */
 
-.sun {
-  background: #ffcc00;
-  height: 60vw;
-  width: 60vw;
-  margin-left: -30vw;
-  margin-top: -30vw;
-  -moz-border-radius: 60vw / 60vw;
-  -webkit-border-radius: 60vw 60vw;
-  border-radius: 60vw / 60vw;
-}
 
-.mercury {
-  width: 66vw;
-  height: 66vw;
-  margin-top: -33vw;
-  margin-left: -33vw;
-  -moz-border-radius: 66vw / 66vw;
-  -webkit-border-radius: 66vw 66vw;
-  border-radius: 66vw / 66vw;
-  -moz-animation: rot 2.41s infinite linear;
-  -webkit-animation: rot 2.41s infinite linear;
-  animation: rot 2.41s infinite linear;
-}
-
-.mercury:before {
-  background: #ff9000;
-  height: 1.915px;
-  width: 1.915px;
-  margin-left: -0.9575px;
-  margin-top: -0.9575px;
-  -moz-border-radius: 1.915px / 1.915px;
-  -webkit-border-radius: 1.915px 1.915px;
-  border-radius: 1.915px / 1.915px;
-}
-
-.venus {
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 monospace, sans-serif;
   width: 70vw;
-  height: 70vw;
-  margin-top: -35vw;
-  margin-left: -35vw;
-  -moz-border-radius: 70vw / 70vw;
-  -webkit-border-radius: 70vw 70vw;
-  border-radius: 70vw / 70vw;
-  -moz-animation: rot 6.15s infinite linear;
-  -webkit-animation: rot 6.15s infinite linear;
-  animation: rot 6.15s infinite linear;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 3vw;
+  border-radius: 1vw;
+  color: black;
 }
 
-.venus:before {
-  background: #ffde00;
-  height: 4.745px;
-  width: 4.745px;
-  margin-left: -2.3725px;
-  margin-top: -2.3725px;
-  -moz-border-radius: 4.745px / 4.745px;
-  -webkit-border-radius: 4.745px 4.745px;
-  border-radius: 4.745px / 4.745px;
+.code {
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
 }
 
-.earth {
-  width: 74vw;
-  height: 74vw;
-  margin-top: -37vw;
-  margin-left: -37vw;
-  -moz-border-radius: 74vw / 74vw;
-  -webkit-border-radius: 74vw 74vw;
-  border-radius: 74vw / 74vw;
-  -moz-animation: rot 10s infinite linear;
-  -webkit-animation: rot 10s infinite linear;
-  animation: rot 10s infinite linear;
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
 }
 
-.earth:before {
-  background: #00aaff;
-  height: 5px;
-  width: 5px;
-  margin-left: -2.5px;
-  margin-top: -2.5px;
-  -moz-border-radius: 5px / 5px;
-  -webkit-border-radius: 5px 5px;
-  border-radius: 5px / 5px;
+.center { text-align: center; }
+
+.right {
+  float: right;
 }
 
-.mars {
-  width: 78vw;
-  height: 78vw;
-  margin-top: -39vw;
-  margin-left: -39vw;
-  -moz-border-radius: 78vw / 78vw;
-  -webkit-border-radius: 78vw 78vw;
-  border-radius: 78vw / 78vw;
-  -moz-animation: rot 18.81s infinite linear;
-  -webkit-animation: rot 18.81s infinite linear;
-  animation: rot 18.81s infinite linear;
+.left {
+  float: left;
 }
 
-.mars:before {
-  background: #ff0036;
-  height: 2.66px;
-  width: 2.66px;
-  margin-left: -1.33px;
-  margin-top: -1.33px;
-  -moz-border-radius: 2.66px / 2.66px;
-  -webkit-border-radius: 2.66px 2.66px;
-  border-radius: 2.66px / 2.66px;
+.center {
+  text-align: center;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
+  margin: 0;
+  padding: 1vw 5vw;
+}
+
+.small {
+  font-size: 80%;
+}
+
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
+}
+
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
+}
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
+}
+
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+    pre {
+	padding: 0;
+	margin: 0;
 }
   </style>
 </head>
 <body>
-  <div class="sun orbit"></div>
-<div class="mercury orbit"></div>
-<div class="venus orbit"></div>
-<div class="earth orbit"></div>
-<div class="mars orbit"></div>
-<h2> Can you spot Mercury?</h2>
+  <div class="leaf ">
+				<div class="inner justify">
+								<h1> Table of Contents</h1>
+								<p> It is very easy and important to add a Table of Contents to your book, especially if it is really long. Table of Contents provides critical accessibility deep inside your book and helps a reader to jump from one page on your book to another easily. </p>
+								<p> Table of Contents can be submitted via a textarea that accepts HTML as an unordered list alongwith a className of <span class="monospace">toc</span> like so: </p>
+								<pre>
+&lt;ul class="toc"&gt;
+  &lt;!--- List items here ---&gt;
+&lt;/ul&gt; </pre>
+								<p>
+												Feel free to use the <a href="https://github.com/bubblin/Official-Handbook/tree/master/extras">_table_of_contents_</a> of this handbook itself (under MIT License ) to create a table of contents for your own. </p>
+								<strong> Automatic Generation </strong>
+								<p>Bookiza combined with the Abelone tool can generate Table of Contents automatically. Discussion about how that works is kind of out of scope for this book.</p>
+				</div>
+</div>
+
   <script></script>
 </body>
 </html>

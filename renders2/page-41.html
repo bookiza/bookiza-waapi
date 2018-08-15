@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+
+<title>The Solar System by Marvin Danig</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+
+  
+  <style>
+    body {
+    font: 4.4vw/1.2 'EB Garamond', serif;
+    margin: 0 0;
+    overflow: hidden;
+    background: #fff;
+    color: #555;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
+}
+
+p {
+    margin: 2vw 0;
+}
+
+h1 {
+	font-size: 6vw;
+}
+
+.leaf {
+    height: 100vh;
+    width: 80%;
+    margin: auto;
+}
+
+.inner {
+    margin: 10% auto;
+    width: 100%;
+}
+
+.flex {
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.justify {
+    text-align: justify;
+}
+
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: 80%;
+}
+
+a {
+    color: #0af;
+    outline: 0 none;
+    text-decoration: none;
+    text-rendering: optimizelegibility;
+}
+
+a:focus,
+a:active,
+a:hover {
+    outline: 0 none;
+    border-bottom: 1px dotted #0af;
+}
+
+blockquote {
+    margin: 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666
+    font-weight:100;
+}
+
+blockquote:before {
+    color: #0af;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
+}
+
+blockquote:after {
+    color: #0af;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
+}
+
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 4.5vw 1vw .1vw;
+  float: left;
+  line-height: 10vw;
+  font-size: 18vw;
+  font-family: 'UnifrakturMaguntia', cursive;
+}
+
+.blue {
+	color: #0af;
+}
+
+.centerize {
+	text-align: center;
+	margin: 0 auto;
+}
+    .top-gap{margin-top:10vw;}
+
+.wrapper {
+	max-width: 68vw;
+	margin: 60px auto;
+	padding: 0 20px;
+}
+
+.youtube {
+	background-color: #000;
+	margin-bottom: 30px;
+	position: relative;
+	padding-top: 56.25%;
+	overflow: hidden;
+	cursor: pointer;
+}
+.youtube img {
+	width: 100%;
+	top: -16.82%;
+	left: 0;
+	opacity: 0.7;
+}
+.youtube .play-button {
+	width: 90px;
+	height: 60px;
+	background-color: #333;
+	box-shadow: 0 0 30px rgba( 0,0,0,0.6 );
+	z-index: 1;
+	opacity: 0.8;
+	border-radius: 6px;
+}
+.youtube .play-button:before {
+	content: "";
+	border-style: solid;
+	border-width: 15px 0 15px 26.0px;
+	border-color: transparent transparent transparent #fff;
+}
+.youtube img,
+.youtube .play-button {
+	cursor: pointer;
+}
+.youtube img,
+.youtube iframe,
+.youtube .play-button,
+.youtube .play-button:before {
+	position: absolute;
+}
+.youtube .play-button,
+.youtube .play-button:before {
+	top: 50%;
+	left: 50%;
+	transform: translate3d( -50%, -50%, 0 );
+}
+.youtube iframe {
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+}
+.imageNote {font-size:80%; text-align:center; margin:3vw;}
+  </style>
+</head>
+<body>
+  <div class="leaf ">
+    <div class="inner justify">
+        <p>
+        	Here's a little story about formation and evolution of Moon by the <a href="https://lunar.gsfc.nasa.gov/">LRO</a> team at NASA:
+        </p>
+				<div class="wrapper">
+								<div class="youtube" data-embed="r1iG9BmNols">
+												<div class="play-button">
+
+												</div>
+								</div>
+				</div>
+
+
+        <div class="center top-gap"> <img class="motif" src="https://raw.githubusercontent.com/marvindanig/The-Solar-System/master/assets/images/motif.png" width="40%" /> </div>
+    </div>
+</div>
+
+  <script>( function() {
+
+	var youtube = document.querySelectorAll( ".youtube" );
+
+	for (var i = 0; i < youtube.length; i++) {
+
+		var source = "https://img.youtube.com/vi/"+ youtube[i].dataset.embed +"/sddefault.jpg";
+
+		var image = new Image();
+				image.src = source;
+				image.addEventListener( "load", function() {
+					youtube[ i ].appendChild( image );
+				}( i ) );
+
+				youtube[i].addEventListener( "click", function() {
+
+					var iframe = document.createElement( "iframe" );
+
+							iframe.setAttribute( "frameborder", "0" );
+							iframe.setAttribute( "allowfullscreen", "" );
+							iframe.setAttribute( "src", "https://www.youtube.com/embed/"+ this.dataset.embed +"?rel=0&showinfo=0&autoplay=1" );
+
+							this.innerHTML = "";
+							this.appendChild( iframe );
+				} );
+	};
+
+} )();</script>
+</body>
+</html>

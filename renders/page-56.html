@@ -2,145 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=EB+Garamond|UnifrakturMaguntia' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
-<title>The Solar System by Marvin Danig</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.0/TweenMax.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script> -->
+<title> Bubblin's Official Guide </title>
 
   
   <style>
-    body {
-    font: 4.4vw/1.2 'EB Garamond', serif;
-    margin: 0 0;
-    overflow: hidden;
-    background: #fff;
-    color: #555;
+    html, body {
+  font: 3.1vw/1.5 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  margin: 0 0;
+  overflow: hidden;
+  color: #667;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 0vw 0 1vw;
+  padding: 0;
+  color: #444;
+  width: 100%;
+  text-align: center;
 }
 
 p {
-    margin: 2vw 0;
+  margin: 3vw 0;
 }
 
-h1 {
-	font-size: 6vw;
-}
-
-.leaf {
-    height: 100vh;
-    width: 80%;
-    margin: auto;
-}
-
-.inner {
-    margin: 10% auto;
-    width: 100%;
-}
-
-.flex {
-    display: -webkit-box;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-.justify {
-    text-align: justify;
-}
-
-.center {
-    text-align: center;
-}
-
-.small {
-    font-size: 80%;
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
 }
 
 a {
-    color: #0af;
-    outline: 0 none;
-    text-decoration: none;
-    text-rendering: optimizelegibility;
+  color: #0077ff;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility;
 }
+
 
 a:focus,
 a:active,
 a:hover {
-    outline: 0 none;
-    border-bottom: 1px dotted #0af;
+  outline: 0 none;
+  color: #0a4;
 }
 
-blockquote {
-    margin: 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666
-    font-weight:100;
+a:active {
+  text-shadow: 0 0 1px #050;
 }
 
-blockquote:before {
-    color: #0af;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
+strong {
+  font-weight: bold;
 }
 
-blockquote:after {
-    color: #0af;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
-
-p.chapter-begin:first-letter {
-  display: inline-block;
-  margin: 4.5vw 1vw .1vw;
-  float: left;
-  line-height: 10vw;
-  font-size: 18vw;
-  font-family: 'UnifrakturMaguntia', cursive;
-}
-
-.blue {
-	color: #0af;
-}
-
-.centerize {
-	text-align: center;
-	margin: 0 auto;
-}
-    @import url("https://fonts.googleapis.com/css?family=PT+Sans+Narrow");
-body {
-  background: #fff;
-  margin: 0 0;
-  overflow: hidden;
-  color: #444;
-  font: 3.6vw/1.1 "PT Sans Narrow", sans-serif;
-}
+/* Page specific */
 
 .leaf {
-  height: 80vh;
-  width: 80vw;
-  margin: 10vh auto
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto;
+}
+
+.inner {
+  margin: 10% auto;
+  width: 100%;
 }
 
 .flex {
@@ -150,136 +84,155 @@ body {
   justify-content: center;
 }
 
-h1 {
-  font-size: 8vw;
-  padding: 0 2vw 0 0;
+.justify {
+  text-align: justify;
+}
+
+/* Your custom styles below */
+
+
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 monospace, sans-serif;
+  width: 70vw;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 3vw;
+  border-radius: 1vw;
+  color: black;
+}
+
+.code {
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
+}
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
+}
+
+.center { text-align: center; }
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.center {
+  text-align: center;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
   margin: 0;
+  padding: 1vw 5vw;
 }
 
-p {
-  padding: 2px;
-  margin: 0;
+.small {
+  font-size: 80%;
 }
 
-.inner {
-  margin: 50% auto;
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
 }
 
-#earth {
-  width: 15vw;
-  height: 15vw;
-  background: url('https://raw.githubusercontent.com/bubblin/The-Solar-System/master/images/page-43/marsmap.jpg') 0 0 repeat;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  background-size: cover;
-  animation: rotate 4s linear infinite;
-  -webkit-animation: rotate 4s linear infinite;
-  -moz-animation: rotate 4s linear infinite;
-  -ms-animation: rotate 4s linear infinite;
-  -o-animation: rotate 4s linear infinite;
-  -webkit-transition: -webkit-transform 300ms linear;
-  -webkit-transform-style: preserve-3d;
-  -moz-transition: -moz-transform 300ms linear;
-  -moz-transform-style: preserve-3d;
-  transition: transform 300ms linear;
-  transform-style: preserve-3d;
-  box-shadow: inset 1vw 0 5vw .1vw rgba(0, 0, 0, .5);
-  -moz-box-shadow: inset 2vw 0 5vw .1vw rgba(0, 0, 0, .5);
-  -webkit-box-shadow: inset 2vw 0 5vw .1vw rgba(0, 0, 0, .5);
-  color: #000;
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
 }
 
-#earth:after {
-  content: "";
-  position: absolute;
-  top: 0%;
-  left: 0%;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  box-shadow: -1vw 1.5vw 8vw 0vw rgba(0, 0, 0, .9) inset;
-  -moz-box-shadow: -1vw 1.5vw 8vw 0vw rgba(0, 0, 0, .9) inset;
-  -webkit-box-shadow: -1vw 1.5vw 8vw 0vw rgba(0, 0, 0, .9) inset;
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
 }
 
-#earth:before {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  opacity: 0.2;
-  background: radial-gradient(circle at 10vw 10vw, #fff, #000);
-}
 
-@keyframes rotate {
+@-webkit-keyframes blink {
   0% {
-    background-position: 0 0;
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
   }
   100% {
-    background-position: 50vw 0;
+    background: transparent;
   }
 }
 
-@-moz-keyframes rotate {
+@keyframes blink {
   0% {
-    background-position: 0 0;
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
   }
   100% {
-    background-position: 50vw 0;
+    background: transparent;
   }
 }
 
-@-webkit-keyframes rotate {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50vw 0;
-  }
+.italics{
+  font-style: italic;
 }
 
-@-ms-keyframes rotate {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50vw 0;
-  }
+.white-text{
+	color: white;
+}
+    body {
+	height: 100vh;
+	width: 100vw;
 }
 
-@-o-keyframes rotate {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50vw 0;
-  }
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
 }
   </style>
 </head>
 <body>
-  <div class="leaf flex ">
+  <div class="leaf ">
   <div class="inner flex">
-    <div>
-      <h1> Mars </h1>
-      <p>The Red Planet</p>
-    </div>
-    <div id="earth"></div>
-  </div>
+<img class="overlay" src="https://raw.githubusercontent.com/bubblin/Official-Handbook/master/assets/images/screenshot-connect.stripe.com.jpg" width="60%" />
+</div>
 </div>
   <script></script>
 </body>
