@@ -231,7 +231,15 @@
 		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
 
 		const mutator = mutations => {
-			_book.state.isInitialized === true ? _turnTheBook(mutations) : _openTheBook()
+
+			let isNodeAdded = false
+
+			mutations.map(mutation => {
+				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
+			})
+
+			if (isNodeAdded)
+				_book.state.isInitialized === true ? _turnTheBook(mutations) : _openTheBook()
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -295,6 +303,11 @@
 					x: event.pageX,
 					y: event.pageY
 				}
+
+				_book.state.direction === forward
+					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
 				break
 			default:
 		}
@@ -363,7 +376,9 @@
 			case 'A':
 				_book.state.direction = event.deltaY < 0 ? backward : forward
 
-				console.log(_book.state.direction)
+				console.log(_book.state.direction())
+
+				// _book.eventsCache.push(event)
 
 				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
@@ -473,8 +488,6 @@
 		{ transform: `translate3d(${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
 	]
 
-
-
 	const _opacity = () => [
 		{ opacity: 1 },
 		{ opacity: 0 }
@@ -496,49 +509,38 @@
 	})
 
 	const _openTheBook = () => {
-
 		_book.state.direction = _isOdd(_book.currentPage) ? forward : backward
-
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
-
 				_book.node.animate(_kf5(), _options({}))
 				_book.buttons[1].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
-
 				let animation1 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
-
-
 				animation1.onfinish = (event) => {
 					_book.buttons[0].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
 					_book.state.isInitialized = true
 				}
-
-
 				break
 			case _book.frames.length:
-
 				_book.node.animate(_kf6(), _options({}))
 				_book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
-
 				let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
-
 				animation2.onfinish = (event) => {
 					_book.buttons[1].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
 					_book.state.isInitialized = true
 				}
 			break
 			default:
-				console.log('bhokal')
+				console.log(_book.currentPage, 'we need more than two of the view to implement this opening correctly')
+
 				break
 		}
 
 	}
 
 	const _turnTheBook = (mutations) => {
-		console.log('I got here')
-		mutations.map(mutation => {
-			Array.from(mutation.addedNodes).map(node => { console.log(node) })
-		})
+		if (_book.eventsCache.shift() !== undefined) {
+			console.log('I will animate the book')
+		}
 	}
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
