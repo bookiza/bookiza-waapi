@@ -9,7 +9,7 @@
 			this.node = d.getElementById('book')
 			this.delegator = d.getElementById('plotter')
 			this.state = {
-				direction: 'forward',
+				direction: forward,
 				isInitialized: false,
 				isTurning: false,
 				// 'isPeelable': false,
@@ -126,8 +126,6 @@
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-
-
 		// Move these methods elsewhere
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
@@ -233,7 +231,7 @@
 		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
 
 		const mutator = mutations => {
-			_applyAnimationMethods(mutations)
+			_book.state.isInitialized === true ? _turnTheBook(mutations) : _openTheBook()
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -283,7 +281,7 @@
 			case 'A':
 				// console.log('Execute half turn')
 
-				// _book.state.direction === 'forward'
+				// _book.state.direction === forward
 				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -333,7 +331,7 @@
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
-				_book.state.direction === 'forward'
+				_book.state.direction === forward
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -363,13 +361,13 @@
 	const _handleWheelEvent = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction = event.deltaY < 0 ? 'backward' : 'forward'
+				_book.state.direction = event.deltaY < 0 ? backward : forward
 
 				console.log(_book.state.direction)
 
 				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
-				// _book.state.direction === 'forward'
+				// _book.state.direction === forward
 				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -448,14 +446,15 @@
 		{ transform: 'rotateY(-180deg)', transformOrigin: 'left center 0' }
 	]
 
-	const _kf2 = () => [
-		{ transform: 'rotateY(180deg)', transformOrigin: 'right center 0' },
-		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' }
-	]
-
 	const _kf3 = () => [
 		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' },
 		{ transform: 'rotateY(180deg)', transformOrigin: 'right center 0' }
+	]
+
+
+	const _kf2 = () => [
+		{ transform: 'rotateY(180deg)', transformOrigin: 'right center 0' },
+		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' }
 	]
 
 	const _kf4 = () => [
@@ -465,76 +464,88 @@
 
 
 	const _kf5 = () => [
-		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0', opacity: 0.5 },
-		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0', opacity: 1 }
+		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0' },
+		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
 	]
 
 	const _kf6 = () => [
-		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  },
-		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(180deg)`, transformOrigin: 'right center 0' }
+		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0' },
+		{ transform: `translate3d(${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
+	]
+
+
+
+	const _opacity = () => [
+		{ opacity: 1 },
+		{ opacity: 0 }
 	]
 
 	const _flutter = () => [
-		{ transform: 'translate3d(0, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  },
-		{ transform: `translate3d(1vw, 0px, 0px) rotateY(0deg)`, transformOrigin: 'right center 0' },
-		{ transform: 'translate3d(0, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  }
+		{ transform: 'translate3d(0px, 0px, 0px)' },
+		{ transform: `translate3d(${_book.state.direction() * 0.5}vw, 0px, 0px)` },
+		{ transform: 'translate3d(0px, 0px, 0px)' },
 	]
 
-
-	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in' }) => ({
+	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in', direction = 'normal', iterations = 1 }) => ({
 		currentTime: 0,
 		duration: duration,
 		easing: bezierCurvature,
 		fill: 'forwards',
-		iterations: 1,
-		direction: 'normal'
+		iterations: iterations,
+		direction: direction
 	})
 
+	const _openTheBook = () => {
 
-	const _applyAnimationMethods = (mutations) => {
-		console.log(_book.state.isInitialized)
+		_book.state.direction = _isOdd(_book.currentPage) ? forward : backward
 
-		mutations.map(mutation => {
-			Array.from(mutation.addedNodes).map(node => { console.log(node)})
-		})
+		console.log(_book.state)
+
+		switch (_getCurrentPage(_book.currentPage)) {
+			case 1:
+
+				_book.node.animate(_kf5(), _options({}))
+				_book.buttons[1].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
+
+				let animation1 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
 
 
-		_book.state.isInitialized === true
-			? console.log(_book.state.isInitialized)
-			: _openBook()
+				animation1.onfinish = (event) => {
+					_book.buttons[0].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
+					_book.state.isInitialized = true
+				}
+
+
+				break
+			case _book.frames.length:
+
+				_book.node.animate(_kf6(), _options({}))
+				_book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
+
+				let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
+
+				animation2.onfinish = (event) => {
+					_book.buttons[1].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
+					_book.state.isInitialized = true
+				}
+			break
+			default:
+				console.log('bhokal')
+				break
+		}
 
 	}
 
-	const _openBook = () => {
-
-		console.log()
-
-		// return
-
-		_book.buttons[0].animate(_kf5(), _options({}))
-		let animation1 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf5(), _options({}))
-
-		_removeElementFromDOMById('prev')
-		let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]].childNodes[0].animate(_kf6(), _options({}))
-
-
-		animation2.onfinish = (event) => {
-
-
-			_book.buttons[0].animate(_flutter(), { iterations: Infinity, duration: 1000 })
-
-
-			_book.state.isInitialized = true
-
-
-		}
-
-
+	const _turnTheBook = (mutations) => {
+		console.log('I got here')
+		mutations.map(mutation => {
+			Array.from(mutation.addedNodes).map(node => { console.log(node) })
+		})
 	}
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
 		switch (_book.state.direction) {
-			case 'forward':
+			case forward:
 				switch (_book.state.mode) {
 					case 'portrait':
 						break
@@ -546,7 +557,7 @@
 						break
 				}
 				break
-			case 'backward':
+			case backward:
 				switch (_book.state.mode) {
 					case 'portrait':
 						break
@@ -577,7 +588,7 @@
 				break
 			case 'landscape':
 				switch (_book.state.direction) {
-					case 'forward':
+					case forward:
 						let animation1 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
 
 						let animation2 = _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
@@ -598,7 +609,7 @@
 
 						}
 						break
-					case 'backward':
+					case backward:
 
 						let animation3 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
 
@@ -662,20 +673,24 @@
 	const λ = (angle) => { } // Cone angle
 
 	const _direction = (id) => id === undefined
-		? _book.plotter.side === 'right' ? 'forward' : 'backward'
-		: id === 'next' ? 'forward' : 'backward'
+		? _book.plotter.side === 'right' ? forward : backward
+		: id === 'next' ? forward : backward
+
+	const forward = () => 1
+
+	const backward = () => -1
 
 	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
 	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
 	const _step = () =>
-		_book.state.direction === 'forward'
+		_book.state.direction === forward
 			? _isEven(_book.targetPage) ? _stepper(_book.state.mode) : 1
 			: _isOdd(_book.targetPage) ? _stepper(_book.state.mode) : 1
 
 	const _target = (direction) =>
-		direction === 'forward'
+		direction === forward
 			? _getCurrentPage(_book.targetPage + _step())
 			: _getCurrentPage(_book.targetPage - _step())
 
