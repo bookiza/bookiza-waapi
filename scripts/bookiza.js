@@ -499,8 +499,6 @@
 
 		_book.state.direction = _isOdd(_book.currentPage) ? forward : backward
 
-		console.log(_book.state)
-
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
 
