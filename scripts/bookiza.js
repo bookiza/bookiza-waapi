@@ -82,9 +82,11 @@
 
 	}
 
-	/************************************
-		 ******** Geometry listeners ********
-		 ************************************/
+	/*******************************
+	 *
+	 * Geometric system listeners  *
+	 *
+	********************************/
 
 	const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
@@ -114,11 +116,11 @@
 
 		delete _book.elements /* Clear object property from { _book } after a mandatory DOM lookup. */
 
-		_book.options = options /* Save options to the book */
+		_book.options = options /* Save options to { book } */
 
 		let size = _book.frames.length === 0 ? Number.isInteger(options.length) ? options.length >= 4 ? _isOdd(options.length) ? options.length + 1 : options.length : 4 : 4 : _isOdd(_book.frames.length) ? _book.frames.length + 1 : _book.frames.length
 
-		if (_book.frames.length === 0) _book.frames = _reifyPages(size)
+		if (_book.frames.length === 0) _book.frames = _reifyFrames(size)
 
 		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length))
 
@@ -126,16 +128,12 @@
 
 
 
-
-
-		// To be removed from here.
+		// Move these methods elsewhere
 		_printElementsToDOM('buttons', _book.buttons)
-
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
-		_book.state.isInitialized = true
-
-		console.log('Second') // To prove that the book is printed before DOMContentLoaded event is fired.
+		// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+		// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 	}
 
 	const handler = (event) => {
@@ -219,10 +217,12 @@
 		w.addEventListener('mouseover', _applyBookEvents)
 		w.addEventListener('mouseout', _removeBookEvents)
 
-		/*  Listen to @touch events only when capable of Touch.
-		*   Some Windows/Chrome will return true even when the
-		*   screen isn't touch capable. Do not use this to !listen
-		*   keyboard/mouse events. Plain and simple. */
+		/***********************************************************
+		 * Listen to @touch events only when capable of Touch.		*
+		 * Some Windows/Chrome will return true even when the		*
+		 * screen isn't touch capable. Do not use this to !listen	*
+		 * keyboard/mouse events. Plain and simple. 				*
+		************************************************************/
 
 		if (_isTouch()) {
 			touchEvents.map((event) => {
@@ -233,27 +233,7 @@
 		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
 
 		const mutator = mutations => {
-
-			mutations.map((mutation, index) => {
-				// console.log(Array.from(mutation.addedNodes).includes('a#next.arrow-controls.next-page.flex'), index)
-				// Array.from(mutation.addedNodes).map(each => { console.log(each)})
-			})
-
-			// for (const mutation of mutations) {
-
-			// 	console.log(mutation.addedNodes)
-
-			// 	// console.log(mutation.addedNodes)
-
-			if (mutations.length !== 1) return
-
-			if (_book.state.isInitialized) {
-				// _raiseAnimatablePages(_book.targetPage, _book.tick)
-				// _animateLeaf(_book.targetPage)
-			}
-
-
-			// }
+			_applyAnimationMethods(mutations)
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -265,9 +245,9 @@
 		if (callback && typeof callback === 'function') callback()
 	}
 
-	/****************************************/
-	/** *********** Event handlers ***********/
-	/****************************************/
+	/***************************************
+	 * Event handlers
+	****************************************/
 
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
@@ -276,6 +256,7 @@
 
 				break
 			case 'DIV':
+				// console.log(_book.state.direction)
 				break
 			default:
 		}
@@ -285,7 +266,7 @@
 		// TODO: This is where we calculate range pages according to QI-QIV.
 		switch (event.target.nodeName) {
 			case 'A':
-				console.log('Anchor out', event.target.id)
+				// console.log('Anchor out', event.target.id)
 				break
 			case 'DIV':
 				break
@@ -293,14 +274,10 @@
 		}
 	}
 
-	const _handleMouseMove = (event) => {
-		_updateGeometricalPlotValues(event)
-	}
+	const _handleMouseMove = (event) => { _updateGeometricalPlotValues(event) }
 
 	const _handleMouseDown = (event) => {
-		_book.plotter.side === 'right'
-			? _book.state.direction = 'forward'
-			: _book.state.direction = 'backward'
+		_book.state.direction = _direction()
 
 		switch (event.target.nodeName) {
 			case 'A':
@@ -314,7 +291,12 @@
 				break
 			case 'DIV':
 				// console.log('Page picked, execute curl')
-				console.log('down', event.pageX)
+				// console.log('down', event.pageX)
+				// console.log(_book.state.direction)
+				_book.plotter.start = {
+					x: event.pageX,
+					y: event.pageY
+				}
 				break
 			default:
 		}
@@ -326,7 +308,16 @@
 				// console.log('Complete the flip')
 				break
 			case 'DIV':
-				console.log('up', event.pageX) // Calculate x-shift, y-shift.
+				// console.log('up', event.pageX) // Calculate x-shift, y-shift.
+
+				_book.plotter.end = {
+					x: event.pageX,
+					y: event.pageY
+				}
+
+				console.log(_sign(_book.plotter.start.x - _book.plotter.end.x))
+
+
 				break
 			default:
 		}
@@ -335,6 +326,9 @@
 	const _handleMouseClicks = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
+
+				_book.eventsCache.push(event) // Pop via DOM mutations
+
 				_book.state.direction = _direction(event.target.id)
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
@@ -405,17 +399,44 @@
 	}
 
 	const _handleTouchStart = (event) => {
-		if (event.touches.length === 2) {
+		switch (event.touches.length) {
+			case '1':
+				_book.plotter.startPoint = {
+					x: event.pageX,
+					y: event.pageY
+				}
+				break
+			case '2':
+
+				break
+			default:
+				break
 		}
-		console.log(event.touches.length)
+
+
+
 	}
 
-	const _handleTouchMove = (event) => {
-		_updateGeometricalPlotValues(event)
-	}
+	const _handleTouchMove = (event) => { _updateGeometricalPlotValues(event) }
 
 	const _handleTouchEnd = (event) => {
 		console.log('Touch stopped')
+
+		switch (event.touches.length) {
+			case '1':
+				_book.plotter.startPoint = {
+					x: event.pageX,
+					y: event.pageY
+				}
+				break
+			case '2':
+
+				break
+			default:
+				break
+		}
+
+
 	}
 
 	/*********************************
@@ -443,6 +464,23 @@
 	]
 
 
+	const _kf5 = () => [
+		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0', opacity: 0.5 },
+		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0', opacity: 1 }
+	]
+
+	const _kf6 = () => [
+		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  },
+		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(180deg)`, transformOrigin: 'right center 0' }
+	]
+
+	const _flutter = () => [
+		{ transform: 'translate3d(0, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  },
+		{ transform: `translate3d(1vw, 0px, 0px) rotateY(0deg)`, transformOrigin: 'right center 0' },
+		{ transform: 'translate3d(0, 0px, 0px) rotateY(0deg)', transformOrigin: 'right center 0'  }
+	]
+
+
 	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in' }) => ({
 		currentTime: 0,
 		duration: duration,
@@ -451,6 +489,48 @@
 		iterations: 1,
 		direction: 'normal'
 	})
+
+
+	const _applyAnimationMethods = (mutations) => {
+		console.log(_book.state.isInitialized)
+
+		mutations.map(mutation => {
+			Array.from(mutation.addedNodes).map(node => { console.log(node)})
+		})
+
+
+		_book.state.isInitialized === true
+			? console.log(_book.state.isInitialized)
+			: _openBook()
+
+	}
+
+	const _openBook = () => {
+
+		console.log()
+
+		// return
+
+		_book.buttons[0].animate(_kf5(), _options({}))
+		let animation1 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf5(), _options({}))
+
+		_removeElementFromDOMById('prev')
+		let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]].childNodes[0].animate(_kf6(), _options({}))
+
+
+		animation2.onfinish = (event) => {
+
+
+			_book.buttons[0].animate(_flutter(), { iterations: Infinity, duration: 1000 })
+
+
+			_book.state.isInitialized = true
+
+
+		}
+
+
+	}
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
 		switch (_book.state.direction) {
@@ -548,8 +628,8 @@
 	}
 
 
-	/**********************************
-	********** @Helper methods ********
+	/*********************************
+	 * @Helper methods  *
 	***********************************/
 
 	const _isTouch = () => 'ontouchstart' in w || n.MaxTouchPoints > 0 || n.msMaxTouchPoints > 0
@@ -558,7 +638,7 @@
 
 	const _isOdd = (number) => Math.abs(number % 2) === 1
 
-	//   const _sign = (x) => (typeof x === 'number' ? (x ? (x < 0 ? -1 : 1) : x === x ? 1 : NaN) : NaN)
+	const _sign = (x) => (typeof x === 'number' ? (x ? (x < 0 ? -1 : 1) : x === x ? 1 : NaN) : NaN)
 
 	const _leftCircularIndex = (currentIndex, index) =>
 		parseInt(currentIndex) - parseInt(index) < 0
@@ -570,7 +650,6 @@
 			? parseInt(currentIndex) + parseInt(index) - parseInt(_book.frames.length)
 			: parseInt(currentIndex) + parseInt(index)
 
-	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
 	const π = Math.PI
 
@@ -582,11 +661,13 @@
 
 	const λ = (angle) => { } // Cone angle
 
-	// const _setFlippingDirection = () => (_book.plotter.side === 'right') ? 'forward' : 'backward'
-
-	const _direction = (id) => id === 'next' ? 'forward' : 'backward'
+	const _direction = (id) => id === undefined
+		? _book.plotter.side === 'right' ? 'forward' : 'backward'
+		: id === 'next' ? 'forward' : 'backward'
 
 	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
+
+	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
 	const _step = () =>
 		_book.state.direction === 'forward'
@@ -696,7 +777,7 @@
 
 	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
-	const _reifyPages = size => [...d.createRange()
+	const _reifyFrames = size => [...d.createRange()
 		.createContextualFragment(new String(new Array(size)
 			.fill()
 			.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
@@ -708,11 +789,21 @@
 			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/page-${index}.html"></iframe></div>`).firstChild, index)
 			: _addPageWrappersAndBaseClasses(html, index)
 
+	// const _oneTimePrint = () => {
+	// 	_printElementsToDOM('buttons', _book.buttons)
+	// 	_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+	// 	// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+	// 	// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+	// 	_book.state.isInitialized = true
+
+	// }
+
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
 		switch (type) {
 			case 'buttons':
-				elements.forEach((elem) => {
+				elements.forEach(elem => {
 					docfrag.appendChild(elem)
 				})
 				break
@@ -728,7 +819,7 @@
 				let rightPages = elements.map((page, currentIndex) => {
 					return _applyStyles(page, currentIndex, type, tick)
 				})
-				rightPages.forEach((page) => {
+				rightPages.forEach(page => {
 					docfrag.appendChild(page)
 				})
 				break
@@ -736,7 +827,7 @@
 				let leftPages = elements.map((page, currentIndex) => {
 					return _applyStyles(page, currentIndex, type, tick)
 				})
-				leftPages.forEach((page) => {
+				leftPages.forEach(page => {
 					docfrag.appendChild(page)
 				})
 				break
@@ -887,9 +978,9 @@
 		d.getElementById('yaxis').textContent = _book.plotter.ε
 	}
 
-	/**********************************
-		************* Polyfills ***********
-		**********************************/
+	/*********************************
+	 * Polyfills *
+	**********************************/
 
 	DOMTokenList.prototype.addmany = function (classes) {
 		let classArr = classes.split(' ')
@@ -970,6 +1061,7 @@
 	 * We'll call these TurnListeners.
 	*/
 	const _addTurnListeners = (eventName, callback) => { _book.node.addEventListener(eventName, callback, false) }
+
 	class Superbook {
 		execute(methodName, ...theArgs) {
 			switch (methodName) {

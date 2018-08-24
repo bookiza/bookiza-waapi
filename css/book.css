@@ -231,8 +231,35 @@ body {
 .next-page {
     float: right;
     margin: 0 -30px 0 0;
-    border-radius: 0 10px 10px 0;
+	border-radius: 0 10px 10px 0;
 }
+
+/* .first {
+	animation: flutter 1s;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+}
+
+@keyframes flutter {
+	0% {
+	  -webkit-transform: translateX(0px);
+	  -ms-transform: translateX(0px);
+	  transform: translateX(0px);
+	}
+
+	50% {
+	  -webkit-transform: translateX(6px);
+	  -ms-transform: translateX(6px);
+	  transform: translateX(6px);
+	}
+
+	100% {
+	  -webkit-transform: translateX(0px);
+	  -ms-transform: translateX(0px);
+	  transform: translateX(0px);
+	}
+} */
+
 
 svg {
     pointer-events: none;

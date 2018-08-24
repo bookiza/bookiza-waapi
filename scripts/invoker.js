@@ -1,10 +1,10 @@
-const options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 60 }
+const options = { duration: 3000, peel: true, zoom: true, startPage: 1, length: 60 }
 
-document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
+// document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 
 const superbook = Bookiza.init({ options })
 
-document.addEventListener('DOMContentLoaded', (event) => { console.log('Third') })
+// document.addEventListener('DOMContentLoaded', (event) => { console.log('Third') })
 
 // console.log('invoker', superbook.execute('dimensions'))
 
