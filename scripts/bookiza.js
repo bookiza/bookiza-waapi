@@ -9,7 +9,7 @@
 			this.node = d.getElementById('book')
 			this.delegator = d.getElementById('plotter')
 			this.state = {
-				direction: forward,
+				direction: _forward,
 				isInitialized: false,
 				isTurning: false,
 				// 'isPeelable': false,
@@ -289,7 +289,7 @@
 			case 'A':
 				// console.log('Execute half turn')
 
-				// _book.state.direction === forward
+				// _book.state.direction === _forward
 				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -304,7 +304,7 @@
 					y: event.pageY
 				}
 
-				_book.state.direction === forward
+				_book.state.direction === _forward
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -344,7 +344,7 @@
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
-				_book.state.direction === forward
+				_book.state.direction === _forward
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -374,7 +374,7 @@
 	const _handleWheelEvent = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction = event.deltaY < 0 ? backward : forward
+				_book.state.direction = event.deltaY < 0 ? _backward : _forward
 
 				console.log(_book.state.direction())
 
@@ -382,7 +382,7 @@
 
 				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
-				// _book.state.direction === forward
+				// _book.state.direction === _forward
 				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -509,7 +509,7 @@
 	})
 
 	const _openTheBook = () => {
-		_book.state.direction = _isOdd(_book.currentPage) ? forward : backward
+		_book.state.direction = _isOdd(_book.currentPage) ? _forward : _backward
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
 				_book.node.animate(_kf5(), _options({}))
@@ -530,7 +530,7 @@
 				}
 			break
 			default:
-				console.log(_book.currentPage, 'we need more than two of the view to implement this opening correctly')
+				console.log(_book.currentPage, 'we need more than two on the view to implement this opening correctly')
 
 				break
 		}
@@ -545,7 +545,7 @@
 
 	const _raiseAnimatablePages = (pageNo, tick) => {
 		switch (_book.state.direction) {
-			case forward:
+			case _forward:
 				switch (_book.state.mode) {
 					case 'portrait':
 						break
@@ -557,7 +557,7 @@
 						break
 				}
 				break
-			case backward:
+			case _backward:
 				switch (_book.state.mode) {
 					case 'portrait':
 						break
@@ -588,7 +588,7 @@
 				break
 			case 'landscape':
 				switch (_book.state.direction) {
-					case forward:
+					case _forward:
 						let animation1 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
 
 						let animation2 = _book.frames[_getRangeIndices(_getCurrentPage(pageNo), _book.state.mode).rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
@@ -609,7 +609,7 @@
 
 						}
 						break
-					case backward:
+					case _backward:
 
 						let animation3 = _book.frames[_setViewIndices(_getCurrentPage(pageNo), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
 
@@ -673,24 +673,24 @@
 	const λ = (angle) => { } // Cone angle
 
 	const _direction = (id) => id === undefined
-		? _book.plotter.side === 'right' ? forward : backward
-		: id === 'next' ? forward : backward
+		? _book.plotter.side === 'right' ? _forward : _backward
+		: id === 'next' ? _forward : _backward
 
-	const forward = () => 1
+	const _forward = () => 1
 
-	const backward = () => -1
+	const _backward = () => -1
 
 	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
 	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
 	const _step = () =>
-		_book.state.direction === forward
+		_book.state.direction === _forward
 			? _isEven(_book.targetPage) ? _stepper(_book.state.mode) : 1
 			: _isOdd(_book.targetPage) ? _stepper(_book.state.mode) : 1
 
 	const _target = (direction) =>
-		direction === forward
+		direction === _forward
 			? _getCurrentPage(_book.targetPage + _step())
 			: _getCurrentPage(_book.targetPage - _step())
 
