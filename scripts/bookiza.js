@@ -103,13 +103,13 @@
 
 	w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
 
-	/****************************************
+	/**************************************************************************************
 	* One time @superbook initialization.
 	* The minimum length of a book is 4 pages. (options.length)
 	* Pages could be provided to Bookiza via DOM or be synthesized
 	* using length value passed as an object property for initialization.
 	* Force the book length to always be an even number: https://bubblin.io/docs/concept
-	************************************/
+	***************************************************************************************/
 
 	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
 		_removeChildren(_book.node)
@@ -239,7 +239,7 @@
 			})
 
 			if (isNodeAdded)
-				_book.state.isInitialized === true ? _turnTheBook(mutations) : _openTheBook()
+				_book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -338,19 +338,21 @@
 		switch (event.target.nodeName) {
 			case 'A':
 
-				_book.eventsCache.push(event) // Pop via DOM mutations
 
 				_book.state.direction = _direction(event.target.id)
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
+
+
+				_book.eventsCache.push({tick: _book.tick, page: _book.targetPage}) // Pop via DOM mutations
 
 				_book.state.direction === _forward
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
 
-				_raiseAnimatablePages(_book.targetPage, _book.tick)
-				_animateLeaf(_book.targetPage)
+				// _raiseAnimatablePages(_book.targetPage, _book.tick)
+				// _animateLeaf(_book.targetPage)
 
 				_book.targetPage = _target(_book.state.direction)
 
@@ -376,7 +378,18 @@
 			case 'A':
 				_book.state.direction = event.deltaY < 0 ? _backward : _forward
 
-				console.log(_book.state.direction())
+				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
+
+				_book.eventsCache.push({tick: _book.tick, page: _book.targetPage}) // Pop via DOM mutations
+
+				_book.state.direction === _forward
+					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+				_book.targetPage = _target(_book.state.direction)
+
+
+				// console.log(_book.state.direction())
 
 				// _book.eventsCache.push(event)
 
@@ -452,9 +465,9 @@
 
 	}
 
-	/*********************************
-	 * Animation objects/Conio-tubular math
-	/**********************************/
+	/**********************************************
+	 * Conio-tubular math + web animation objects *
+	**********************************************/
 
 	const _kf1 = () => [
 		{ transform: 'rotateY(0deg)', transformOrigin: 'left center 0' },
@@ -480,12 +493,7 @@
 
 	const _kf5 = () => [
 		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0' },
-		{ transform: `translate3d(-${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
-	]
-
-	const _kf6 = () => [
-		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0' },
-		{ transform: `translate3d(${_book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
+		{ transform: `translate3d(${_book.state.direction() * -1 * _book.plotter.bounds.width / 4}px, 0px, 0px) rotateY(0deg)`, transformOrigin: 'left center 0' }
 	]
 
 	const _opacity = () => [
@@ -521,7 +529,7 @@
 				}
 				break
 			case _book.frames.length:
-				_book.node.animate(_kf6(), _options({}))
+				_book.node.animate(_kf5(), _options({}))
 				_book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
 				let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
 				animation2.onfinish = (event) => {
@@ -530,16 +538,29 @@
 				}
 			break
 			default:
-				console.log(_book.currentPage, 'we need more than two on the view to implement this opening correctly')
+				console.log(_book.currentPage, 'we need more than two on the view to implement waapi on this opening')
+
+				_book.state.isInitialized = true
 
 				break
 		}
 
 	}
 
-	const _turnTheBook = (mutations) => {
-		if (_book.eventsCache.shift() !== undefined) {
-			console.log('I will animate the book')
+	const _turnTheBook = () => {
+		/********************************************
+		 * Check if eventsCache has an event 		*
+		 * queued up for this (addNode) mutation	*
+		 *******************************************/
+		let turnable = _book.eventsCache.shift()
+		if ( turnable !== undefined) {
+
+			console.log(turnable, turnable.tick, turnable.page)
+
+			_raiseAnimatablePages(turnable.page, turnable.tick)
+			_animateLeaf(turnable.page)
+
+
 		}
 	}
 
