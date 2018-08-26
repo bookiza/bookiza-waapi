@@ -382,28 +382,13 @@
 
 				_book.eventsCache.push({tick: _book.tick, page: _book.targetPage}) // Pop via DOM mutations
 
+				_book.state.isTurning = true
+
 				_book.state.direction === _forward
 					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
 				_book.targetPage = _target(_book.state.direction)
-
-
-				// console.log(_book.state.direction())
-
-				// _book.eventsCache.push(event)
-
-				// _book.state.isTurning ? _book.tick += 1 : _book.tick = 1
-
-				// _book.state.direction === _forward
-				// 	? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-				// 	: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-
-				// _raiseAnimatablePages(_book.targetPage, _book.tick)
-
-				// _animateLeaf(_book.targetPage)
-
-				// _book.targetPage = _target(_book.state.direction)
 
 				break
 			case 'DIV':
@@ -555,7 +540,9 @@
 		let turnable = _book.eventsCache.shift()
 		if ( turnable !== undefined) {
 
-			console.log(turnable, turnable.tick, turnable.page)
+			// console.log(turnable, turnable.tick, turnable.page)
+
+			// return
 
 			_raiseAnimatablePages(turnable.page, turnable.tick)
 			_animateLeaf(turnable.page)
@@ -596,7 +583,7 @@
 
 
 	const _animateLeaf = (pageNo) => {
-		_book.state.isTurning = true
+		// _book.state.isTurning = true
 
 		_book.turning.page = _getCurrentPage(pageNo)
 		_book.turning.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
