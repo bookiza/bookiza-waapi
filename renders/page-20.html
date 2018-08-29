@@ -2,38 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
+<title> Textbook | Bubblin Superbooks | Bookiza </title>
 
-<title> Bubblin's Official Guide </title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+  
   <style>
     html, body {
-  font: 3.1vw/1.5 'Playfair Display', serif;
-  color: #2f2f2f;
-  background-color: #f9f7f1;
+  background: #fff;
   margin: 0 0;
   overflow: hidden;
-  color: #667;
+  color: #444;
+  font: 4.2vw/1.25 'EB Garamond', serif;
+  height:100vh;
+  width:100vw;
 }
 
 
-h1 {
-  font-weight: 900;
-  font-size: 6vw;
-  text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.5;
-  margin: 0vw 0 1vw;
+h1, h2, h3 {
+  margin: 1vw 0;
   padding: 0;
   color: #444;
   width: 100%;
   text-align: center;
+  font-weight: 100;
 }
 
-p {
-  margin: 3vw 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
 }
+
 
 img {
   border: 0;
@@ -47,20 +51,15 @@ a {
   text-rendering: optimizelegibility;
 }
 
-
 a:focus,
 a:active,
 a:hover {
   outline: 0 none;
-  color: #0a4;
+  color: #070;
 }
 
 a:active {
-  text-shadow: 0 0 1px #050;
-}
-
-strong {
-  font-weight: bold;
+  text-shadow: 0 0 2px #fff;
 }
 
 /* Page specific */
@@ -68,13 +67,14 @@ strong {
 .leaf {
   height: 100%;
   height: 100vh;
-  width: 80%;
+  width: 100%;
+  width: 100vw;
   margin: auto;
 }
 
 .inner {
   margin: 10% auto;
-  width: 100%;
+  width: 85%;
 }
 
 .flex {
@@ -88,168 +88,65 @@ strong {
   text-align: justify;
 }
 
-/* Your custom styles below */
-
-
-.code-block {
-  margin: 3vw 0;
-  font: 2vw/1.0 monospace, sans-serif;
-  width: 70vw;
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 3vw;
-  border-radius: 1vw;
-  color: black;
+p {
+    margin: 3vw 0;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
 }
 
-.code {
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 0.5vw 1vw;
-  border-radius: 1vw;
-  font: 2.7vw/1.1 monospace, sans-serif;
-  color: black;
-}
-
-.monospace, .highlight {
-  font-family: monospace;
-  font-size: 2.5vw;
-  background: #ff0;
-  border: 1px solid #ff0;
-  color: #444;
-  padding: .2vw 1vw;
-  border-radius: .5vw;
-  margin: 0 .5vw;
-}
-
-.center { text-align: center; }
-
-.right {
-  float: right;
-}
-
-.left {
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 5vw 1vw .1vw 0;
   float: left;
+  line-height: 10vw;
+  font-size: 25vw;
+  color: hsla(11, 50%, 50%, 1);
+  font-family: 'Luckiest Guy', serif;
 }
 
 .center {
   text-align: center;
-}
-
-ol {
-  list-style-type: lower-roman;
-  list-style-position: inside;
-  list-style-image: none;
-  margin: 0;
-  padding: 1vw 5vw;
+  margin:0 auto;
 }
 
 .small {
   font-size: 80%;
 }
 
-.gray {
-  background: #666;
-  color: #fff;
-  font-size: 60%;
-  padding: 1vw;
+
+blockquote {
+    font-family: 'EB Garamond', serif;
+    margin: 2vh 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666;
+    font-weight: 100;
 }
 
-
-.terminal {
-  background-color: black;
-  color: #55ff55;
-  margin: 3vw 0;
-  width: 70vw;
-  border: 1px solid #ccc;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
-  font-family: monospace;
-  font-size: 2.5vw;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-align: left;
+blockquote:before {
+    color: #0c0;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
 }
 
-.prompt {
-  background: #55ff55;
-  height: 1em;
-  width: 0.75em;
-  -webkit-animation: blink 1s linear infinite;
-  animation: blink 1s linear infinite;
+blockquote:after {
+    color: #0c0;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
 }
 
-
-@-webkit-keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-@keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-.italics{
-  font-style: italic;
-}
-
-.white-text{
-	color: white;
-}
-    .small {
-  font-size: 80%;
-}
-
-.gray {
-  background: #666;
-  color: #fff;
-  font-size: 60%;
-  padding: 1vw;
-}
+    
   </style>
 </head>
 <body>
-  <div class="leaf ">
-  <div class="inner justify ">
-    <h4> Step-6: The moment of truth…</h4>
-    <p> To create a new comic book <span class="code">my-awesome-new-comics</span> with say 24 pages: </p>
-    <div class="terminal turnoff">
-      <p> $ bookiza new my-awesome-new-comics --leafs 12 --template comics </p>
-    </div>
-    <p>
-      Bookiza will scaffold a new project with 12 fresh leafs (24 pages) inside the <span class="code">manuscript/</span> folder and apply the template layout of a <span class="code">comics</span>.
-    </p>
-    <p>
-      It will then proceed to install all the nodejs dependencies for your project and then seek your confirmation to commit the project into a Github repository. Type <span class="code">yes</span> when it does.
-    </p>
-    <p> Boom! </p>
-    <p> <span class="code">CD</span> into <span class="code">my-awesome-new-comics</span>, and start: </p>
-    <div class="terminal turnoff">
-      <p> $ bookiza server </p>
-    </div>
-  </div>
-</div>
+  <div class="leaf flex"><div class="inner justify"><p>—God! he said quietly. Isn't the sea what Algy calls it: a great sweet mother? The snotgreen sea. The scrotumtightening sea. Epi oinopa ponton. Ah, Dedalus, the Greeks! I must teach you. You must read them in the original. Thalatta! Thalatta! She is our great sweet mother. Come and look.</p><p>Stephen stood up and went over to the parapet. Leaning on it he looked down on the water and on the mailboat clearing the harbourmouth of Kingstown.</p><p>—Our mighty mother! Buck Mulligan said.</p><p>He turned abruptly his grey searching eyes from the sea to Stephen's face.</p><p>—The aunt thinks you killed your mother, he said. That's why she won't let me have anything to do with you.</p></div> </div>
   <script></script>
 </body>
 </html>

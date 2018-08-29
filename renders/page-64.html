@@ -2,38 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='//fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'> 
-
-<title> Bubblin's Official Guide </title>
+  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
+<title> Textbook | Bubblin Superbooks | Bookiza </title>
 
   
   <style>
-    body {
-  font: 3.1vw/1.35 'Playfair Display', serif;
-  color: #2f2f2f;
-  background-color: #f9f7f1;
+    html, body {
+  background: #fff;
   margin: 0 0;
   overflow: hidden;
-  color: #454545;
+  color: #444;
+  font: 4.2vw/1.25 'EB Garamond', serif;
+  height:100vh;
+  width:100vw;
 }
 
 
-h1 {
-  font-weight: 900;
-  font-size: 6vw;
-  text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.5;
-  margin: 1vw 0 2vw;
+h1, h2, h3 {
+  margin: 1vw 0;
   padding: 0;
   color: #444;
   width: 100%;
   text-align: center;
+  font-weight: 100;
 }
 
-p {
-  margin: 3vw 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'PT Sans Narrow', serif;
+    margin: 2vw 0;
+    padding: 0;
 }
+
 
 img {
   border: 0;
@@ -47,20 +51,15 @@ a {
   text-rendering: optimizelegibility;
 }
 
-
 a:focus,
 a:active,
 a:hover {
   outline: 0 none;
-  color: #0a4;
+  color: #070;
 }
 
 a:active {
-  text-shadow: 0 0 1px #050;
-}
-
-strong {
-  font-weight: bold;
+  text-shadow: 0 0 2px #fff;
 }
 
 /* Page specific */
@@ -68,13 +67,14 @@ strong {
 .leaf {
   height: 100%;
   height: 100vh;
-  width: 80%;
+  width: 100%;
+  width: 100vw;
   margin: auto;
 }
 
 .inner {
   margin: 10% auto;
-  width: 100%;
+  width: 85%;
 }
 
 .flex {
@@ -88,137 +88,65 @@ strong {
   text-align: justify;
 }
 
-/* Your custom styles below */
-
-
-.code-block {
-  margin: 3vw 0;
-  font: 2vw/1.0 'Roboto', sans-serif;
-  width: 70vw;
-  background: #fff;
-  border: 1px solid #fa0;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
+p {
+    margin: 3vw 0;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
 }
 
-.code {
-  background: #fff;
-  border: 1px solid #fa0;
-  padding: 0 1vw;
-  border-radius: 1vw;
-  font: 2.7vw/1.1 'Roboto', sans-serif;
-}
-
-.monospace, .highlight {
-  font-family: monospace;
-  font-size: 2.5vw;
-  background: #ff0;
-  border: 1px solid #ff0;  
-  color: #444;
-  padding: .2vw 1vw;
-  border-radius: .5vw;
-  margin: 0 .5vw;
-}
-
-.center { text-align: center; }
-
-.right {
-  float: right;
-}
-
-.left {
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 5vw 1vw .1vw 0;
   float: left;
+  line-height: 10vw;
+  font-size: 25vw;
+  color: hsla(11, 50%, 50%, 1);
+  font-family: 'Luckiest Guy', serif;
 }
 
 .center {
   text-align: center;
-}
-
-ol {
-  list-style-type: lower-roman;
-  list-style-position: inside;
-  list-style-image: none;
-  margin: 0;
-  padding: 1vw 5vw;
+  margin:0 auto;
 }
 
 .small {
   font-size: 80%;
 }
 
-.gray {
-  background: #666;
-  color: #fff;
-  font-size: 60%;
-  padding: 1vw;
+
+blockquote {
+    font-family: 'EB Garamond', serif;
+    margin: 2vh 0;
+    padding: 0;
+    quotes: "\201C""\201D""\2018""\2019";
+    color: #666;
+    font-weight: 100;
 }
 
-
-.terminal {
-  background-color: black;
-  color: #55ff55;
-  margin: 3vw 0;
-  width: 70vw;
-  border: 1px solid #ccc;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
-  font-family: monospace;
-  font-size: 2.5vw;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-align: left;
+blockquote:before {
+    color: #0c0;
+    content: open-quote;
+    font-size: 6vw;
+    line-height: 0.1vw;
+    margin-right: -0.1vw;
+    vertical-align: -0.9vw;
 }
 
-.prompt {
-  background: #55ff55;
-  height: 1em;
-  width: 0.75em;
-  -webkit-animation: blink 1s linear infinite;
-  animation: blink 1s linear infinite;
+blockquote:after {
+    color: #0c0;
+    content: close-quote;
+    font-size: 6vw;
+    line-height: 0.4vw;
+    margin-left: 0.5vw;
+    vertical-align: -0.9vw;
 }
 
-
-@-webkit-keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-@keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
     
   </style>
 </head>
 <body>
-  <div class="leaf ">
-  <div class="inner justify">
-    <h1> Contents Index</h1>
-    <p> It is possible to provide complete index of your book on the cover page. This is particularly useful for books that are thick and, therefore, need one. </p> 
-    <p> We're currently considering a simple API to easily add index — an ordered list of hyperlinks — to pages of the book that are on public <span class="monospace">urls</span>.  </p>
-    <p> <i class="small gray fa fa-warning"> Status:</i> Under consideration. Planned for next release. </p>
-  </div>
-</div>
+  <div class="leaf flex"><div class="inner justify"><p>—O, shade of Kinch the elder! Japhet in search of a father!</p><p>—We're always tired in the morning, Stephen said to Haines. And it is rather long to tell.</p><p>Buck Mulligan, walking forward again, raised his hands.</p><p>—The sacred pint alone can unbind the tongue of Dedalus, he said.</p><p>—I mean to say, Haines explained to Stephen as they followed, this tower and these cliffs here remind me somehow of Elsinore. That beetles o'er his base into the sea, isn't it?</p><p>Buck Mulligan turned suddenly for an instant towards Stephen but did not speak. In the bright silent instant Stephen saw his own image in cheap dusty mourning between their gay attires.</p></div> </div>
   <script></script>
 </body>
 </html>

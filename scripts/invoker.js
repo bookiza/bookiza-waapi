@@ -1,4 +1,4 @@
-const options = { duration: 1000, peel: true, zoom: true, startPage: 10, length: 24 }
+const options = { duration: 1000, peel: true, zoom: true, startPage: 1, length: 2000 }
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 

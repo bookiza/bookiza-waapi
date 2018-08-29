@@ -128,7 +128,6 @@
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
 
-		// Move these methods elsewhere
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
@@ -245,9 +244,9 @@
 
 
 
-			// /********************
-			//  *  Perf matters 	*
-			// ********************/
+			/********************
+			 *  Perf matters 	*
+			********************/
 
 			// let performance = w.performance
 
@@ -258,17 +257,17 @@
 			// })
 
 
-			// const observer = new PerformanceObserver((list) => {
+			// const perfObserver = new PerformanceObserver((list) => {
 			// 	for (const entry of list.getEntries()) {
 			// 		// `entry` is a PerformanceEntry instance.
-			// 		console.log(entry.entryType)
-			// 		console.log(entry.startTime) // DOMHighResTimeStamp
-			// 		console.log(entry.duration) // DOMHighResTimeStamp
+			// 		console.log('entrytype', entry.entryType)
+			// 		console.log('startTime', entry.startTime) // DOMHighResTimeStamp
+			// 		console.log('duratiob', entry.duration) // DOMHighResTimeStamp
 			// 	}
 			// })
 
 			// // Start observing the entry types you care about.
-			// observer.observe({ entryTypes: ['resource', 'paint'] })
+			// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
 
 
 		}
@@ -566,7 +565,7 @@
 		let turnable = _book.eventsCache.shift()
 		if (turnable !== undefined) {
 
-			console.log(_book.state.animations)
+			// console.log(_book.state.animations)
 
 			if (_book.state.direction === _forward && _book.targetPage === 2 ){
 				_book.state.animations.book.reverse()
@@ -666,6 +665,8 @@
 							_book.turned.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
 							_book.node.dispatchEvent(_book.turned)
 
+							console.log(_book.currentPage)
+
 						}
 						break
 					case _backward:
@@ -730,6 +731,16 @@
 	const Δ = (displacement) => { } // Displacement on mousedown + mousemove/touchstart + touchmove
 
 	const λ = (angle) => { } // Cone angle
+
+    // Definitions:
+    // μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
+    // ε = Epsilon = `y-distance` in pixels from origin of the book.
+    // let Δ, θ, ω, Ω, α, β, δ = 0
+
+    // Cone Angle λ (= )
+    // const λ = (angle) => {
+
+
 
 	const _direction = (id) => id === undefined
 		? _book.plotter.side === 'right' ? _forward : _backward
