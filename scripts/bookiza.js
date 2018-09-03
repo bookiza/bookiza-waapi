@@ -50,6 +50,7 @@
 			*******************************************************/
 			this.eventsCache = []
 			this.tick = 0 /* Count the number of pages ticked before book goes to isTurning: false state again */
+			this.Ω = (paintTime = 100) => paintTime * Math.pow(0.9, this.tick)  /* Apply paintTime cushion for multipage turns via wheel events */
 
 			/* Turn events */
 			this.turned = new Event('turned')
@@ -248,25 +249,32 @@
 			 *  Perf matters 	*
 			********************/
 
-			// let performance = w.performance
 
-			// let performanceEntries = performance.getEntriesByType('paint')
+			// if (!w.performance) return
+
+			// const performance = w.performance
+
+			// const performanceEntries = performance.getEntriesByType('paint')
+
+			// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
+
+
+			// console.log(Ω)
 
 			// performanceEntries.forEach((performanceEntry, i, entries) => {
-			// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds.")
+			// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
+			// 	// let Ω = performanceEntry.startTime
 			// })
 
 
 			// const perfObserver = new PerformanceObserver((list) => {
 			// 	for (const entry of list.getEntries()) {
 			// 		// `entry` is a PerformanceEntry instance.
-			// 		console.log('entrytype', entry.entryType)
-			// 		console.log('startTime', entry.startTime) // DOMHighResTimeStamp
-			// 		console.log('duratiob', entry.duration) // DOMHighResTimeStamp
+			// 		console.log(entry.entryType, entry.startTime, entry.duration)
 			// 	}
 			// })
 
-			// // Start observing the entry types you care about.
+			// // // Start observing the entry types you care about.
 			// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
 
 
@@ -397,7 +405,8 @@
 	const _handleWheelEvent = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction = event.deltaY < 0 ? _backward : _forward
+
+				_book.state.direction = event.target.id === 'next' ? event.deltaY < 0 ? _backward : _forward : event.deltaY < 0 ? _forward : _backward
 
 				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
 
@@ -523,6 +532,9 @@
 
 	const _openTheBook = () => {
 		_book.state.direction = _isOdd(_book.currentPage) ? _forward : _backward
+
+		console.log('Ω', _book.Ω())
+
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
 
@@ -592,6 +604,8 @@
 				_book.state.animations.buttonFlutter.cancel()
 			}
 
+
+			console.log('Ω', _book.Ω())
 
 
 			_raiseAnimatablePages(turnable.page, turnable.tick)
@@ -665,7 +679,7 @@
 							_book.turned.view = _setViewIndices(_getCurrentPage(pageNo), _book.state.mode).map((i) => i + 1) // Array of page numbers in the [View].
 							_book.node.dispatchEvent(_book.turned)
 
-							console.log(_book.currentPage)
+							// console.log(_book.currentPage)
 
 						}
 						break

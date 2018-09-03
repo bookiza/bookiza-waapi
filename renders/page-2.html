@@ -5,7 +5,7 @@
   <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
 <title> Textbook | Bubblin Superbooks | Bookiza </title>
 
-  
+
   <style>
     html, body {
   background: #fff;
@@ -214,6 +214,29 @@ blockquote:after {
     </div>
 </div>
 
-  <script></script>
+<!-- (function(){
+let performance = window.performance
+
+let performanceEntries = performance.getEntriesByType('paint')
+
+performanceEntries.forEach((performanceEntry, i, entries) => {
+	console.log("Page-2: The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
+})
+
+
+const perfObserver = new PerformanceObserver((list) => {
+	for (const entry of list.getEntries()) {
+		// `entry` is a PerformanceEntry instance.
+		console.log('page-2', entry.entryType, entry.startTime, entry.duration)
+	}
+})
+
+// // Start observing the entry types you care about.
+perfObserver.observe({ entryTypes: ['resource', 'paint'] })
+})() -->
+
+  <script>
+
+  </script>
 </body>
 </html>
