@@ -128,12 +128,19 @@
 
 		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-
+		console.log(_getCurrentPage(options.startPage), 'fuck')
+		/*********************************************
+		 * Button mutation will set off _openTheBook()
+		 * or _turnTheBook() via MutatationObserver
+		 *********************************************/
 		_printElementsToDOM('buttons', _book.buttons)
+
 		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
 
 		// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 		// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+
 	}
 
 	const handler = (event) => {
@@ -533,7 +540,7 @@
 	const _openTheBook = () => {
 		_book.state.direction = _isOdd(_book.currentPage) ? _forward : _backward
 
-		console.log('Ω', _book.Ω())
+		// console.log('Ω', _book.Ω())
 
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
