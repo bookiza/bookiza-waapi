@@ -126,19 +126,17 @@
 
 		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length))
 
-		_applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
-		console.log(_getCurrentPage(options.startPage), 'fuck')
-		/*********************************************
-		 * Button mutation will set off _openTheBook()
-		 * or _turnTheBook() via MutatationObserver
-		 *********************************************/
-		_printElementsToDOM('buttons', _book.buttons)
+		/********************************************************
+		 * Set up mutationObserver to handle state.				*
+		 * Buttons will mutate DOM to set off _openTheBook()	*
+		 * or _turnTheBook() via MutatationObserver()			*
+		 ********************************************************/
 
-		_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+		 _setUpMutationAndPerformanceObservers([_buttons , _oneTimePrint])
 
-		// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-		// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+		// _applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
 
 
 	}
@@ -237,63 +235,8 @@
 			})
 		}
 
-		const mutationConfiguration = { attributes: false, childList: true, subtree: false }
-
-		const mutator = mutations => {
-
-			let isNodeAdded = false
-
-			mutations.map(mutation => {
-				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
-			})
-
-			if (isNodeAdded)
-				_book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
-
-
-
-			/********************
-			 *  Perf matters 	*
-			********************/
-
-
-			// if (!w.performance) return
-
-			// const performance = w.performance
-
-			// const performanceEntries = performance.getEntriesByType('paint')
-
-			// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
-
-
-			// console.log(Ω)
-
-			// performanceEntries.forEach((performanceEntry, i, entries) => {
-			// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
-			// 	// let Ω = performanceEntry.startTime
-			// })
-
-
-			// const perfObserver = new PerformanceObserver((list) => {
-			// 	for (const entry of list.getEntries()) {
-			// 		// `entry` is a PerformanceEntry instance.
-			// 		console.log(entry.entryType, entry.startTime, entry.duration)
-			// 	}
-			// })
-
-			// // // Start observing the entry types you care about.
-			// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
-
-
-		}
-
-		const observer = new MutationObserver(mutator)
-
-		observer.observe(_book.node, mutationConfiguration)
-
-		// observer.disconnect() // TODO: If we decide on close to cover functionality.
-
 		if (callback && typeof callback === 'function') callback()
+
 	}
 
 	/***************************************
@@ -538,9 +481,10 @@
 	})
 
 	const _openTheBook = () => {
+
+
 		_book.state.direction = _isOdd(_book.currentPage) ? _forward : _backward
 
-		// console.log('Ω', _book.Ω())
 
 		switch (_getCurrentPage(_book.currentPage)) {
 			case 1:
@@ -552,7 +496,7 @@
 
 				animation1.onfinish = (event) => {
 					_book.state.animations.buttonFlutter = _book.buttons[0].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
-					_book.state.isInitialized = true
+					_applyEventListenersOnBook(_isInitialized)
 				}
 				break
 			case _book.frames.length:
@@ -562,17 +506,18 @@
 				let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
 				animation2.onfinish = (event) => {
 					_book.state.animations.buttonFlutter = _book.buttons[1].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
-					_book.state.isInitialized = true
+					_applyEventListenersOnBook(_isInitialized)
 				}
 				break
 			default:
 				console.log(_book.currentPage, 'we need more than two on the view to implement waapi on this opening')
 
 
-				_book.state.isInitialized = true
+				_applyEventListenersOnBook(_isInitialized)
 
 				break
 		}
+
 
 	}
 
@@ -586,33 +531,33 @@
 
 			// console.log(_book.state.animations)
 
-			if (_book.state.direction === _forward && _book.targetPage === 2 ){
+			if (_book.state.direction === _forward && _book.targetPage === 2) {
 				_book.state.animations.book.reverse()
 				_book.state.animations.buttonOpacity.reverse()
 				_book.state.animations.buttonFlutter.cancel()
 			}
 
-			if (_book.state.direction === _backward && _book.targetPage === 1 ){
-				_book.state.animations.book.reverse()
-				_book.state.animations.buttonOpacity.reverse()
-				_book.state.animations.buttonFlutter.cancel()
-			}
-
-
-			if  (_book.state.direction === _backward && _book.targetPage === _book.frames.length - 1) {
-				_book.state.animations.book.reverse()
-				_book.state.animations.buttonOpacity.reverse()
-				_book.state.animations.buttonFlutter.cancel()
-			}
-
-			if (_book.state.direction === _forward && _book.targetPage === _book.frames.length ){
+			if (_book.state.direction === _backward && _book.targetPage === 1) {
 				_book.state.animations.book.reverse()
 				_book.state.animations.buttonOpacity.reverse()
 				_book.state.animations.buttonFlutter.cancel()
 			}
 
 
-			console.log('Ω', _book.Ω())
+			if (_book.state.direction === _backward && _book.targetPage === _book.frames.length - 1) {
+				_book.state.animations.book.reverse()
+				_book.state.animations.buttonOpacity.reverse()
+				_book.state.animations.buttonFlutter.cancel()
+			}
+
+			if (_book.state.direction === _forward && _book.targetPage === _book.frames.length) {
+				_book.state.animations.book.reverse()
+				_book.state.animations.buttonOpacity.reverse()
+				_book.state.animations.buttonFlutter.cancel()
+			}
+
+
+			// console.log('Ω', _book.Ω())
 
 
 			_raiseAnimatablePages(turnable.page, turnable.tick)
@@ -753,13 +698,13 @@
 
 	const λ = (angle) => { } // Cone angle
 
-    // Definitions:
-    // μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
-    // ε = Epsilon = `y-distance` in pixels from origin of the book.
-    // let Δ, θ, ω, Ω, α, β, δ = 0
+	// Definitions:
+	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
+	// ε = Epsilon = `y-distance` in pixels from origin of the book.
+	// let Δ, θ, ω, Ω, α, β, δ = 0
 
-    // Cone Angle λ (= )
-    // const λ = (angle) => {
+	// Cone Angle λ (= )
+	// const λ = (angle) => {
 
 
 
@@ -771,7 +716,69 @@
 
 	const _backward = () => -1
 
+	const _isInitialized = () => { _book.state.isInitialized = true }
+
 	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
+
+	const _setUpMutationAndPerformanceObservers = (callbacks) => {
+
+		const mutationConfig = { attributes: false, childList: true, subtree: false }
+
+		const mutator = mutations => {
+
+			let isNodeAdded = false
+
+			mutations.map(mutation => {
+				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
+			})
+
+			if (isNodeAdded)
+				_book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
+
+			console.log(_book.state.isInitialized)
+
+			/********************
+			 *  Perf matters 	*
+			*********************/
+			if (!w.performance) return
+
+			// const performance = w.performance
+
+			// const performanceEntries = performance.getEntriesByType('paint')
+
+			// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
+
+
+			// console.log(Ω.startTime)
+
+			// performanceEntries.forEach((performanceEntry, i, entries) => {
+			// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
+			// 	// let Ω = performanceEntry.startTime
+			// })
+
+
+			// const perfObserver = new PerformanceObserver((list) => {
+			// 	for (const entry of list.getEntries()) {
+			// 		// `entry` is a PerformanceEntry instance.
+			// 		console.log(entry.entryType, entry.startTime, entry.duration)
+			// 	}
+			// })
+
+			// // // Start observing the entry types you care about.
+			// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
+
+		}
+
+		const observer = new MutationObserver(mutator)
+
+		observer.observe(_book.node, mutationConfig)
+
+		// observer.disconnect() // TODO: If we decide on closeBook functionality.
+
+		callbacks.map(callback => { if (callback && typeof callback === 'function') callback() })
+
+
+	}
 
 	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
@@ -895,15 +902,36 @@
 			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/page-${index}.html"></iframe></div>`).firstChild, index)
 			: _addPageWrappersAndBaseClasses(html, index)
 
-	// const _oneTimePrint = () => {
-	// 	_printElementsToDOM('buttons', _book.buttons)
-	// 	_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
-	// 	// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-	// 	// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
 
-	// 	_book.state.isInitialized = true
+	const _buttons = () => { _printElementsToDOM('buttons', _book.buttons) }
 
-	// }
+	const _oneTimePrint = () => {
+
+		// _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+		// _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+		switch (_getCurrentPage(_book.options.startPage)) {
+			case 1:
+				console.log('[2, 3] and turn to 1')
+
+				_book.currentPage = 2
+				_book.targetPage = 1
+
+				_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+
+				break
+			case _book.frames.length:
+				console.log('[last-2, last-1] and turn to last')
+				break
+			default:
+				_isEven(_getCurrentPage(_book.options.startPage))
+					? console.log('/* first & [even(r) + odd] page view */')
+					: console.log('/* last &  [even + odd(r)] page view */')
+				break
+
+		}
+
+	}
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
