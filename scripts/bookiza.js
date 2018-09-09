@@ -128,16 +128,13 @@
 
 
 		/********************************************************
-		 * Set up mutationObserver to handle state.				*
+		 * Set up mutationObserver & performanceObservers to 	*
+		 * handle state.										*
 		 * Buttons will mutate DOM to set off _openTheBook()	*
 		 * or _turnTheBook() via MutatationObserver()			*
 		 ********************************************************/
 
-		 _setUpMutationAndPerformanceObservers([_buttons , _oneTimePrint])
-
-
-		// _applyEventListenersOnBook(_setCurrentPage(options.startPage)) // Event delegation via #plotter node.
-
+		_setUpMutationObservers([_setUpPerformanceObservers, _buttons, _oneTimePrint]) // Pass array of callbacks
 
 	}
 
@@ -718,9 +715,9 @@
 
 	const _isInitialized = () => { _book.state.isInitialized = true }
 
-	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
+	w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
-	const _setUpMutationAndPerformanceObservers = (callbacks) => {
+	const _setUpMutationObservers = (callbacks) => {
 
 		const mutationConfig = { attributes: false, childList: true, subtree: false }
 
@@ -737,36 +734,6 @@
 
 			console.log(_book.state.isInitialized)
 
-			/********************
-			 *  Perf matters 	*
-			*********************/
-			if (!w.performance) return
-
-			// const performance = w.performance
-
-			// const performanceEntries = performance.getEntriesByType('paint')
-
-			// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
-
-
-			// console.log(Ω.startTime)
-
-			// performanceEntries.forEach((performanceEntry, i, entries) => {
-			// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
-			// 	// let Ω = performanceEntry.startTime
-			// })
-
-
-			// const perfObserver = new PerformanceObserver((list) => {
-			// 	for (const entry of list.getEntries()) {
-			// 		// `entry` is a PerformanceEntry instance.
-			// 		console.log(entry.entryType, entry.startTime, entry.duration)
-			// 	}
-			// })
-
-			// // // Start observing the entry types you care about.
-			// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
-
 		}
 
 		const observer = new MutationObserver(mutator)
@@ -777,6 +744,39 @@
 
 		callbacks.map(callback => { if (callback && typeof callback === 'function') callback() })
 
+	}
+
+	const _setUpPerformanceObservers = () => {
+		/********************************************
+		 * Performance matters!						*
+		 * Returns Ω values of the browser			*
+		********************************************/
+		if (!w.performance) return
+
+		// const performance = w.performance
+
+		// const performanceEntries = performance.getEntriesByType('paint')
+
+		// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
+
+
+		// console.log(Ω.startTime)
+
+		// performanceEntries.forEach((performanceEntry, i, entries) => {
+		// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
+		// 	// let Ω = performanceEntry.startTime
+		// })
+
+
+		// const perfObserver = new PerformanceObserver((list) => {
+		// 	for (const entry of list.getEntries()) {
+		// 		// `entry` is a PerformanceEntry instance.
+		// 		console.log(entry.entryType, entry.startTime, entry.duration)
+		// 	}
+		// })
+
+		// // // Start observing the entry types you care about.
+		// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
 
 	}
 
