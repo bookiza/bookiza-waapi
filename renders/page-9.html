@@ -2,42 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
-<title> Textbook | Bubblin Superbooks | Bookiza </title>
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
 
-  
+<title> Bubblin's Official Guide </title>
+
+
   <style>
     html, body {
-  background: #fff;
+  font: 3.1vw/1.5 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
   margin: 0 0;
   overflow: hidden;
-  color: #444;
-  font: 4.2vw/1.25 'EB Garamond', serif;
-  height:100vh;
-  width:100vw;
+  color: #667;
 }
 
 
-h1, h2, h3 {
-  margin: 1vw 0;
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 0vw 0 1vw;
   padding: 0;
   color: #444;
   width: 100%;
   text-align: center;
-  font-weight: 100;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
+p {
+  margin: 3vw 0;
 }
-
 
 img {
   border: 0;
@@ -51,15 +47,20 @@ a {
   text-rendering: optimizelegibility;
 }
 
+
 a:focus,
 a:active,
 a:hover {
   outline: 0 none;
-  color: #070;
+  color: #0a4;
 }
 
 a:active {
-  text-shadow: 0 0 2px #fff;
+  text-shadow: 0 0 1px #050;
+}
+
+strong {
+  font-weight: bold;
 }
 
 /* Page specific */
@@ -67,14 +68,13 @@ a:active {
 .leaf {
   height: 100%;
   height: 100vh;
-  width: 100%;
-  width: 100vw;
+  width: 80%;
   margin: auto;
 }
 
 .inner {
   margin: 10% auto;
-  width: 85%;
+  width: 100%;
 }
 
 .flex {
@@ -88,156 +88,149 @@ a:active {
   text-align: justify;
 }
 
-p {
-    margin: 3vw 0;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
+/* Your custom styles below */
+
+
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 monospace, sans-serif;
+  width: 70vw;
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 3vw;
+  border-radius: 1vw;
+  color: black;
 }
 
-p.chapter-begin:first-letter {
-  display: inline-block;
-  margin: 5vw 1vw .1vw 0;
+.code {
+  background: #fff;
+  border: 1px solid #aaa;
+  padding: 0.5vw 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 monospace, sans-serif;
+  color: black;
+}
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
+}
+
+.center { text-align: center; }
+
+.right {
+  float: right;
+}
+
+.left {
   float: left;
-  line-height: 10vw;
-  font-size: 25vw;
-  color: hsla(11, 50%, 50%, 1);
-  font-family: 'Luckiest Guy', serif;
 }
 
 .center {
   text-align: center;
-  margin:0 auto;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
+  margin: 0;
+  padding: 1vw 5vw;
 }
 
 .small {
   font-size: 80%;
 }
 
-
-blockquote {
-    font-family: 'EB Garamond', serif;
-    margin: 2vh 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666;
-    font-weight: 100;
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
 }
 
-blockquote:before {
-    color: #0c0;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
-}
 
-blockquote:after {
-    color: #0c0;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
-
-    body {
-  font: 2.8vw/1.15 "PT Sans Narrow", sans-serif;
-}
-
-.leaf {
-  height: 100vh;
-  width: 80%;
-  margin: auto;
-}
-
-.inner {
-  margin: 10% auto;
-  width: 100%;
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  margin: 5vw 0;
-}
-
-ul li {
-  list-style: outside none none;
-  margin: 0;
-  height: 6vw;
-  margin: 2px auto;
-  background: rgba(241, 241, 241, 0.5);
-  -webkit-border-radius: 1vw;
-  -moz-border-radius: 1vw;
-  -o-border-radius: 1vw;
-  -ms-border-radius: 1vw;
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
   border-radius: 1vw;
-}
-
-ul li:hover {
-  background: hsla(90, 70%, 30%, .1);
-}
-
-ul li a {
-  color: hsla(0, 5%, 35%, 1);
-  float: left;
-  width: 80%;
-  vertical-align: center;
-  clear: both;
-  text-decoration: none;
-    height: 6vw;
-  padding: 0 0 0 3vw;
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family: monospace;
+  font-size: 2.5vw;
   white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
 }
 
-ul li a:hover {
-  float: left;
-  clear: both;
-  text-decoration: none;
-  cursor: pointer;
-  text-shadow: none;
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
 }
 
-li span {
-  pointer-events: none;
-  float: right;
-  font-size: 80%;
-  width: 10%;
-  height: 6vw;
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
 }
+
+@keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.italics{
+  font-style: italic;
+}
+
+.white-text{
+	color: white;
+}
+
   </style>
 </head>
 <body>
-  <div class="leaf">
-    <div class="inner">
-        <h2 class="center"> Table of Contents </h2>
-        <ul>
-            <li><a class="page" href="516"> LIFE ON THE RAW </a> <span class="flex">516</span> </li>
-            <li><a class="page" href="520"> RETURN OF BLOOM </a> <span class="flex">520</span> </li>
-            <li><a class="page" href="522"> INTERVIEW WITH THE EDITOR </a> <span class="flex">522</span> </li>
-            <li><a class="page" href="524"> K.M.A. </a> <span class="flex">524</span> </li>
-            <li><a class="page" href="526"> K.M.R.I.A. </a> <span class="flex">526</span> </li>
-            <li><a class="page" href="528"> RAISING THE WIND </a> <span class="flex">528</span> </li>
-            <li><a class="page" href="531"> SOME COLUMN!—THAT'S WHAT WADDLER ONE SAID </a> <span class="flex">531</span> </li>
-            <li><a class="page" href="533"> THOSE SLIGHTLY RAMBUNCTIOUS FEMALES </a> <span class="flex">533</span> </li>
-            <li><a class="page" href="535"> DAMES DONATE DUBLIN'S CITS SPEEDPILLS VELOCITOUS AEROLITHS, BELIEF </a> <span class="flex">535</span> </li>
-            <li><a class="page" href="537"> SOPHIST WALLOPS HAUGHTY HELEN SQUARE ON PROBOSCIS. SPARTANS GNASH MOLARS. ITHACANS VOW PEN IS CHAMP. </a> <span class="flex">537</span> </li>
-            <li><a class="page" href="539"> HELLO THERE, CENTRAL! </a> <span class="flex">539</span> </li>
-            <li><a class="page" href="541"> WHAT?—AND LIKEWISE—WHERE? </a> <span class="flex">541</span> </li>
-            <li><a class="page" href="543"> VIRGILIAN, SAYS PEDAGOGUE. SOPHOMORE PLUMPS FOR OLD MAN MOSES. </a> <span class="flex">543</span> </li>
-            <li><a class="page" href="545"> HORATIO IS CYNOSURE THIS FAIR JUNE DAY </a> <span class="flex">545</span> </li>
-            <li><a class="page" href="547"> DIMINISHED DIGITS PROVE TOO TITILLATING FOR FRISKY FRUMPS. ANNE WIMBLES, FLO WANGLES—YET CAN YOU BLAME THEM? </a> <span class="flex">547</span> </li>
-        </ul>
-    </div>
+  <div class="leaf ">
+  <div class="inner justify ">
+    <h1> Reader mode</h1>
+    <p> Bubblin is <em> optimized </em> for readers more than it is for writers. Once the book is published, it enters the READER mode, as in the Service Workers take over the live edition and manage versioning for the readers automatically on their respective devices.</p>
+    <p> It is highly advised to double check and test all pages for creeping bugs and issues across multiple devices before pushing out the first version of the book. </p>
+    <p> For readers, the page counting method works like this: </p>
+    <img src="https://raw.githubusercontent.com/bubblin/Official-Handbook/master/assets/images/page-counting-method.png" width="100%" class="overlay" />
+    <p> See section on <a href="31" class="page">Page Numbers</a> for more.</p>
+  </div>
 </div>
-
   <script></script>
 </body>
 </html>
