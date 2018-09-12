@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic|Lato:300,900|Rubik+Mono+One" rel="stylesheet" type="text/css">/</link>
+<title>Bookiza Framework Documentation | Bubblin Superbooks | Bookiza</title>
+
+
+  
+  <style>
+    html, body {
+  font-size: 3.2vw;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  font-family: 'Playfair Display', serif;
+  margin: 0 0;
+  overflow: hidden;
+  color: #444;
+  height: 100vh;
+  width: 100vw; }
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 1vw 0 1vw;
+  padding: 0;
+  color: #666;
+  width: 100%;
+  text-align: center; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 2vw 0;
+  padding: 0; }
+
+p {
+  margin: 2vw 0;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; }
+
+p.chapter-begin:first-letter {
+  display: inline-block;
+  margin: 5vw 1vw .1vw 0;
+  float: left;
+  line-height: 10vw;
+  font-size: 25vw;
+  color: #bf5740;
+  font-family: 'Luckiest Guy', serif; }
+
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic; }
+
+a {
+  color: #0a4;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility; }
+  a:focus, a:active, a:hover {
+    outline: 0 none;
+    color: #0af; }
+  a:active {
+    text-shadow: 0 0 1px #050; }
+
+/* Page specific */
+.leaf {
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto; }
+
+.inner {
+  margin: 12% auto;
+  width: 100%; }
+
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center; }
+
+.justify {
+  text-align: justify; }
+
+.center {
+  text-align: center; }
+
+/* Your custom styles below */
+.subhead {
+  font-size: 60%; }
+
+.head {
+  font-family: 'Lato', serif; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.tape {
+  height: 5vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  background: #119747;
+  font-size: 2.5vw; }
+
+.tape div.chaptername {
+  width: 80vw;
+  padding: 0 2vw; }
+
+.tape div.chapter {
+  width: 20vw;
+  height: 5vh;
+  background: gray;
+  color: white; }
+
+.right {
+  text-align: right;
+  float: right; }
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw; }
+
+pre, code {
+  overflow-x: auto;
+  font-size: 80%;
+  color: #cf2026;
+  padding: 0; }
+
+.code-block {
+  margin: 2vw 0;
+  width: 80vw;
+  background: #fff;
+  border: 1px solid #cf2026;
+  padding: 0 2.5vw;
+  border-radius: 1vw; }
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 75vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 75%;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left; }
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite; }
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+@keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+.notice {
+  font-size: 80%;
+  background: #ffc;
+  width: 80vw;
+  padding: 0.5vh 2.5vw; }
+
+    
+  </style>
+</head>
+<body>
+  <header class="tape flex"><div class="chapter flex">Chapter 1</div><div class="chaptername">Introduction</div></header><main class="leaf flex"><div class="inner justify"><h1>Introduction</h1><div class="subhead">Reston, Virginia  - Friday Nov 7, 2016 - Seven Leafs</div><div class="subhead">by<span class="uppercase">Marvin Danig</span></div><h4>Welcome to <a href="http://bookiza.io">Bookiza's</a> official documentation.</h4><p>Bookiza is a book <i>reification</i> framework for the web. It cuts down book writing and publishing time by half.</p><p>By <strong>half,</strong> no less!</p><p>Manage your manuscript smartly and bake-in all the goodness of the web into your book. Write books that work <a href="https://bubbl.in/support">everywhere.</a> </p><aside class="notice">Note: Bookiza uses the terminal environment (shell) and NodeJS. If you're uncomfortable about using shell commands or uncertain about what the terminal app or NodeJS is, please consider using Bubblin's "in-browser" <a href="https://bubbl.in/tools">editor</a> instead.</aside><p>Here's a <a href="https://marvindanig.wordpress.com/2016/03/17/how-to-write-a-superbook/">blogpost</a> to get you started.</p></div></main>
+  <script></script>
+</body>
+</html>

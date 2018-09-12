@@ -446,8 +446,9 @@
 		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' }
 	]
 
+	// transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0;
 	const _kf4 = () => [
-		{ transform: 'rotateY(-180deg)', transformOrigin: 'left center 0' },
+		{ transform: `rotateY(${_book.state.direction() * 180}deg)`, transformOrigin: 'left center 0' },
 		{ transform: 'rotateY(0deg)', transformOrigin: 'left center 0' }
 	]
 
@@ -464,11 +465,11 @@
 
 	const _flutter = () => [
 		{ transform: 'translate3d(0px, 0px, 0px)' },
-		{ transform: `translate3d(${_book.state.direction() * 0.5}vw, 0px, 0px)`},
+		{ transform: `translate3d(${_book.state.direction() * -1 * 0.3}vw, 0px, 0px)` },
 		{ transform: 'translate3d(0px, 0px, 0px)' },
 	]
 
-	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in', direction = 'normal', iterations = 1 }) => ({
+	const _options = ({ duration = _book.options.duration, bezierCurvature = 'ease-in-out', direction = 'normal', iterations = 1 }) => ({
 		currentTime: 0,
 		duration: duration,
 		easing: bezierCurvature,
@@ -479,9 +480,6 @@
 
 	const _openTheBook = () => {
 
-		console.log(_book.currentPage)
-		console.log(_book.targetPage)
-
 		switch (_getCurrentPage(_book.targetPage)) {
 			case 1:
 
@@ -489,26 +487,33 @@
 
 				_book.state.animations.buttonOpacity = _book.buttons[1].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
 
-
 				let animation1 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]].childNodes[0].animate(_kf3(), _options({}))
 
 				_book.frames[_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices[1]].childNodes[0].animate(_kf4(), _options({}))
 
+				_book.frames[_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices[0]].childNodes[0].animate(_kf2(), _options({})).reverse()
+
 				animation1.onfinish = (event) => {
 					_book.state.animations.buttonFlutter = _book.buttons[0].animate(_flutter(), _options({ iterations: Infinity, duration: 600, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
 					_setCurrentPage(_book.targetPage)
-
 					_applyEventListenersOnBook(_isInitialized)
-
 				}
 				break
 			case _book.frames.length:
+
 				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
+
 				_book.state.animations.buttonOpacity = _book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
 
-				let animation3 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
-				animation3.onfinish = (event) => {
+				let animation2 = _book.frames[_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]].childNodes[0].animate(_kf1(), _options({}))
+
+				_book.frames[_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices[0]].childNodes[0].animate(_kf2(), _options({}))
+
+				_book.frames[_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices[1]].childNodes[0].animate(_kf4(), _options({})).reverse()
+
+				animation2.onfinish = (event) => {
 					_book.state.animations.buttonFlutter = _book.buttons[1].animate(_flutter(), _options({ iterations: Infinity, duration: 1000, bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)' }))
+					_setCurrentPage(_book.targetPage)
 					_applyEventListenersOnBook(_isInitialized)
 				}
 				break
@@ -519,15 +524,66 @@
 
 				break
 		}
-
-
 	}
+
+	const _oneTimePrint = () => {
+		switch (_getCurrentPage(_book.options.startPage)) {
+			case 1:
+
+				_book.currentPage = _getCurrentPage(_book.options.startPage + 1) 	// 2
+				_book.targetPage = _getCurrentPage(_book.options.startPage) 		// 1
+
+				_book.state.direction = _backward
+
+				_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+
+				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
+
+				_printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+				break
+			case _book.frames.length:
+
+				_book.currentPage = _getCurrentPage(_book.options.startPage - 1) 	// last but one
+				_book.targetPage = _getCurrentPage(_book.options.startPage)			// last
+				_book.state.direction = _forward
+
+				_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
+
+				_book.state.isTurning ? _book.tick += 1 : _book.tick = 1
+
+				_printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+				break
+			default:
+
+				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage)) ? 1 : _book.frames.length
+				_book.targetPage = _getCurrentPage(_book.options.startPage)
+				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
+
+				console.log(_getCurrentPage(_book.targetPage + 1))
+
+				_isEven(_getCurrentPage(_book.options.startPage))
+					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage - 1), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage + 1), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
+
+				_isEven(_getCurrentPage(_book.options.startPage))
+					? _printElementsToDOM('first', [_book.frames[0]], _book.tick)
+					: _printElementsToDOM('last', [_book.frames[_book.frames.length - 1]], _book.tick)
+
+				break
+
+		}
+	}
+
 
 	const _turnTheBook = () => {
 		/********************************************
 		 * Check if eventsCache has an event 		*
 		 * queued up for this (addNode) mutation	*
 		 *******************************************/
+
+
 		let turnable = _book.eventsCache.shift()
 		if (turnable !== undefined) {
 
@@ -598,8 +654,6 @@
 		}
 	}
 
-
-
 	const _animateLeaf = (pageNo) => {
 
 		_book.turning.page = _getCurrentPage(pageNo)
@@ -664,7 +718,6 @@
 				break
 		}
 	}
-
 
 	/*********************************
 	 * @Helper methods  *
@@ -733,8 +786,6 @@
 			})
 			if (isNodeAdded)
 				_book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
-
-			console.log(_book.state.isInitialized)
 
 		}
 		const observer = new MutationObserver(mutator)
@@ -892,61 +943,17 @@
 	const _reifyFrames = size => [...d.createRange()
 		.createContextualFragment(new String(new Array(size)
 			.fill()
-			.map((v, i) => `<div class="page"><iframe src="./renders/page-${i + 1}.html"></iframe></div>`)))
+			.map((v, i) => `<div class="page"><iframe src="./renders/${ _book.options.build }/page-${i + 1}.html"></iframe></div>`)))
 		.querySelectorAll('div')
 	].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 	const _createFrame = (index, html) =>
 		html === undefined
-			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/page-${index}.html"></iframe></div>`).firstChild, index)
+			? _addPageWrappersAndBaseClasses(d.createRange().createContextualFragment(`<div class="page"><iframe src="./renders/${ _book.options.build }/page-${index}.html"></iframe></div>`).firstChild, index)
 			: _addPageWrappersAndBaseClasses(html, index)
 
 
 	const _buttons = () => { _printElementsToDOM('buttons', _book.buttons) }
-
-	const _oneTimePrint = () => {
-		switch (_getCurrentPage(_book.options.startPage)) {
-			case 1:
-				_book.currentPage = _getCurrentPage(_book.options.startPage + 1) // 2
-				_book.targetPage =  _getCurrentPage(_book.options.startPage) // 1
-				_book.state.direction = _backward
-
-				_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
-				_printElementsToDOM('first', [_book.frames[0]], _book.tick)
-				break
-			case _book.frames.length:
-
-				_book.currentPage = _getCurrentPage(_book.options.startPage - 1)
-				_book.targetPage = _getCurrentPage(_book.options.startPage)
-				_book.state.direction =  _forward
-
-				_printElementsToDOM('view', _setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map((index) => _book.frames[`${index}`]), _book.tick)
-				_printElementsToDOM('last', [_book.frames[_book.frames.length - 1]], _book.tick)
-
-				break
-			default:
-
-				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage)) ? 1 : _book.frames.length
-				_book.targetPage = _getCurrentPage(_book.options.startPage)
-				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
-
-				console.log(_getCurrentPage(_book.targetPage + 1))
-
-				_isEven(_getCurrentPage(_book.options.startPage))
-					? _printElementsToDOM('rightPages', _getRangeIndices(_getCurrentPage(_book.targetPage - 1), _book.state.mode).rightPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-					: _printElementsToDOM('leftPages', _getRangeIndices(_getCurrentPage(_book.targetPage + 1), _book.state.mode).leftPageIndices.map((index) => _book.frames[`${index}`]), _book.tick)
-
-				_isEven(_getCurrentPage(_book.options.startPage))
-					? _printElementsToDOM('first', [_book.frames[0]], _book.tick)
-					: _printElementsToDOM('last', [_book.frames[_book.frames.length - 1]], _book.tick)
-
-				break
-
-		}
-
-		//
-		//
-	}
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()
@@ -980,14 +987,14 @@
 					docfrag.appendChild(page)
 				})
 				break
-			case 'first':
-				let first = _applyStyles(elements[0], 0, type, tick)
-				docfrag.appendChild(first)
-				break
-			case 'last':
-				let last = _applyStyles(elements[0], 0, type, tick)
-				docfrag.appendChild(last)
-				break
+			// case 'first':
+			// 	let first = _applyStyles(elements[0], 0, type, tick)
+			// 	docfrag.appendChild(first)
+			// 	break
+			// case 'last':
+			// 	let last = _applyStyles(elements[0], 0, type, tick)
+			// 	docfrag.appendChild(last)
+			// 	break
 
 		}
 		_book.node.appendChild(docfrag)
@@ -1026,10 +1033,10 @@
 						cssString += _isEven(currentIndex) ? 'z-index: 0; ' : 'z-index: 1;'
 						pageObj.style.cssText = cssString
 						break
-					case 'first':
-						break
-					case 'last':
-						break
+					// case 'first':
+					// 	break
+					// case 'last':
+					// 	break
 				}
 				break
 			case 'landscape':
@@ -1070,32 +1077,32 @@
 						cssString = 'pointer-events:none;'
 						// pageObj.style.cssText = cssString
 						cssString += _isEven(currentIndex)
-							? `z-index: ${tick}; float: left; left: 0;`
-							: `z-index: ${tick - _book.frames.length}; float: right; right: 0; `
+							? `z-index: ${tick - _book.frames.length}; float: left; left: 0;`
+							: `z-index: ${tick}; float: right; right: 0; `
 						pageObj.style.cssText = cssString
 						break
-					case 'first':
-						// inner
-						cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px;'
-							//'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: right center 0px;'
-						pageObj.childNodes[0].style = cssString
+					// case 'first':
+					// 	// inner
+					// 	// cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px;'
+					// 	cssString = 'pointer-events: none; transitions: none;'
+					// 	pageObj.childNodes[0].style = cssString
 
-						// wrapper
-						cssString = `pointer-events:none; z-index: ${tick}; float: right; right: 0;`
-						pageObj.style.cssText = cssString
+					// 	// wrapper
+					// 	cssString = `pointer-events: none; z-index: ${tick}; float: right; right: 0;`
+					// 	pageObj.style.cssText = cssString
 
-						break
-					case 'last':
-						// inner
-						cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: right center 0px;'
-						pageObj.childNodes[0].style = cssString
+					// 	break
+					// case 'last':
+					// 	// inner
+					// 	cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: right center 0px;'
+					// 	pageObj.childNodes[0].style = cssString
 
-						// wrapper
-						cssString = `pointer-events:none; z-index: ${tick}; float: left; left: 0;`
-						pageObj.style.cssText = cssString
+					// 	// wrapper
+					// 	cssString = `pointer-events:none; z-index: ${tick}; float: left; left: 0;`
+					// 	pageObj.style.cssText = cssString
 
 
-						break
+					// 	break
 
 
 
