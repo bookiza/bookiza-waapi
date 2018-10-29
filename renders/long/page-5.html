@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
-<title> Textbook | Bubblin Superbooks | Bookiza </title>
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic|Lato:300,900|Rubik+Mono+One" rel="stylesheet" type="text/css">/</link>
+<title>Bookiza Framework Documentation | Bubblin Superbooks | Bookiza</title>
+
 
   
   <style>
     html, body {
-  background: #fff;
+  font-size: 3.2vw;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  font-family: 'Playfair Display', serif;
   margin: 0 0;
   overflow: hidden;
   color: #444;
-  font: 4.2vw/1.25 'EB Garamond', serif;
-  height:100vh;
-  width:100vw;
-}
+  height: 100vh;
+  width: 100vw; }
 
-
-h1, h2, h3 {
-  margin: 1vw 0;
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 1vw 0 1vw;
   padding: 0;
-  color: #444;
+  color: #666;
   width: 100%;
-  text-align: center;
-  font-weight: 100;
-}
+  text-align: center; }
 
 h1,
 h2,
@@ -33,67 +37,14 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
-}
-
-
-img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
-}
-
-a {
-  color: #0077ff;
-  outline: 0 none;
-  text-decoration: none;
-  text-rendering: optimizelegibility;
-}
-
-a:focus,
-a:active,
-a:hover {
-  outline: 0 none;
-  color: #070;
-}
-
-a:active {
-  text-shadow: 0 0 2px #fff;
-}
-
-/* Page specific */
-
-.leaf {
-  height: 100%;
-  height: 100vh;
-  width: 100%;
-  width: 100vw;
-  margin: auto;
-}
-
-.inner {
-  margin: 10% auto;
-  width: 85%;
-}
-
-.flex {
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.justify {
-  text-align: justify;
-}
+  margin: 2vw 0;
+  padding: 0; }
 
 p {
-    margin: 3vw 0;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
-}
+  margin: 2vw 0;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; }
 
 p.chapter-begin:first-letter {
   display: inline-block;
@@ -101,86 +52,210 @@ p.chapter-begin:first-letter {
   float: left;
   line-height: 10vw;
   font-size: 25vw;
-  color: hsla(11, 50%, 50%, 1);
-  font-family: 'Luckiest Guy', serif;
-}
+  color: #bf5740;
+  font-family: 'Luckiest Guy', serif; }
+
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic; }
+
+a {
+  color: #0a4;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility; }
+  a:focus, a:active, a:hover {
+    outline: 0 none;
+    color: #0af; }
+  a:active {
+    text-shadow: 0 0 1px #050; }
+
+/* Page specific */
+.leaf {
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto; }
+
+.inner {
+  margin: 12% auto;
+  width: 100%; }
+
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center; }
+
+.justify {
+  text-align: justify; }
 
 .center {
-  text-align: center;
-  margin:0 auto;
-}
+  text-align: center; }
 
-.small {
-  font-size: 80%;
-}
+/* Your custom styles below */
+.subhead {
+  font-size: 60%; }
 
+.head {
+  font-family: 'Lato', serif; }
 
-blockquote {
-    font-family: 'EB Garamond', serif;
-    margin: 2vh 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666;
-    font-weight: 100;
-}
+.uppercase {
+  text-transform: uppercase; }
 
-blockquote:before {
-    color: #0c0;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
-}
+.tape {
+  height: 5vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  background: #119747;
+  font-size: 2.5vw; }
 
-blockquote:after {
-    color: #0c0;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
+.tape div.chaptername {
+  width: 80vw;
+  padding: 0 2vw; }
 
-    blockquote {
-    font-family: 'EB Garamond', serif;
-    margin: 2vh 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666 font-weight: 100;
-}
-
-blockquote:before {
-    color: #0c0;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
-}
-
-blockquote:after {
-    color: #0c0;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
+.tape div.chapter {
+  width: 20vw;
+  height: 5vh;
+  background: gray;
+  color: white; }
 
 .right {
+  text-align: right;
+  float: right; }
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw; }
+
+pre, code {
+  overflow-x: auto;
+  font-size: 80%;
+  color: #cf2026;
+  padding: 0; }
+
+.code-block {
+  margin: 2vw 0;
+  width: 80vw;
+  background: #fff;
+  border: 1px solid #cf2026;
+  padding: 0 2.5vw;
+  border-radius: 1vw; }
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 75vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 75%;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left; }
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite; }
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+@keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+.notice {
+  font-size: 80%;
+  background: #ffc;
+  width: 80vw;
+  padding: 0.5vh 2.5vw; }
+
+    body {
+  font: 3vw/1.15 "PT Sans Narrow", sans-serif; }
+
+.leaf {
+  height: 100vh;
+  width: 80%;
+  margin: auto; }
+
+.justify {
+  text-align: unset; }
+
+.center {
+  text-align: auto;
+  margin: unset; }
+
+.inner {
+  margin: 15% auto;
+  width: 100%; }
+
+ul {
+  margin: 0;
+  padding: 0; }
+  ul li {
+    line-height: 3vw;
+    list-style: outside none none;
+    margin: 0; }
+
+a {
+  background: white;
+  color: #5e5555;
+  float: left;
+  width: 90%;
+  clear: both;
+  text-decoration: none;
+  margin: 1px 0;
+  padding: 1.5% 5%;
+  -webkit-border-radius: 1vw;
+  -moz-border-radius: 1vw;
+  -o-border-radius: 1vw;
+  -ms-border-radius: 1vw;
+  border-radius: 1vw; }
+  a:hover {
+    background: #119747;
+    color: white;
+    float: left;
+    width: 90%;
+    clear: both;
+    text-decoration: none;
+    cursor: pointer;
+    text-shadow: none; }
+  a span {
     float: right;
-}
+    font-size: 80%; }
 
   </style>
 </head>
 <body>
-  <div class="leaf flex">
-    <div class="inner justify">
-        <blockquote><em>Love loves to love love. </em></blockquote>
-        <div class="right small"> ― James Joyce, Ulysses</div>
-    </div>
-</div>
+  <div class="leaf flex"><div class="inner"><h2>Contents</h2><ul><li><a href="7" class="page">Introduction<span>7</span></a></li><li><a href="8" class="page">Setup<span>8</span></a></li><li><a href="9" class="page">Installation<span>9</span></a></li><li><a href="15" class="page">Registration<span>15</span></a></li><li><a href="17" class="page">Manuscript<span>17</span></a></li><li><a href="18" class="page">Commands<span>18</span></a></li><li><a href="20" class="page">Templates<span>20</span></a></li><li><a href="21" class="page">Afterthoughts<span>21</span></a></li><li><a href="22" class="page">Preprocessors<span>22</span></a></li><li><a href="23" class="page">Bubblin<span>23</span></a></li><li><a href="25" class="page">Credits<span>25</span></a></li><li><a href="26" class="page">Colophon<span>26</span></a></li></ul></div></div>
   <script></script>
 </body>
 </html>

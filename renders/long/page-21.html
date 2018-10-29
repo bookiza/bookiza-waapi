@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Josefin+Slab|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
-<title> Textbook | Bubblin Superbooks | Bookiza </title>
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Droid+Serif:400,700,400italic,700italic|Lato:300,900|Rubik+Mono+One" rel="stylesheet" type="text/css">/</link>
+<title>Bookiza Framework Documentation | Bubblin Superbooks | Bookiza</title>
+
 
   
   <style>
     html, body {
-  background: #fff;
+  font-size: 3.2vw;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  font-family: 'Playfair Display', serif;
   margin: 0 0;
   overflow: hidden;
   color: #444;
-  font: 4.2vw/1.25 'EB Garamond', serif;
-  height:100vh;
-  width:100vw;
-}
+  height: 100vh;
+  width: 100vw; }
 
-
-h1, h2, h3 {
-  margin: 1vw 0;
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 1vw 0 1vw;
   padding: 0;
-  color: #444;
+  color: #666;
   width: 100%;
-  text-align: center;
-  font-weight: 100;
-}
+  text-align: center; }
 
 h1,
 h2,
@@ -33,67 +37,14 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'PT Sans Narrow', serif;
-    margin: 2vw 0;
-    padding: 0;
-}
-
-
-img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
-}
-
-a {
-  color: #0077ff;
-  outline: 0 none;
-  text-decoration: none;
-  text-rendering: optimizelegibility;
-}
-
-a:focus,
-a:active,
-a:hover {
-  outline: 0 none;
-  color: #070;
-}
-
-a:active {
-  text-shadow: 0 0 2px #fff;
-}
-
-/* Page specific */
-
-.leaf {
-  height: 100%;
-  height: 100vh;
-  width: 100%;
-  width: 100vw;
-  margin: auto;
-}
-
-.inner {
-  margin: 10% auto;
-  width: 85%;
-}
-
-.flex {
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-.justify {
-  text-align: justify;
-}
+  margin: 2vw 0;
+  padding: 0; }
 
 p {
-    margin: 3vw 0;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
-}
+  margin: 2vw 0;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; }
 
 p.chapter-begin:first-letter {
   display: inline-block;
@@ -101,52 +52,157 @@ p.chapter-begin:first-letter {
   float: left;
   line-height: 10vw;
   font-size: 25vw;
-  color: hsla(11, 50%, 50%, 1);
-  font-family: 'Luckiest Guy', serif;
-}
+  color: #bf5740;
+  font-family: 'Luckiest Guy', serif; }
+
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic; }
+
+a {
+  color: #0a4;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility; }
+  a:focus, a:active, a:hover {
+    outline: 0 none;
+    color: #0af; }
+  a:active {
+    text-shadow: 0 0 1px #050; }
+
+/* Page specific */
+.leaf {
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto; }
+
+.inner {
+  margin: 12% auto;
+  width: 100%; }
+
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center; }
+
+.justify {
+  text-align: justify; }
 
 .center {
-  text-align: center;
-  margin:0 auto;
-}
+  text-align: center; }
 
-.small {
+/* Your custom styles below */
+.subhead {
+  font-size: 60%; }
+
+.head {
+  font-family: 'Lato', serif; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.tape {
+  height: 5vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  background: #119747;
+  font-size: 2.5vw; }
+
+.tape div.chaptername {
+  width: 80vw;
+  padding: 0 2vw; }
+
+.tape div.chapter {
+  width: 20vw;
+  height: 5vh;
+  background: gray;
+  color: white; }
+
+.right {
+  text-align: right;
+  float: right; }
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw; }
+
+pre, code {
+  overflow-x: auto;
   font-size: 80%;
-}
+  color: #cf2026;
+  padding: 0; }
 
+.code-block {
+  margin: 2vw 0;
+  width: 80vw;
+  background: #fff;
+  border: 1px solid #cf2026;
+  padding: 0 2.5vw;
+  border-radius: 1vw; }
 
-blockquote {
-    font-family: 'EB Garamond', serif;
-    margin: 2vh 0;
-    padding: 0;
-    quotes: "\201C""\201D""\2018""\2019";
-    color: #666;
-    font-weight: 100;
-}
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 75vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 75%;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left; }
 
-blockquote:before {
-    color: #0c0;
-    content: open-quote;
-    font-size: 6vw;
-    line-height: 0.1vw;
-    margin-right: -0.1vw;
-    vertical-align: -0.9vw;
-}
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite; }
 
-blockquote:after {
-    color: #0c0;
-    content: close-quote;
-    font-size: 6vw;
-    line-height: 0.4vw;
-    margin-left: 0.5vw;
-    vertical-align: -0.9vw;
-}
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+@keyframes blink {
+  0% {
+    background: #55ff55; }
+  49% {
+    background: #55ff55; }
+  50% {
+    background: transparent; }
+  100% {
+    background: transparent; } }
+
+.notice {
+  font-size: 80%;
+  background: #ffc;
+  width: 80vw;
+  padding: 0.5vh 2.5vw; }
 
     
   </style>
 </head>
 <body>
-  <div class="leaf flex"><div class="inner justify"><p>—Someone killed her, Stephen said gloomily.</p><p>—You could have knelt down, damn it, Kinch, when your dying mother asked you, Buck Mulligan said. I'm hyperborean as much as you. But to think of your mother begging you with her last breath to kneel down and pray for her. And you refused. There is something sinister in you....</p><p>He broke off and lathered again lightly his farther cheek. A tolerant smile curled his lips.</p><p>—But a lovely mummer! he murmured to himself. Kinch, the loveliest mummer of them all!</p><p>He shaved evenly and with care, in silence, seriously.</p><p>Stephen, an elbow rested on the jagged granite, leaned his palm against his brow and gazed at the fraying edge of his shiny black coat-sleeve. Pain, that was not yet the pain of love, fretted his heart.</p></div> </div>
+  <header class="tape flex"><div class="chaptername right">Afterthoughts</div><div class="chapter flex">Chapter 8</div></header><main class="leaf"><div class="inner justify"><h1>Afterthought</h1><p>With mobile being a dominant way for people to consume web, Bookiza brings only the most natural form of pagination that people loved for over a millenium: silky page turns.</p><p>Here is a premise around which Bookiza is designed:</p><ol><li>Book is a <em>collection</em> of webpages just like a website is but on a book pages are organized linearly on a stack/spine. Pagination by splitting content into pieces of equal size is a great way to optimize for linear reading experience.</li><li>Paginated and piecemealed content makes for accessability, readability and maintenance along with better control on layout and engineering issues: i.e. presentation and cross-platform compatibility.<p>Pagination also improves the ability to recall - i.e. memorization for readers.</p></li></ol></div></main>
   <script></script>
 </body>
 </html>

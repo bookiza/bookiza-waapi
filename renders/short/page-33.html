@@ -2,43 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'>
-
-<title> Bubblin's Official Guide </title>
+  <title>  Just Be | Bubblin Superbooks | Bookiza </title>
+<link href="https://fonts.googleapis.com/css?family=Niramit" rel="stylesheet">
 
   
   <style>
-    html, body {
-  font: 3.1vw/1.5 'Playfair Display', serif;
-  color: #2f2f2f;
-  background-color: #f9f7f1;
-  margin: 0 0;
-  overflow: hidden;
-  color: #667;
+    /* Set image on each page with background-image: url(/to/your/comic/assets/images/page-1115x1143-pixels.jpg); */
+/* Layout CSS below is applied to all pages of the comics */
+
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
 }
 
-
-h1 {
-  font-weight: 900;
-  font-size: 6vw;
-  text-transform: uppercase;
-  display: inline-block;
-  line-height: 1.5;
-  margin: 0vw 0 1vw;
-  padding: 0;
-  color: #444;
-  width: 100%;
-  text-align: center;
-}
-
-p {
-  margin: 3vw 0;
+body, html {
+    margin: 0 0;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    background-size: 100% 100%;
+    height: 100vh;
+    width: 100vw;
+    font: 4vw/1.3 'Niramit', sans-serif;
 }
 
 img {
-  border: 0;
-  -ms-interpolation-mode: bicubic;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
 }
+
+
+p {
+    margin: 3vw 0;
+}
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+
 
 a {
   color: #0077ff;
@@ -47,192 +50,96 @@ a {
   text-rendering: optimizelegibility;
 }
 
-
 a:focus,
 a:active,
 a:hover {
   outline: 0 none;
-  color: #0a4;
+  color: #070;
 }
 
 a:active {
-  text-shadow: 0 0 1px #050;
+  text-shadow: 0 0 2px #fff;
 }
 
-strong {
-  font-weight: bold;
-}
+
 
 /* Page specific */
 
 .leaf {
-  height: 100%;
-  height: 100vh;
-  width: 80%;
-  margin: auto;
+    height: 100%;
+    height: 100vh;
+    width: 80%;
+    margin: auto;
 }
 
 .inner {
-  margin: 10% auto;
-  width: 100%;
+    margin: 12% auto;
+    width: 100%;
 }
 
 .flex {
-  display: -webkit-box;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
+    display: -webkit-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .justify {
-  text-align: justify;
+    text-align: justify;
 }
-
-/* Your custom styles below */
-
-
-.code-block {
-  margin: 3vw 0;
-  font: 2vw/1.0 monospace, sans-serif;
-  width: 70vw;
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 3vw;
-  border-radius: 1vw;
-  color: black;
-}
-
-.code {
-  background: #fff;
-  border: 1px solid #aaa;
-  padding: 0.5vw 1vw;
-  border-radius: 1vw;
-  font: 2.7vw/1.1 monospace, sans-serif;
-  color: black;
-}
-
-.monospace, .highlight {
-  font-family: monospace;
-  font-size: 2.5vw;
-  background: #ff0;
-  border: 1px solid #ff0;
-  color: #444;
-  padding: .2vw 1vw;
-  border-radius: .5vw;
-  margin: 0 .5vw;
-}
-
-.center { text-align: center; }
 
 .right {
-  float: right;
+	float: right;
 }
 
-.left {
-  float: left;
+.center{
+    margin: 0 auto;
+    text-align: center;
+}
+/* Your custom styles below */
+
+    h1{
+	font-size: 14vw;
+	text-align: center;
+	margin: 0 auto 3vh;
 }
 
-.center {
-  text-align: center;
+p{
+	font-size: 90%;
 }
-
-ol {
-  list-style-type: lower-roman;
-  list-style-position: inside;
-  list-style-image: none;
-  margin: 0;
-  padding: 1vw 5vw;
-}
-
-.small {
-  font-size: 80%;
-}
-
-.gray {
-  background: #666;
-  color: #fff;
-  font-size: 60%;
-  padding: 1vw;
-}
-
-
-.terminal {
-  background-color: black;
-  color: #55ff55;
-  margin: 3vw 0;
-  width: 70vw;
-  border: 1px solid #ccc;
-  padding: 2vw 5vw;
-  border-radius: 1vw;
-  font-family: monospace;
-  font-size: 2.5vw;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-align: left;
-}
-
-.prompt {
-  background: #55ff55;
-  height: 1em;
-  width: 0.75em;
-  -webkit-animation: blink 1s linear infinite;
-  animation: blink 1s linear infinite;
-}
-
-
-@-webkit-keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-@keyframes blink {
-  0% {
-    background: #55ff55;
-  }
-  49% {
-    background: #55ff55;
-  }
-  50% {
-    background: transparent;
-  }
-  100% {
-    background: transparent;
-  }
-}
-
-.italics{
-  font-style: italic;
-}
-
-.white-text{
-	color: white;
-}
-    
   </style>
 </head>
 <body>
-  <div class="leaf ">
-  <div class="inner justify ">
-    <h1> Internal Links</h1>
-    <p> Internal links of the book are handled differently from the links that lead to webpages outside of the book.</p>
-    <p> Use <span class="turnoff code">class="page"</span> with <span class="turnoff code">href="[page_no]"</span> like so: </p>
-    <div class="code-block"> class="page" href="20" </div>
-    <p>to link to page number <span class="monospace">20</span> of the book. </p>
-    <p> Checkout the HTML of the <a href="https://github.com/bubblin/Official-Handbook/blob/master/manuscript/page-7/body.html">index page</a> of this book, for example. Internal linking is a cool way to connect pages of a book that is already loaded in the
-      dom. </p>
-    <p>It is mandatory to use Bubblin's <a href="https://bubbl.in/standards">Internal Linking API</a> when connecting to pages within the book.</p>
-  </div>
+  <div class="leaf flex"><div class="inner justify">
+
+	<h1> "Just Be!"</h1>
+	<p class="center small"> (A book for personality development)</p>
+
+	<p>
+		We are planning to print this book and create a Teacher Toolkit to go along with it—full of lesson plans and activities for children to learn more about empowerment and how to "Just Be". 
+	</p>
+	<p>
+		 With your support, we can print more copies and create better material to help support teachers, kids and parents! 
+	</p>
+
+
+<div class="center">
+<!-- Begin funderdog code snippet -->
+<a href="https://secure.funder.dog/?org=HJEsImaqQ&formType=modalPopup&campaign=default" style="background: #5a00a0 url('https://dh22mn9qlrak2.cloudfront.net/90x90-logo-funderdog.png') no-repeat 25px center;background-size:45px;color: #fff;text-decoration: none;font-family: Verdana,sans-serif;display: inline-block;font-size: 18px;padding: 15px 38px 15px 75px;font-weight: normal;border-radius: 0px;-webkit-border-radius: 0px;-moz-border-radius: 0px; margin-bottom: 2vh;" class="page funderdog-donate-modal-001">Donate to Author</a><script src="https://scripts.funder.dog/scripts/modal-widget.js" defer></script>
+<!-- End funderdog code snippet -->
 </div>
+
+<hr/>
+
+	<div class="center">
+
+        <a href="http://bookiza.io"><img src="https://raw.githubusercontent.com/bookiza/bookiza.cli/master/assets/images/bookiza.png" width="20%" /></a>
+        <p> <em>This book was baked using <a href="https://bookiza.io">Bookiza</a>! </em></p>
+</div>
+
+
+</div></div>
+
   <script></script>
 </body>
 </html>
