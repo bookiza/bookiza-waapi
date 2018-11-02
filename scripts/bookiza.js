@@ -134,6 +134,8 @@
 		 * or _turnTheBook() via MutatationObserver()			*
 		 ********************************************************/
 
+         // TODO: Use comma operators instead.
+
 		_setUpMutationObservers([_setUpPerformanceObservers, _buttons, _oneTimePrint]) // Pass array of callbacks
 
 	}
