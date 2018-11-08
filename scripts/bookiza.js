@@ -103,7 +103,7 @@
 
 	const _resetGeometricalOrigin = () => { _book.plotter.origin = _setGeometricalOrigin() }
 
-	w.addEventListener('resize', _resetGeometricalOrigin) // Re-calibrate geometrical origin.
+	w.addEventListener('resize', _resetGeometricalOrigin) // Recalibrate geometrical origin.
 
 	/**************************************************************************************
 	* One time @superbook initialization.
