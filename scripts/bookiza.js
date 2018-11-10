@@ -124,8 +124,7 @@
 
 		if (_book.frames.length === 0) _book.frames = _reifyFrames(size)
 
-		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length))
-
+		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length)) // TODO: Explain why this is required.
 
 		/********************************************************
 		 * Set up mutationObserver & performanceObservers to 	*
