@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>  I love you | Bubblin Superbooks | Bookiza </title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"> </script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/939680/MorphSVGPlugin.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/939680/howler.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Nanum+Pen+Script" rel="stylesheet">
+
+
+  
+  <style>
+    /* Set image on each page with background-image: url(/to/your/comic/assets/images/page-1115x1143-pixels.jpg); */
+/* Layout CSS below is applied to all pages of the comics */
+
+body, html {
+    height: 100vh;
+    width: 100vw;
+    margin: 0 0;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-color: #cfdfe4;
+    background-size: 100% 100%;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 8vw;
+}
+
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+
+    body {
+				margin: 0;
+				-webkit-transform-style: preserve-3d;
+				-moz-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+				height: 100%;
+				width: 100%;
+				position: absolute;
+				overflow: hidden;
+				background: #7db9e8;
+}
+
+.head {
+				background-color: #FE5F55;
+				width: 35vw;
+				height: 35vw;
+				border-radius: 40%;
+				border-bottom-left-radius: 50%;
+				border-bottom-right-radius: 50%;
+				margin: 0 auto;
+				transition: 0.5s;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+}
+
+.head:before {
+				position: absolute;
+				content: '';
+				width: 7vw;
+				height: 4vw;
+				background-color: #FE5F55;
+				border-radius: 50%;
+				top: 5vw;
+}
+
+.head:after {
+				position: absolute;
+				content: '';
+				width: 7vw;
+				height: 4vw;
+				background-color: #FE5F55;
+				border-radius: 50%;
+				top: 5vw;
+				right: 0;
+}
+
+.head:hover {
+				padding-bottom: 1vw;
+				transition: 0.5s;
+}
+
+.eye {
+				width: 22vw;
+				height: 22vw;
+				background: white;
+				border-radius: 50%;
+				position: absolute;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				margin-top: 3.5vw;
+}
+
+.iris {
+				width: 8vw;
+				height: 10vw;
+				background-color: #333;
+				border-radius: 50%;
+				float: right;
+				margin-right: 5vw;
+				margin-top: 5vw;
+}
+
+.light {
+				background-color: white;
+				width: 2.5vw;
+				height: 3.5vw;
+				float: right;
+				margin-right: 0px;
+				border-radius: 50%;
+				margin-top: 1vw;
+				margin-right: 1.5vw;
+				transform: rotate(-15deg);
+}
+
+.mouth {
+				width: 2.5vw;
+				height: 1vw;
+				border-radius: 50%;
+				background-color: #333;
+				position: absolute;
+				bottom: 1vw;
+				border: 1vw solid white;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				transition: 0.5s;
+}
+
+.head:hover .mouth {
+				width: 8vw;
+				height: 1.5vw;
+				bottom: 1.25vw;
+				transition: 0.5s;
+}
+
+.arms {
+				background: #FE5F55;
+				width: 85%;
+				height: 1.5vw;
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);
+				position: absolute;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				border-bottom-left-radius: 2vw;
+				border-bottom-right-radius: 2vw;
+}
+
+.hand {
+				content: '';
+				position: absolute;
+				width: 2vw;
+				height: 7.5vw;
+				background: #FE5F55;
+				left: 0;
+				top: -6vw;
+				border-top-right-radius: 2vw;
+				border-bottom-left-radius: 2vw;
+}
+
+.hand:last-child {
+				left: initial;
+				right: 0;
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 2vw;
+				border-top-left-radius: 3.5vw;
+}
+
+.sucker {
+				width: 1.2vw;
+				height: 1.2vw;
+				border-radius: 50%;
+				background-color: white;
+				margin-left: -0.6vw;
+				margin-top: 0.5vw;
+				-webkit-animation: sucker 0.5s infinite;
+				-moz-animation: sucker 0.5s infinite;
+				-o-animation: sucker 0.5s infinite;
+				animation: sucker 0.5s infinite;
+}
+
+.sucker:nth-child(2),
+.sucker:nth-child(4) {
+				-webkit-animation: sucker 0.5s 0.3s infinite;
+				-moz-animation: sucker 0.5s 0.3s infinite;
+				-o-animation: sucker 0.5s 0.3s infinite;
+				animation: sucker 0.5s 0.3s infinite;
+}
+
+@-webkit-keyframes sucker {
+				0% {
+								margin-left: -0.6vw;
+				}
+
+				50% {
+								margin-left: -0.8vw;
+				}
+
+				100% {
+								margin-left: -0.6vw;
+				}
+}
+
+@-moz-keyframes sucker {
+				0% {
+								margin-left: -0.6vw;
+				}
+
+				50% {
+								margin-left: -0.8vw;
+				}
+
+				100% {
+								margin-left: -0.6vw;
+				}
+}
+
+@-o-keyframes sucker {
+				0% {
+								margin-left: -0.6vw;
+				}
+
+				50% {
+								margin-left: -0.8vw;
+				}
+
+				100% {
+								margin-left: -0.6vw;
+				}
+}
+
+@keyframes sucker {
+				0% {
+								margin-left: -0.6vw;
+				}
+
+				50% {
+								margin-left: -0.8vw;
+				}
+
+				100% {
+								margin-left: -0.6vw;
+				}
+}
+
+.hand:last-child .sucker {
+				margin-left: 1.2vw;
+				-webkit-animation: sucker-right 0.5s infinite;
+				-moz-animation: sucker-right 0.5s infinite;
+				-o-animation: sucker-right 0.5s infinite;
+				animation: sucker-right 0.5s infinite;
+}
+
+.hand:last-child .sucker:nth-child(2),
+.hand:last-child .sucker:nth-child(4) {
+				-webkit-animation: sucker-right 0.5s 0.3s infinite;
+				-moz-animation: sucker-right 0.5s 0.3s infinite;
+				-o-animation: sucker-right 0.5s 0.3s infinite;
+				animation: sucker-right 0.5s 0.3s infinite;
+}
+
+@-webkit-keyframes sucker-right {
+				0% {
+								margin-left: 1.2vw;
+				}
+
+				50% {
+								margin-left: 1.4vw;
+				}
+
+				100% {
+								margin-left: 1.2vw;
+				}
+}
+
+@-moz-keyframes sucker-right {
+				0% {
+								margin-left: 1.2vw;
+				}
+
+				50% {
+								margin-left: 1.4vw;
+				}
+
+				100% {
+								margin-left: 1.2vw;
+				}
+}
+
+@-o-keyframes sucker-right {
+				0% {
+								margin-left: 1.2vw;
+				}
+
+				50% {
+								margin-left: 1.4vw;
+				}
+
+				100% {
+								margin-left: 1.2vw;
+				}
+}
+
+@keyframes sucker-right {
+				0% {
+								margin-left: 1.2vw;
+				}
+
+				50% {
+								margin-left: 1.4vw;
+				}
+
+				100% {
+								margin-left: 1.2vw;
+				}
+}
+
+.leg {
+				width: 1.5vw;
+				background: #FE5F55;
+				height: 48%;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				border-bottom-right-radius: 2vw;
+				-webkit-transform: translateX(-2vw);
+				-moz-transform: translateX(-2vw);
+				-o-transform: translateX(-2vw);
+				transform: translateX(-2vw);
+}
+
+.right.leg {
+				-webkit-transform: translateX(2vw);
+				-moz-transform: translateX(2vw);
+				-o-transform: translateX(2vw);
+				transform: translateX(2vw);
+				border-bottom-left-radius: 3.5vw;
+				border-bottom-right-radius: 0;
+}
+
+.foot {
+				content: '';
+				position: absolute;
+				width: 7.5vw;
+				height: 2vw;
+				background-color: #FE5F55;
+				bottom: 0;
+				right: 0;
+				border-top-left-radius: 2vw;
+				border-bottom-right-radius: 2vw;
+}
+
+.right.leg .foot {
+				width: 7.3vw;
+				padding-left: 0.2vw;
+				left: 0;
+				right: 0;
+				border-top-left-radius: 0;
+				border-top-right-radius: 3.5vw;
+				border-bottom-right-radius: 0;
+				border-bottom-left-radius: 3.5vw;
+}
+
+.foot .sucker {
+				float: left;
+				margin-top: 1.5vw;
+				margin-left: 0.5vw;
+				-webkit-animation: foot-sucker 0.5s infinite;
+				-moz-animation: foot-sucker 0.5s infinite;
+				-o-animation: foot-sucker 0.5s infinite;
+				animation: foot-sucker 0.5s infinite;
+}
+
+.foot .sucker:nth-child(2),
+.foot .sucker:nth-child(4) {
+				-webkit-animation: foot-sucker 0.5s 0.3s infinite;
+				-moz-animation: foot-sucker 0.5s 0.3s infinite;
+				-o-animation: foot-sucker 0.5s 0.3s infinite;
+				animation: foot-sucker 0.5s 0.3s infinite;
+}
+
+@-webkit-keyframes foot-sucker {
+				0% {
+								margin-top: 1.5vw;
+				}
+
+				50% {
+								margin-top: 1.7vw;
+				}
+
+				100% {
+								margin-top: 1.5vw;
+				}
+}
+
+@-moz-keyframes foot-sucker {
+				0% {
+								margin-top: 1.5vw;
+				}
+
+				50% {
+								margin-top: 1.7vw;
+				}
+
+				100% {
+								margin-top: 1.5vw;
+				}
+}
+
+@-o-keyframes foot-sucker {
+				0% {
+								margin-top: 1.5vw;
+				}
+
+				50% {
+								margin-top: 1.7vw;
+				}
+
+				100% {
+								margin-top: 1.5vw;
+				}
+}
+
+@keyframes foot-sucker {
+				0% {
+								margin-top: 1.5vw;
+				}
+
+				50% {
+								margin-top: 1.7vw;
+				}
+
+				100% {
+								margin-top: 1.5vw;
+				}
+}
+
+@media (orientation: landscape) {
+				.head {
+								-webkit-animation: breath 1s infinite;
+								-moz-animation: breath 1s infinite;
+								-o-animation: breath 1s infinite;
+								animation: breath 1s infinite;
+				}
+				@	-moz-keyframes breath {
+								0% {
+												padding-bottom: 0px;
+								}
+
+								50% {
+												padding-bottom: 1vw;
+								}
+
+								100% {
+												padding-bottom: 0px;
+								}
+				}
+
+				@-o-keyframes breath {
+								0% {
+												padding-bottom: 0px;
+								}
+
+								50% {
+												padding-bottom: 1vw;
+								}
+
+								100% {
+												padding-bottom: 0px;
+								}
+				}
+
+				@-webkit-keyframes breath {
+								0% {
+												padding-bottom: 0px;
+								}
+
+								50% {
+												padding-bottom: 1vw;
+								}
+
+								100% {
+												padding-bottom: 0px;
+								}
+				}
+
+				@keyframes breath {
+								0% {
+												padding-bottom: 0px;
+								}
+
+								50% {
+												padding-bottom: 1vw;
+								}
+
+								100% {
+												padding-bottom: 0px;
+								}
+				}
+
+				.mouth {
+								-webkit-animation: breathMouth 1s infinite;
+								-moz-animation: breathMouth 1s infinite;
+								-o-animation: breathMouth 1s infinite;
+								animation: breathMouth 1s infinite;
+				}
+
+				@keyframes breathMouth {
+								0% {
+												width: 2.5vw;
+												height: 1vw;
+												bottom: 1vw;
+								}
+
+								50% {
+												width: 8vw;
+												height: 1.5vw;
+												bottom: 1.25vw;
+								}
+
+								100% {
+												width: 2.5vw;
+												height: 1vw;
+												bottom: 1vw;
+								}
+				}
+}
+
+@media (orientation: portrait) {
+				.head {
+								-webkit-animation: none;
+								-moz-animation: none;
+								-o-animation: none;
+								animation: none;
+								padding-bottom: 1vw;
+								transition: 0.5s;
+				}
+
+				.mouth {
+								webkit-animation: none;
+								-moz-animation: none;
+								-o-animation: none;
+								animation: none;
+								width: 8vw;
+								height: 1.5vw;
+								bottom: 1.25;
+								transition: 0.5s;
+				}
+}
+
+  </style>
+</head>
+<body>
+  <div class="arms">
+  <div class="hand">
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+  </div>
+  <div class="hand">
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+  </div>
+</div>
+
+<div class="leg">
+  <div class="foot">
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+  </div>
+</div>
+<div class="right leg">
+  <div class="foot">
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+    <div class="sucker"></div>
+  </div>
+</div>
+<div class="head">
+  <div class="eye">
+    <div class="iris">
+      <div class="light"></div>
+    </div>
+  </div>
+  <div class="mouth"></div>
+</div>
+  <script></script>
+</body>
+</html>
