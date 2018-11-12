@@ -113,7 +113,7 @@
 	* Force the book length to always be an even number: https://bubblin.io/docs/concept
 	***************************************************************************************/
 
-	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4 } }) => {
+	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4, animation: 'curl' } }) => {
 		_removeChildren(_book.node)
 
 		delete _book.elements /* Clear object property from { _book } after a mandatory DOM lookup. */
@@ -124,7 +124,7 @@
 
 		if (_book.frames.length === 0) _book.frames = _reifyFrames(size)
 
-		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length)) // TODO: Explain why this is required.
+		if (_isOdd(_book.frames.length)) _book.frames.push(_createFrame(_book.frames.length)) /* If pages were printed via server-side HTML. See line #44 */
 
 		/********************************************************
 		 * Set up mutationObserver & performanceObservers to 	*
@@ -134,7 +134,6 @@
 		 ********************************************************/
 
          // TODO: Use comma operators instead.
-
 		_setUpMutationObservers([_setUpPerformanceObservers, _buttons, _oneTimePrint]) // Pass array of callbacks
 
 	}

@@ -1,4 +1,5 @@
-const options = { duration: 300, peel: true, zoom: false, startPage: 1, length: 6, build: 'card' }
+
+const options = { duration: 300, peel: true, zoom: false, startPage: 1, length: 6, build: 'card', animation: 'curl' }
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 
