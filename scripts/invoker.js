@@ -1,9 +1,8 @@
-
-const options = { duration: 300, peel: true, zoom: false, startPage: 1, length: 6, build: 'card', animation: 'curl' }
+const options = { duration: 2000, peel: true, zoom: false, startPage: 1, length: 6, build: 'card', animation: 'curl' };
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })
 
-const superbook = Bookiza.init({ options })
+const superbook = Bookiza.init({ options });
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('Third') })
 
@@ -23,4 +22,3 @@ const superbook = Bookiza.init({ options })
 // superbook.on('turning', (event) => { console.log(event) })
 
 // superbook.on('turned', (event) => { console.log(event, event.page, event.view) })
-
