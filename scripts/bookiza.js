@@ -707,7 +707,7 @@
 			}
 
 			if (_book.state.direction === _forward && _book.targetPage === _book.frames.length) {
-				_book.state.animations.book.play()
+				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
 				_book.state.animations.buttonOpacity.play()
 				_book.state.animations.buttonFlutter.cancel()
 			}
