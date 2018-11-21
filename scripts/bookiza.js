@@ -586,15 +586,17 @@
 				}
 				break
 			default:
-				_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse()
+				_isEven(_getCurrentPage(_book.targetPage))
+					? (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
+					: (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
 
-				let animation3 = _book.frames[
-					_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
-				].childNodes[0]
-					.animate(_kf1(), _options({}))
-					.reverse()
+				// let animation3 = _book.frames[
+				// 	_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
+				// ].childNodes[0]
+				// 	.animate(_kf1(), _options({}))
+				// 	.reverse()
 
-				_book.frames[_book.currentPage - 1].childNodes[0].animate(_kf2(), _options({})).reverse()
+				// _book.frames[_book.currentPage - 1].childNodes[0].animate(_kf2(), _options({})).reverse()
 
 				_applyEventListenersOnBook(_isInitialized)
 
