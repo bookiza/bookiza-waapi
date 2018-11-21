@@ -596,12 +596,6 @@
 
 				_book.frames[_book.currentPage - 1].childNodes[0].animate(_kf2(), _options({})).reverse()
 
-				console.log('curr', _book.currentPage)
-				console.log('targ', _book.targetPage)
-				console.log('dir', _book.state.direction())
-				console.log('ah', _getCurrentPage(_book.targetPage + 1))
-				console.log(_book.tick)
-
 				_applyEventListenersOnBook(_isInitialized)
 
 				break
@@ -660,32 +654,38 @@
 
 				break
 			default:
-				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage)) ? 1 : _book.frames.length
+				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage))
+					? _getCurrentPage(parseInt(_book.options.startPage) - 1)
+					: _getCurrentPage(parseInt(_book.options.startPage) + 1)
+
 				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
 				_book.targetPage = _getCurrentPage(_book.options.startPage)
 
-				_isEven(_getCurrentPage(_book.options.startPage))
-					? _printElementsToDOM(
-							'rightPages',
-							_getRangeIndices(
-								_getCurrentPage(_book.targetPage - 1),
-								_book.state.mode
-							).rightPageIndices.map((index) => _book.frames[`${index}`]),
-							_book.tick
-						)
-					: _printElementsToDOM(
-							'leftPages',
-							_getRangeIndices(_getCurrentPage(_book.targetPage + 1), _book.state.mode).leftPageIndices.map(
-								(index) => _book.frames[`${index}`]
-							),
-							_book.tick
-						)
+				_printElementsToDOM(
+					'view',
+					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
 
 				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
 
 				_isEven(_getCurrentPage(_book.options.startPage))
-					? _printElementsToDOM('first', [ _book.frames[0] ], _book.tick)
-					: _printElementsToDOM('last', [ _book.frames[_book.frames.length - 1] ], _book.tick)
+					? _printElementsToDOM(
+							'rightPages',
+							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
+					: _printElementsToDOM(
+							'leftPages',
+							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
 
 				break
 		}
@@ -1127,14 +1127,6 @@
 					docfrag.appendChild(page)
 				})
 				break
-			case 'first':
-				let first = _applyStyles(elements[0], 0, type, tick)
-				docfrag.appendChild(first)
-				break
-			case 'last':
-				let last = _applyStyles(elements[0], 0, type, tick)
-				docfrag.appendChild(last)
-				break
 		}
 		_book.node.appendChild(docfrag)
 	}
@@ -1172,10 +1164,6 @@
 						cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
 						cssString += _isEven(currentIndex) ? 'z-index: 0; ' : 'z-index: 1;'
 						pageObj.style.cssText = cssString
-						break
-					case 'first':
-						break
-					case 'last':
 						break
 				}
 				break
@@ -1220,28 +1208,6 @@
 							? `z-index: ${tick - _book.frames.length}; float: left; left: 0;`
 							: `z-index: ${tick}; float: right; right: 0; `
 						pageObj.style.cssText = cssString
-						break
-					case 'first':
-						// inner
-						// cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px;'
-						cssString = 'pointer-events: none; transitions: none;'
-						pageObj.childNodes[0].style = cssString
-
-						// wrapper
-						cssString = `pointer-events: none; z-index: ${tick}; float: right; right: 0;`
-						pageObj.style.cssText = cssString
-
-						break
-					case 'last':
-						// inner
-						cssString =
-							'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: right center 0px;'
-						pageObj.childNodes[0].style = cssString
-
-						// wrapper
-						cssString = `pointer-events:none; z-index: ${tick}; float: left; left: 0;`
-						pageObj.style.cssText = cssString
-
 						break
 				}
 		}
