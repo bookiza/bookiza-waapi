@@ -49,7 +49,7 @@
 			*  TODO: Use [ p, q, r, s, t, u, v ] standard snapshots								*
 			*******************************************************/
 			this.eventsCache = []
-			this.tick = 0 /* Count the number of pages ticked before book goes to isTurning: false state again */
+			this.tick = 0 /* Count the number of pages ticked before book goes to `isTurning: false` state again */
 			this.Ω = (paintTime = 100) =>
 				paintTime * Math.pow(0.9, this.tick) /* Apply paintTime cushion for multipage turns via wheel events */
 
@@ -478,18 +478,15 @@
 		{ transform: 'rotateY(0deg)', transformOrigin: 'right center 0' }
 	]
 
-	// transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0;
 	const _kf4 = () => [
 		{ transform: `rotateY(${_book.state.direction() * 180}deg)`, transformOrigin: 'left center 0' },
 		{ transform: 'rotateY(0deg)', transformOrigin: 'left center 0' }
 	]
 
 	const _kf5 = () => [
-		{ transform: 'translate3d(0px, 0px, 0px) rotateY(0deg)', transformOrigin: 'left center 0' },
+		{ transform: 'translate3d(0px, 0px, 0px) rotate(0)', transformOrigin: 'left center 0' },
 		{
-			transform: `translate3d(${_book.state.direction() *
-				_book.plotter.bounds.width /
-				4}px, 0px, 0px) rotateY(0deg)`,
+			transform: `translate3d(${_book.state.direction() * _book.plotter.bounds.width / 4}px, 0px, 0px) rotate(0)`,
 			transformOrigin: 'left center 0'
 		}
 	]
@@ -589,6 +586,22 @@
 				}
 				break
 			default:
+				_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse()
+
+				let animation3 = _book.frames[
+					_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
+				].childNodes[0]
+					.animate(_kf1(), _options({}))
+					.reverse()
+
+				_book.frames[_book.currentPage - 1].childNodes[0].animate(_kf2(), _options({})).reverse()
+
+				console.log('curr', _book.currentPage)
+				console.log('targ', _book.targetPage)
+				console.log('dir', _book.state.direction())
+				console.log('ah', _getCurrentPage(_book.targetPage + 1))
+				console.log(_book.tick)
+
 				_applyEventListenersOnBook(_isInitialized)
 
 				break
@@ -648,10 +661,8 @@
 				break
 			default:
 				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage)) ? 1 : _book.frames.length
-				_book.targetPage = _getCurrentPage(_book.options.startPage)
 				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
-
-				console.log(_getCurrentPage(_book.targetPage + 1))
+				_book.targetPage = _getCurrentPage(_book.options.startPage)
 
 				_isEven(_getCurrentPage(_book.options.startPage))
 					? _printElementsToDOM(
@@ -669,6 +680,8 @@
 							),
 							_book.tick
 						)
+
+				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
 
 				_isEven(_getCurrentPage(_book.options.startPage))
 					? _printElementsToDOM('first', [ _book.frames[0] ], _book.tick)
@@ -1114,14 +1127,14 @@
 					docfrag.appendChild(page)
 				})
 				break
-			// case 'first':
-			// 	let first = _applyStyles(elements[0], 0, type, tick)
-			// 	docfrag.appendChild(first)
-			// 	break
-			// case 'last':
-			// 	let last = _applyStyles(elements[0], 0, type, tick)
-			// 	docfrag.appendChild(last)
-			// 	break
+			case 'first':
+				let first = _applyStyles(elements[0], 0, type, tick)
+				docfrag.appendChild(first)
+				break
+			case 'last':
+				let last = _applyStyles(elements[0], 0, type, tick)
+				docfrag.appendChild(last)
+				break
 		}
 		_book.node.appendChild(docfrag)
 	}
@@ -1160,10 +1173,10 @@
 						cssString += _isEven(currentIndex) ? 'z-index: 0; ' : 'z-index: 1;'
 						pageObj.style.cssText = cssString
 						break
-					// case 'first':
-					// 	break
-					// case 'last':
-					// 	break
+					case 'first':
+						break
+					case 'last':
+						break
 				}
 				break
 			case 'landscape':
@@ -1208,27 +1221,28 @@
 							: `z-index: ${tick}; float: right; right: 0; `
 						pageObj.style.cssText = cssString
 						break
-					// case 'first':
-					// 	// inner
-					// 	// cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px;'
-					// 	cssString = 'pointer-events: none; transitions: none;'
-					// 	pageObj.childNodes[0].style = cssString
+					case 'first':
+						// inner
+						// cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: left center 0px;'
+						cssString = 'pointer-events: none; transitions: none;'
+						pageObj.childNodes[0].style = cssString
 
-					// 	// wrapper
-					// 	cssString = `pointer-events: none; z-index: ${tick}; float: right; right: 0;`
-					// 	pageObj.style.cssText = cssString
+						// wrapper
+						cssString = `pointer-events: none; z-index: ${tick}; float: right; right: 0;`
+						pageObj.style.cssText = cssString
 
-					// 	break
-					// case 'last':
-					// 	// inner
-					// 	cssString = 'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: right center 0px;'
-					// 	pageObj.childNodes[0].style = cssString
+						break
+					case 'last':
+						// inner
+						cssString =
+							'pointer-events:none; transitions: none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: right center 0px;'
+						pageObj.childNodes[0].style = cssString
 
-					// 	// wrapper
-					// 	cssString = `pointer-events:none; z-index: ${tick}; float: left; left: 0;`
-					// 	pageObj.style.cssText = cssString
+						// wrapper
+						cssString = `pointer-events:none; z-index: ${tick}; float: left; left: 0;`
+						pageObj.style.cssText = cssString
 
-					// 	break
+						break
 				}
 		}
 
