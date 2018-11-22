@@ -590,13 +590,19 @@
 					? (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
 					: (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
 
-				// let animation3 = _book.frames[
-				// 	_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
-				// ].childNodes[0]
-				// 	.animate(_kf1(), _options({}))
-				// 	.reverse()
+				let animation3 = _isEven(_getCurrentPage(_book.targetPage))
+					? console.log('even', _book.state.direction())
+					: _book.frames[
+							_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
+						].childNodes[0]
+							.animate(_kf1(), _options({}))
+							.reverse()
 
-				// _book.frames[_book.currentPage - 1].childNodes[0].animate(_kf2(), _options({})).reverse()
+				_isEven(_getCurrentPage(_book.targetPage))
+					? console.log('ha')
+					: _book.frames[
+							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
+						].childNodes[0].animate(_kf3(), _options({}))
 
 				_applyEventListenersOnBook(_isInitialized)
 
