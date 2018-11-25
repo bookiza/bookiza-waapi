@@ -1,8 +1,8 @@
 const options = {
-	duration: 1000,
+	duration: 600,
 	peel: true,
 	zoom: false,
-	startPage: 3,
+	startPage: 1,
 	length: 2370,
 	build: 'extra-long',
 	animation: 'curl'
