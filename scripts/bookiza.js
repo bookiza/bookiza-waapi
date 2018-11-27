@@ -726,19 +726,33 @@
 			if (_book.state.direction === _backward && _book.targetPage === 1) {
 				_book.state.animations.book.reverse()
 				_book.state.animations.buttonOpacity.reverse()
-				_book.state.animations.buttonFlutter.cancel()
+				_book.state.animations.buttonFlutter.play()
 			}
 
 			if (_book.state.direction === _backward && _book.targetPage === _book.frames.length - 1) {
 				_book.state.animations.book.reverse()
 				_book.state.animations.buttonOpacity.reverse()
-				_book.state.animations.buttonFlutter.cancel()
+				_book.state.animations.buttonFlutter.play()
 			}
 
 			if (_book.state.direction === _forward && _book.targetPage === _book.frames.length) {
 				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
-				_book.state.animations.buttonOpacity.play()
-				_book.state.animations.buttonFlutter.cancel()
+
+				_book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
+
+				_book.buttons[1].animate(
+					_flutter(),
+					_options({
+						iterations: Infinity,
+						duration: 600,
+						bezierCurvature: 'cubic-bezier(0.42, 0, 0.58, 1)'
+					})
+				)
+
+				_book.frames[_setViewIndices(_getCurrentPage(1), _book.state.mode)[1]].childNodes[0].animate(
+					_kf1(),
+					_options({})
+				)
 			}
 
 			// console.log('Ω', _book.Ω())
@@ -922,6 +936,7 @@
 			if (isNodeAdded) _book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
 		}
 		const observer = new MutationObserver(mutator)
+
 		observer.observe(_book.node, mutationConfig)
 
 		// observer.disconnect() // TODO: If we decide on closeBook functionality.
