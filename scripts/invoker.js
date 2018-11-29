@@ -3,8 +3,8 @@ const options = {
 	peel: true,
 	zoom: false,
 	startPage: 1,
-	length: 6,
-	build: 'card',
+	length: 34,
+	build: 'short',
 	animation: 'hard'
 }
 

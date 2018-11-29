@@ -413,7 +413,7 @@
 	}
 
 	const _handleKeyPressEvent = (event) => {
-		console.log('pressed', event.keyCode)
+		// console.log('pressed', event.keyCode)
 	}
 
 	const _handleKeyDownEvent = (event) => {
@@ -421,7 +421,20 @@
 	}
 
 	const _handleKeyUpEvent = (event) => {
-		// console.log('up', event.keyCode)
+		if (event.keyCode === 32) {
+			console.log('up', event.keyCode)
+			_book.state.direction = _forward
+			_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+			_book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
+			_printElementsToDOM(
+				'rightPages',
+				_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map(
+					(index) => _book.frames[`${index}`]
+				),
+				_book.tick
+			)
+			_book.targetPage = _target(_book.state.direction)
+		}
 	}
 
 	const _handleTouchStart = (event) => {
@@ -606,20 +619,24 @@
 						].childNodes[0].animate(_kf1(), _options({ delay: _book.Ω, direction: 'reverse' }))
 
 				_isEven(_getCurrentPage(_book.targetPage))
-					? (_book.frames[
-							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
-						].childNodes[0]
-							.animate(_kf4(), _options({}))
-							.reverse(),
-						_book.frames[
-							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
-						].childNodes[0].animate(_kf3(), _options({})))
-					: (_book.frames[
-							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
-						].childNodes[0].animate(_kf3(), _options({})),
-						_book.frames[
-							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
-						].childNodes[0].animate(_kf1(), _options({})))
+					? [
+							_book.frames[
+								_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
+							].childNodes[0]
+								.animate(_kf4(), _options({}))
+								.reverse(),
+							_book.frames[
+								_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
+							].childNodes[0].animate(_kf3(), _options({}))
+						]
+					: [
+							_book.frames[
+								_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
+							].childNodes[0].animate(_kf3(), _options({})),
+							_book.frames[
+								_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
+							].childNodes[0].animate(_kf1(), _options({}))
+						]
 
 				animation3.onfinish = (event) => {
 					_setCurrentPage(_book.targetPage)
