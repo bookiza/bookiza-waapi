@@ -5,7 +5,7 @@ const options = {
 	startPage: 1,
 	length: 6,
 	build: 'card',
-	animation: 'curl'
+	animation: 'hard'
 }
 
 // document.addEventListener('DOMContentLoaded', (event) => { console.log('First') })

@@ -375,44 +375,45 @@
 	const _handleWheelEvent = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				_book.state.direction =
-					event.target.id === 'next'
-						? event.deltaY < 0 ? _backward : _forward
-						: event.deltaY < 0 ? _forward : _backward
+				// _book.state.direction =
+				// 	event.target.id === 'next'
+				// 		? event.deltaY < 0 ? _backward : _forward
+				// 		: event.deltaY < 0 ? _forward : _backward
 
-				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+				// _book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
 
-				_book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
+				// _book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
 
-				_book.state.isTurning = true
+				// _book.state.isTurning = true
 
-				_book.state.direction === _forward
-					? _printElementsToDOM(
-							'rightPages',
-							_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map(
-								(index) => _book.frames[`${index}`]
-							),
-							_book.tick
-						)
-					: _printElementsToDOM(
-							'leftPages',
-							_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map(
-								(index) => _book.frames[`${index}`]
-							),
-							_book.tick
-						)
+				// _book.state.direction === _forward
+				// 	? _printElementsToDOM(
+				// 			'rightPages',
+				// 			_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map(
+				// 				(index) => _book.frames[`${index}`]
+				// 			),
+				// 			_book.tick
+				// 		)
+				// 	: _printElementsToDOM(
+				// 			'leftPages',
+				// 			_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map(
+				// 				(index) => _book.frames[`${index}`]
+				// 			),
+				// 			_book.tick
+				// 		)
 
-				_book.targetPage = _target(_book.state.direction)
+				// _book.targetPage = _target(_book.state.direction)
 
 				break
 			case 'DIV':
+				console.log('curve the page over, may be.')
 				break
 			default:
 		}
 	}
 
 	const _handleKeyPressEvent = (event) => {
-		// console.log('pressed', event.keyCode)
+		console.log('pressed', event.keyCode)
 	}
 
 	const _handleKeyDownEvent = (event) => {
@@ -461,6 +462,10 @@
 
 	/**********************************************
 	 * Conio-tubular math + web animation objects *
+  **********************************************/
+
+	/**********************************************
+	 * Experimental sample for state analysis………… *
 	**********************************************/
 
 	const _kf1 = () => [
@@ -483,7 +488,7 @@
 		{ transform: 'rotateY(0deg)', transformOrigin: 'left center 0' }
 	]
 
-	const _kf5 = () => [
+	const _slide = () => [
 		{ transform: 'translate3d(0px, 0px, 0px) rotate(0)', transformOrigin: 'left center 0' },
 		{
 			transform: `translate3d(${_book.state.direction() * _book.plotter.bounds.width / 4}px, 0px, 0px) rotate(0)`,
@@ -503,20 +508,22 @@
 		duration = _book.options.duration,
 		bezierCurvature = 'ease-in-out',
 		direction = 'normal',
-		iterations = 1
+		iterations = 1,
+		iterationStart = 0
 	}) => ({
 		currentTime: 0,
 		duration: duration,
 		easing: bezierCurvature,
 		fill: 'both',
 		iterations: iterations,
-		direction: direction
+		direction: direction,
+		iterationStart: iterationStart
 	})
 
 	const _openTheBook = () => {
 		switch (_getCurrentPage(_book.targetPage)) {
 			case 1:
-				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
+				_book.state.animations.book = _book.node.animate(_slide(), _options({}))
 
 				_book.state.animations.buttonOpacity = _book.buttons[1].animate(
 					_opacity(),
@@ -551,7 +558,7 @@
 				}
 				break
 			case _book.frames.length:
-				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
+				_book.state.animations.book = _book.node.animate(_slide(), _options({}))
 
 				_book.state.animations.buttonOpacity = _book.buttons[0].animate(
 					_opacity(),
@@ -587,8 +594,8 @@
 				break
 			default:
 				_isEven(_getCurrentPage(_book.targetPage))
-					? (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
-					: (_book.state.animations.book = _book.node.animate(_kf5(), _options({})).reverse())
+					? (_book.state.animations.book = _book.node.animate(_slide(), _options({})).reverse())
+					: (_book.state.animations.book = _book.node.animate(_slide(), _options({})).reverse())
 
 				let animation3 = _isEven(_getCurrentPage(_book.targetPage))
 					? _book.frames[
@@ -596,113 +603,28 @@
 						].childNodes[0].animate(_kf2(), _options({ delay: _book.Ω }))
 					: _book.frames[
 							_setViewIndices(_getCurrentPage(_book.targetPage), _book.state.mode)[1]
-						].childNodes[0]
-							.animate(_kf1(), _options({ delay: _book.Ω }))
-							.reverse()
+						].childNodes[0].animate(_kf1(), _options({ delay: _book.Ω, direction: 'reverse' }))
 
 				_isEven(_getCurrentPage(_book.targetPage))
-					? _book.frames[
+					? (_book.frames[
 							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
 						].childNodes[0]
 							.animate(_kf4(), _options({}))
-							.reverse()
-					: _book.frames[
+							.reverse(),
+						_book.frames[
 							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
-						].childNodes[0].animate(_kf3(), _options({}))
+						].childNodes[0].animate(_kf3(), _options({})))
+					: (_book.frames[
+							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[0]
+						].childNodes[0].animate(_kf3(), _options({})),
+						_book.frames[
+							_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode)[1]
+						].childNodes[0].animate(_kf1(), _options({})))
 
 				animation3.onfinish = (event) => {
 					_setCurrentPage(_book.targetPage)
 					_applyEventListenersOnBook(_isInitialized)
 				}
-				break
-		}
-	}
-
-	const _oneTimePrint = () => {
-		switch (_getCurrentPage(_book.options.startPage)) {
-			case 1:
-				_book.currentPage = _getCurrentPage(_book.options.startPage + 1) // 2
-				_book.targetPage = _getCurrentPage(_book.options.startPage) // 1
-
-				_book.state.direction = _backward
-
-				_printElementsToDOM(
-					'view',
-					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
-						(index) => _book.frames[`${index}`]
-					),
-					_book.tick
-				)
-
-				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
-
-				_printElementsToDOM(
-					'leftPages',
-					_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map(
-						(index) => _book.frames[`${index}`]
-					),
-					_book.tick
-				)
-
-				break
-			case _book.frames.length:
-				_book.currentPage = _getCurrentPage(_book.options.startPage - 1) // last but one
-				_book.targetPage = _getCurrentPage(_book.options.startPage) // last
-				_book.state.direction = _forward
-
-				_printElementsToDOM(
-					'view',
-					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
-						(index) => _book.frames[`${index}`]
-					),
-					_book.tick
-				)
-
-				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
-
-				_printElementsToDOM(
-					'rightPages',
-					_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map(
-						(index) => _book.frames[`${index}`]
-					),
-					_book.tick
-				)
-
-				break
-			default:
-				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage))
-					? _getCurrentPage(parseInt(_book.options.startPage) - 1)
-					: _getCurrentPage(parseInt(_book.options.startPage) + 1)
-
-				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
-				_book.targetPage = _getCurrentPage(_book.options.startPage)
-
-				_printElementsToDOM(
-					'view',
-					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
-						(index) => _book.frames[`${index}`]
-					),
-					_book.tick
-				)
-
-				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
-
-				_isEven(_getCurrentPage(_book.options.startPage))
-					? _printElementsToDOM(
-							'rightPages',
-							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map(
-								(index) => _book.frames[`${index}`]
-							),
-							_book.tick
-						)
-					: _printElementsToDOM(
-							'leftPages',
-							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map(
-								(index) => _book.frames[`${index}`]
-							),
-							_book.tick
-						)
-
 				break
 		}
 	}
@@ -736,7 +658,7 @@
 			}
 
 			if (_book.state.direction === _forward && _book.targetPage === _book.frames.length) {
-				_book.state.animations.book = _book.node.animate(_kf5(), _options({}))
+				_book.state.animations.book = _book.node.animate(_slide(), _options({}))
 
 				_book.buttons[0].animate(_opacity(), _options({ duration: _book.options.duration / 2 }))
 
@@ -865,6 +787,98 @@
 						}
 						break
 				}
+
+				break
+		}
+	}
+
+	const _oneTimePrint = () => {
+		switch (_getCurrentPage(_book.options.startPage)) {
+			case 1:
+				_book.currentPage = _getCurrentPage(_book.options.startPage + 1) // 2
+				_book.targetPage = _getCurrentPage(_book.options.startPage) // 1
+
+				_book.state.direction = _backward
+
+				_printElementsToDOM(
+					'view',
+					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
+
+				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+
+				_printElementsToDOM(
+					'leftPages',
+					_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
+
+				break
+			case _book.frames.length:
+				_book.currentPage = _getCurrentPage(_book.options.startPage - 1) // last but one
+				_book.targetPage = _getCurrentPage(_book.options.startPage) // last
+				_book.state.direction = _forward
+
+				_printElementsToDOM(
+					'view',
+					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
+
+				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+
+				_printElementsToDOM(
+					'rightPages',
+					_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
+
+				break
+			default:
+				// _book.currentPage = _isEven(_getCurrentPage(_book.options.startPage)) ? 1 : _book.frames.length
+
+				_book.targetPage = _getCurrentPage(_book.options.startPage)
+
+				_book.state.direction = _isEven(_getCurrentPage(_book.options.startPage)) ? _backward : _forward
+
+				_book.currentPage = _isEven(_getCurrentPage(_book.options.startPage))
+					? _getCurrentPage(parseInt(_book.options.startPage) - 1)
+					: _getCurrentPage(parseInt(_book.options.startPage) + 1)
+
+				_printElementsToDOM(
+					'view',
+					_setViewIndices(_getCurrentPage(_book.currentPage), _book.state.mode).map(
+						(index) => _book.frames[`${index}`]
+					),
+					_book.tick
+				)
+
+				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+
+				_isEven(_getCurrentPage(_book.options.startPage))
+					? _printElementsToDOM(
+							'rightPages',
+							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).rightPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
+					: _printElementsToDOM(
+							'leftPages',
+							_getRangeIndices(_getCurrentPage(_book.currentPage), _book.state.mode).leftPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
 
 				break
 		}
