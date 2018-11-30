@@ -50,7 +50,7 @@
 			*******************************************************/
 			this.eventsCache = []
 			this.tick = 0 /* Count the number of pages ticked before book goes to `isTurning: false` state again */
-			this.Ω = (paintTime = 100) =>
+			this.Ω = (paintTime = 150) =>
 				paintTime * Math.pow(0.9, this.tick) /* Apply paintTime cushion for multipage turns via wheel events */
 
 			/* Turn events */
@@ -134,7 +134,7 @@
 		 * Set up mutationObserver & performanceObservers to 	  *
 		 * monitor changes to the DOM. Buttons will mutate DOM  *
 		 * first and set off _openTheBook()	method leading to   *
-		 * isInitialized: true state. Then _turnTheBook()       *
+		 * isInitialized: true state. Then _turnTheBook()!      *
 		 ********************************************************/
 
 		// TODO: Use comma operators instead?
@@ -366,34 +366,33 @@
 	const _handleWheelEvent = (event) => {
 		switch (event.target.nodeName) {
 			case 'A':
-				// _book.state.direction =
-				// 	event.target.id === 'next'
-				// 		? event.deltaY < 0 ? _backward : _forward
-				// 		: event.deltaY < 0 ? _forward : _backward
+				_book.state.direction =
+					event.target.id === 'next'
+						? event.deltaY < 0 ? _backward : _forward
+						: event.deltaY < 0 ? _forward : _backward
 
-				// _book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
+				_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
 
-				// _book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
+				_book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
 
-				// _book.state.isTurning = true
+				_book.state.isTurning = true
 
-				// _book.state.direction === _forward
-				// 	? _printElementsToDOM(
-				// 			'rightPages',
-				// 			_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map(
-				// 				(index) => _book.frames[`${index}`]
-				// 			),
-				// 			_book.tick
-				// 		)
-				// 	: _printElementsToDOM(
-				// 			'leftPages',
-				// 			_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map(
-				// 				(index) => _book.frames[`${index}`]
-				// 			),
-				// 			_book.tick
-				// 		)
-
-				// _book.targetPage = _target(_book.state.direction)
+				_book.state.direction === _forward
+					? _printElementsToDOM(
+							'rightPages',
+							_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).rightPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
+					: _printElementsToDOM(
+							'leftPages',
+							_getRangeIndices(_getCurrentPage(_book.targetPage), _book.state.mode).leftPageIndices.map(
+								(index) => _book.frames[`${index}`]
+							),
+							_book.tick
+						)
+				_book.targetPage = _target(_book.state.direction)
 
 				break
 			case 'DIV':
@@ -800,7 +799,108 @@
 		}
 	}
 
-	const _oneTimePrint = () => {
+
+	/*********************************
+	 * @Helper methods  *
+	***********************************/
+
+	const _isTouch = () => 'ontouchstart' in w || n.MaxTouchPoints > 0 || n.msMaxTouchPoints > 0
+
+	const _isEven = (number) => (number === parseFloat(number) ? !(number % 2) : void 0)
+
+	const _isOdd = (number) => Math.abs(number % 2) === 1
+
+	const _sign = (x) => (typeof x === 'number' ? (x ? (x < 0 ? -1 : 1) : x === x ? 1 : NaN) : NaN)
+
+	const _leftCircularIndex = (currentIndex, index) =>
+		parseInt(currentIndex) - parseInt(index) < 0
+			? parseInt(_book.frames.length) + (parseInt(currentIndex) - parseInt(index))
+			: parseInt(currentIndex) - parseInt(index)
+
+	const _rightCircularIndex = (currentIndex, index) =>
+		parseInt(currentIndex) + parseInt(index) >= parseInt(_book.frames.length)
+			? parseInt(currentIndex) + parseInt(index) - parseInt(_book.frames.length)
+			: parseInt(currentIndex) + parseInt(index)
+
+	const π = Math.PI
+
+	const _radians = (degrees) => degrees / 180 * π
+
+	const _degrees = (radians) => radians / π * 180
+
+	const Δ = (displacement) => {} // Displacement on mousedown + mousemove/touchstart + touchmove
+
+	const λ = (angle) => {} // Cone angle
+
+	// Definitions:
+	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
+	// ε = Epsilon = `y-distance` in pixels from origin of the book.
+	// let Δ, θ, ω, Ω, α, β, δ = 0
+
+	// Cone Angle λ (= )
+	// const λ = (angle) => {
+
+	const _direction = (id) =>
+		id === undefined
+			? _book.plotter.side === 'right' ? _forward : _backward
+			: id === 'next' ? _forward : _backward
+
+	const _forward = () => 1
+
+	const _backward = () => -1
+
+	const _isInitialized = () => {
+		_book.state.isInitialized = true
+	}
+
+	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
+
+	const _setUpMutationObservers = (callbacks) => {
+		const mutationConfig = { attributes: false, childList: true, subtree: false }
+		const mutator = (mutations) => {
+			let isNodeAdded = false
+
+			mutations.map((mutation) => {
+				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
+			})
+			if (isNodeAdded) _book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
+		}
+		const MO = new MutationObserver(mutator)
+
+		MO.observe(_book.node, mutationConfig)
+
+		// MO.disconnect() // TODO: If we decide implementing closeBook functionality.
+
+		callbacks.map((callback) => {
+			if (callback && typeof callback === 'function') callback()
+		})
+	}
+
+	const _setUpPerformanceObservers = () => {
+		/**************************************************************
+		 * Figure out average full-contentful-paint (fcp) time			  *
+		 * Returns an Ω value of the browser's rendering engine			  *
+     * This data can be submitted for different browsers for a    *
+     * better average.                                            *
+		***************************************************************/
+		if (!w.performance) return
+
+		const PO = new PerformanceObserver((list) => {
+      // const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
+  
+      // console.log(Ω, 'Ω')
+
+      for (const entry of list.getEntries()) {
+				console.log(entry.name, entry.startTime, entry.duration)
+			}
+		})
+
+		// Start observing the entry types you care about.
+    PO.observe({ entryTypes: ['resource', 'paint'] })
+    
+  }
+  
+  const _oneTimePrint = () => {
 		switch (_getCurrentPage(_book.options.startPage)) {
 			case 1:
 				_book.currentPage = _getCurrentPage(_book.options.startPage + 1) // 2
@@ -892,112 +992,6 @@
 		}
 	}
 
-	/*********************************
-	 * @Helper methods  *
-	***********************************/
-
-	const _isTouch = () => 'ontouchstart' in w || n.MaxTouchPoints > 0 || n.msMaxTouchPoints > 0
-
-	const _isEven = (number) => (number === parseFloat(number) ? !(number % 2) : void 0)
-
-	const _isOdd = (number) => Math.abs(number % 2) === 1
-
-	const _sign = (x) => (typeof x === 'number' ? (x ? (x < 0 ? -1 : 1) : x === x ? 1 : NaN) : NaN)
-
-	const _leftCircularIndex = (currentIndex, index) =>
-		parseInt(currentIndex) - parseInt(index) < 0
-			? parseInt(_book.frames.length) + (parseInt(currentIndex) - parseInt(index))
-			: parseInt(currentIndex) - parseInt(index)
-
-	const _rightCircularIndex = (currentIndex, index) =>
-		parseInt(currentIndex) + parseInt(index) >= parseInt(_book.frames.length)
-			? parseInt(currentIndex) + parseInt(index) - parseInt(_book.frames.length)
-			: parseInt(currentIndex) + parseInt(index)
-
-	const π = Math.PI
-
-	const _radians = (degrees) => degrees / 180 * π
-
-	const _degrees = (radians) => radians / π * 180
-
-	const Δ = (displacement) => {} // Displacement on mousedown + mousemove/touchstart + touchmove
-
-	const λ = (angle) => {} // Cone angle
-
-	// Definitions:
-	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
-	// ε = Epsilon = `y-distance` in pixels from origin of the book.
-	// let Δ, θ, ω, Ω, α, β, δ = 0
-
-	// Cone Angle λ (= )
-	// const λ = (angle) => {
-
-	const _direction = (id) =>
-		id === undefined
-			? _book.plotter.side === 'right' ? _forward : _backward
-			: id === 'next' ? _forward : _backward
-
-	const _forward = () => 1
-
-	const _backward = () => -1
-
-	const _isInitialized = () => {
-		_book.state.isInitialized = true
-	}
-
-	// w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
-
-	const _setUpMutationObservers = (callbacks) => {
-		const mutationConfig = { attributes: false, childList: true, subtree: false }
-		const mutator = (mutations) => {
-			let isNodeAdded = false
-
-			mutations.map((mutation) => {
-				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
-			})
-			if (isNodeAdded) _book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
-		}
-		const observer = new MutationObserver(mutator)
-
-		observer.observe(_book.node, mutationConfig)
-
-		// observer.disconnect() // TODO: If we decide on closeBook functionality.
-
-		callbacks.map((callback) => {
-			if (callback && typeof callback === 'function') callback()
-		})
-	}
-
-	const _setUpPerformanceObservers = () => {
-		/********************************************
-		 * Performance matters!						*
-		 * Returns Ω values of the browser			*
-		********************************************/
-		if (!w.performance) return
-
-		// const performance = w.performance
-
-		// const performanceEntries = performance.getEntriesByType('paint')
-
-		// const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
-
-		// console.log(Ω.startTime)
-
-		// performanceEntries.forEach((performanceEntry, i, entries) => {
-		// 	console.log("The time to " + performanceEntry.name + " was " + performanceEntry.startTime + " milliseconds." + performanceEntry.duration + "duration")
-		// 	// let Ω = performanceEntry.startTime
-		// })
-
-		// const perfObserver = new PerformanceObserver((list) => {
-		// 	for (const entry of list.getEntries()) {
-		// 		// `entry` is a PerformanceEntry instance.
-		// 		console.log(entry.entryType, entry.startTime, entry.duration)
-		// 	}
-		// })
-
-		// // // Start observing the entry types you care about.
-		// perfObserver.observe({ entryTypes: ['resource', 'paint'] })
-	}
 
 	const _stepper = (mode) => (mode === 'portrait' ? 1 : 2)
 
@@ -1109,44 +1103,35 @@
 
 	// const _removeElementsFromDOMByClassName = (className) => { node.getElementsByClassName(className).remove() }
 
-	const _removeElementFromDOMById = (id) => {
-		if (d.getElementById(id) !== null) d.getElementById(id).remove()
-	}
+	const _removeElementFromDOMById = (id) => { if (d.getElementById(id) !== null) d.getElementById(id).remove() }
 
 	const _reifyFrames = (size) =>
-		[
-			...d
-				.createRange()
-				.createContextualFragment(
-					new String(
-						new Array(size)
-							.fill()
-							.map(
-								(v, i) =>
-									`<div class="page"><iframe src="./renders/${_book.options.build}/page-${i +
-										1}.html"></iframe></div>`
-							)
-					)
-				)
-				.querySelectorAll('div')
+		[ ...d.createRange()
+				  .createContextualFragment(
+					  new String(
+						  new Array(size).fill().map((v, i) =>
+                  `<div class="page">
+                    <iframe src="./renders/${_book.options.build}/page-${i + 1}.html"></iframe>
+                  </div>`
+              )
+            )
+				  ).querySelectorAll('div')
 		].map((page, index) => _addPageWrappersAndBaseClasses(page, index))
 
 	const _createFrame = (index, html) =>
 		html === undefined
 			? _addPageWrappersAndBaseClasses(
-					d
-						.createRange()
+          d.createRange()
 						.createContextualFragment(
-							`<div class="page"><iframe src="./renders/${_book.options
-								.build}/page-${index}.html"></iframe></div>`
+              `<div class="page">
+                  <iframe src="./renders/${_book.options.build}/page-${index}.html"></iframe>
+              </div>`
 						).firstChild,
 					index
 				)
 			: _addPageWrappersAndBaseClasses(html, index)
 
-	const _buttons = () => {
-		_printElementsToDOM('buttons', _book.buttons)
-	}
+	const _buttons = () => { _printElementsToDOM('buttons', _book.buttons) }
 
 	const _printElementsToDOM = (type, elements, tick = _book.frames.length) => {
 		const docfrag = d.createDocumentFragment()

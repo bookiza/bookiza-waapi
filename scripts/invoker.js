@@ -1,10 +1,10 @@
 const options = {
-	duration: 2000,
+	duration: 600,
 	peel: true,
 	zoom: false,
 	startPage: 1,
-	length: 34,
-	build: 'short',
+	length: 2370,
+	build: 'extra-long-2370',
 	animation: 'hard'
 }
 
