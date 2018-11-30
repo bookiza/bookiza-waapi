@@ -4,7 +4,7 @@ const options = {
 	zoom: false,
 	startPage: 1,
 	length: 2370,
-	build: 'extra-long-2370',
+	build: 'biblical-6720',
 	animation: 'hard'
 }
 
