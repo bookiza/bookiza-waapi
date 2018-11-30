@@ -85,16 +85,12 @@
 	}
 
 	/*******************************
-	 *
-	 * Geometric system listeners  *
-	 *
+	*  Geometric system listeners  *
 	********************************/
 
 	const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
-	const _resetGeometricalPremise = () => {
-		_book.plotter.bounds = _setGeometricalPremise(_book.node)
-	}
+	const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(_book.node) }
 
 	w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise.
 
@@ -103,23 +99,20 @@
 		y: `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}`
 	})
 
-	const _resetGeometricalOrigin = () => {
-		_book.plotter.origin = _setGeometricalOrigin()
-	}
+	const _resetGeometricalOrigin = () => { _book.plotter.origin = _setGeometricalOrigin() }
 
 	w.addEventListener('resize', _resetGeometricalOrigin) // Recalibrate geometrical origin.
 
 	/**************************************************************************************
 	* One time @superbook initialization.
-	* The minimum length of a book is 4 pages. (options.length)
+	* The minimum length (options.length) of a book is 4 pages. 
 	* Pages could be provided to Bookiza via DOM or be synthesized
-	* using length value passed as an object property for initialization.
+	* using length value passed as options during initialization.
 	* Force the book length to always be an even number: https://bubblin.io/docs/concept
 	***************************************************************************************/
 
-	const _initializeSuperBook = ({
-		options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4, animation: 'curl' }
-	}) => {
+	const _initializeSuperBook = ({ options = { duration: 300, peel: true, zoom: true, startPage: 1, length: 4, animation: 'hard' } }) => {
+    
 		_removeChildren(_book.node)
 
 		delete _book.elements /* Clear object property from { _book } after a mandatory DOM lookup. */
@@ -135,18 +128,16 @@
 
 		if (_book.frames.length === 0) _book.frames = _reifyFrames(size)
 
-		if (_isOdd(_book.frames.length)) {
-			_book.frames.push(_createFrame(_book.frames.length))
-		} /* If pages were printed via server-side HTML. See line #44 */
+		if (_isOdd(_book.frames.length)) { _book.frames.push(_createFrame(_book.frames.length)) } /* If pages were printed via server-side HTML. See line #44 */
 
 		/********************************************************
-		 * Set up mutationObserver & performanceObservers to 	*
-		 * handle state.										*
-		 * Buttons will mutate DOM to set off _openTheBook()	*
-		 * or _turnTheBook() via MutatationObserver()			*
+		 * Set up mutationObserver & performanceObservers to 	  *
+		 * monitor changes to the DOM. Buttons will mutate DOM  *
+		 * first and set off _openTheBook()	method leading to   *
+		 * isInitialized: true state. Then _turnTheBook()       *
 		 ********************************************************/
 
-		// TODO: Use comma operators instead.
+		// TODO: Use comma operators instead?
 		_setUpMutationObservers([ _setUpPerformanceObservers, _buttons, _oneTimePrint ]) // Pass array of callbacks
 	}
 
@@ -1277,6 +1268,7 @@
 		return pageObj
 	}
 
+	/* Dependent on nature of transition */
 	const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
 		_removeClassesFromElem(pageObj, 'page')
 		let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
@@ -1416,12 +1408,12 @@
 
 	// console.log(_book)
 
-	/******************
+	/********************************************
 	 * Add `turned`, `turning` listeners to
 	 * allow callback execution with context
 	 * of the book, page & whatever is in view.
 	 * We'll call these TurnListeners.
-	*/
+	********************************************/
 	const _addTurnListeners = (eventName, callback) => {
 		_book.node.addEventListener(eventName, callback, false)
 	}

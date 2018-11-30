@@ -1,5 +1,5 @@
 const options = {
-	duration: 600,
+	duration: 2000,
 	peel: true,
 	zoom: false,
 	startPage: 1,
