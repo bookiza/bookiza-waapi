@@ -40,7 +40,8 @@ body {
 	align-items: center;
 	justify-content: center;
 	/*transition-duration: 200ms;*/
-	backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;    
 	touch-action: none;
 	position: absolute;
 	box-sizing: border-box;
@@ -61,7 +62,8 @@ body {
 */
 	/* Apply perspective with same vanishing point to children */
 	perspective-origin: 50% 50%;
-	backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;    
 }
 
 #book {
@@ -129,11 +131,13 @@ body {
 		/* Default CSS when JS is turned off */
 	}
 	body .wrapper {
-		backface-visibility: visible;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;    
 		width: 100%;
 	}
 	body .inner iframe {
-		backface-visibility: visible;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;    
 		width: 100%;
 	}
 	/*    body .even > .gradient {

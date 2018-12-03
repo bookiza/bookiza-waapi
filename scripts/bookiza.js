@@ -894,7 +894,7 @@
       const Ω = list.getEntries().find(({ name }) => name === 'first-contentful-paint')
   
       // console.log(list.getEntries())
-      console.log('Ω', Ω)
+      // console.log('Ω', Ω)
 
       for (const entry of list.getEntries()) {
         console.log(entry.name, entry.startTime, entry.duration)
