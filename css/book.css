@@ -71,7 +71,8 @@ body {
 	transform: translate3d(0, 0, 0);
 	transform-style: preserve-3d;
 	/* Apply faux 3D space for pages */
-	backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .wrapper {
@@ -103,7 +104,8 @@ body {
 	width: 100%;
 	height: 100%;
 	z-index: 0;
-	backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .inner iframe {

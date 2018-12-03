@@ -3,8 +3,8 @@ const options = {
 	peel: true,
 	zoom: false,
 	startPage: 1,
-	length: 2370,
-	build: 'biblical-6720',
+	length: 34,
+	build: 'short',
 	animation: 'hard'
 }
 

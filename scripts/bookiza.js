@@ -412,8 +412,8 @@
 
 	const _handleKeyUpEvent = (event) => {
 		if (event.keyCode === 32) {
-			console.log('up', event.keyCode)
-			_book.state.direction = _forward
+      /* We have _next() method right here */
+      _book.state.direction = _forward
 			_book.state.isTurning ? (_book.tick += 1) : (_book.tick = 1)
 			_book.eventsCache.push({ tick: _book.tick, page: _book.targetPage }) // Pop via DOM mutations
 			_printElementsToDOM(
@@ -466,6 +466,11 @@
 	/**********************************************
 	 * Conio-tubular math + web animation objects *
   **********************************************/
+
+  /* 
+    Use https://caniuse.com/#feat=css-clip-path with a polyfill 
+    https://stackoverflow.com/questions/52483173/is-it-possible-to-clip-a-side-of-a-div-with-css-like-so
+  */
 
 	/**********************************************
 	 * Experimental sample for state analysis………… *
@@ -861,7 +866,7 @@
 			let isNodeAdded = false
 
 			mutations.map((mutation) => {
-				if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
+        if (mutation.type === 'childList' && mutation.addedNodes.length) isNodeAdded = true
 			})
 			if (isNodeAdded) _book.state.isInitialized === true ? _turnTheBook() : _openTheBook()
 		}
@@ -886,12 +891,13 @@
 		if (!w.performance) return
 
 		const PO = new PerformanceObserver((list) => {
-      // const Ω = performanceEntries.find(({ name }) => name === 'first-contentful-paint')
+      const Ω = list.getEntries().find(({ name }) => name === 'first-contentful-paint')
   
-      // console.log(Ω, 'Ω')
+      // console.log(list.getEntries())
+      console.log('Ω', Ω)
 
       for (const entry of list.getEntries()) {
-				console.log(entry.name, entry.startTime, entry.duration)
+        console.log(entry.name, entry.startTime, entry.duration)
 			}
 		})
 
