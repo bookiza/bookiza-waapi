@@ -1,10 +1,15 @@
+
+const lastPage = () => window.localStorage.lastPage || 1
+
+console.log(lastPage())
+
 const options = {
-	duration: 600,
+	duration: 2000,
 	peel: true,
 	zoom: false,
-	startPage: 1,
-	length: 34,
-	build: 'short',
+	startPage: lastPage(),
+	length: 2370,
+	build: 'extra-long-2370',
 	animation: 'hard'
 }
 
