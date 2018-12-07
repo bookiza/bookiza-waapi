@@ -2,7 +2,7 @@
 const lastPage = () => window.localStorage.lastPage || 1
 
 const options = {
-	duration: 2000,
+	duration: 1000,
 	peel: true,
 	zoom: false,
 	startPage: lastPage(),
