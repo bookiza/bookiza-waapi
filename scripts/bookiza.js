@@ -911,9 +911,10 @@
   }
 
   const _oneTimePrint = () => {
+    
     switch (_getCurrentPage(_book.options.startPage)) {
       case 1:
-        _book.currentPage = _getCurrentPage(_book.options.startPage + 1) // 2
+        _book.currentPage = _getCurrentPage(parseInt(_book.options.startPage) + 1) // 2
         _book.targetPage = _getCurrentPage(_book.options.startPage) // 1
 
         _book.state.direction = _backward
@@ -938,7 +939,7 @@
 
         break
       case _book.frames.length:
-        _book.currentPage = _getCurrentPage(_book.options.startPage - 1) // last but one
+        _book.currentPage = _getCurrentPage(parseInt(_book.options.startPage) - 1) // last but one
         _book.targetPage = _getCurrentPage(_book.options.startPage) // last
         _book.state.direction = _forward
 
